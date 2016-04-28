@@ -56,7 +56,7 @@ namespace PlayOn.Tools.Helper
 
             if (String.IsNullOrEmpty(video.Item?.Name)) return new Scaffold.Video();
 
-            var id = path + video.Item.Name.ToLower() + "|";
+            path = path + video.Item.Name.ToLower() + "|";
 
             if (String.IsNullOrEmpty(video.Series?.Name)) video.Series = new Scaffold.Xml.Info { Name = String.Empty };
 
@@ -68,11 +68,10 @@ namespace PlayOn.Tools.Helper
 
             return new Scaffold.Video
             {
-                Id = id,
+                Path = path,
                 Name = name,
                 Overview = video.Description.Name,
-                Series = video.Series.Name,
-                IsLive = path.Contains("|live|") || path.Contains("|live tv|")
+                Series = video.Series.Name
             };
         }
     }

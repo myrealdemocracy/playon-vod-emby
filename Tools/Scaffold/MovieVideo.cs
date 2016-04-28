@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace PlayOn.Tools.Scaffold
 {
-    public class Movie : BaseVideo
+    public class MovieVideo : Video
     {
-        public List<MovieVideo> Videos { get; set; }
     }
 }
