@@ -19,8 +19,6 @@ namespace PlayOn.Tools.Helper
 
             if (!String.IsNullOrEmpty(path))
             {
-                path = Clean(path);
-
                 var terms = path.Split(Convert.ToChar("|"));
 
                 baseUrl += "?id=" + terms[0];
@@ -41,7 +39,7 @@ namespace PlayOn.Tools.Helper
         public static string Find(string baseUrl, string path)
         {
             var count = 0;
-            var items = Helper.Xml.Items<Scaffold.Xml.Group>(baseUrl).Items;
+            var items = Helper.Xml.Extractor.Items<Scaffold.Xml.Group>(baseUrl).Items;
             var subItem = new Scaffold.Xml.Item();
             var terms = path.Split(Convert.ToChar("|"));
 
@@ -50,15 +48,15 @@ namespace PlayOn.Tools.Helper
                 switch (term)
                 {
                     case "video":
-                        baseUrl = Base + "/" + Helper.Xml.Items<Scaffold.Xml.Video>(baseUrl).Item.Src;
+                        baseUrl = Base + "/" + Helper.Xml.Extractor.Items<Scaffold.Xml.Video>(baseUrl).Item.Src;
                         break;
                     case "image":
                         baseUrl = count == 0 ? Helper.Image.Default(baseUrl, true) : Helper.Image.Mapper(subItem);
                         break;
                     default:
-                        if (count > 0) items = Helper.Xml.Items<Scaffold.Xml.Group>(baseUrl).Items;
+                        if (count > 0) items = Helper.Xml.Extractor.Items<Scaffold.Xml.Group>(baseUrl).Items;
 
-                        subItem = items.FirstOrDefault(q => String.Equals(Clean(q.Name), term, StringComparison.CurrentCultureIgnoreCase));
+                        subItem = items.FirstOrDefault(q => String.Equals(q.Name, term, StringComparison.CurrentCultureIgnoreCase));
 
                         if (subItem != null) baseUrl = subItem.Href;
                         break;
@@ -68,22 +66,6 @@ namespace PlayOn.Tools.Helper
             }
 
             return baseUrl;
-        }
-
-        public static string Clean(string url)
-        {
-            url = url.Replace(" ", "+");
-            url = url.Replace("-", "+");
-            url = url.Replace(":", "+");
-            url = url.Replace("?", "");
-            url = url.Replace("(", "+");
-            url = url.Replace(")", "+");
-            url = url.Replace("\"", "+");
-            url = url.Replace("'", "+");
-            url = url.Replace("@", "+");
-            url = url.Replace("#", "");
-
-            return url;
         }
     }
 }

@@ -46,11 +46,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helper\Image.cs" />
-    <Compile Include="Helper\Item.cs" />
+    <Compile Include="Helper\Serie.cs" />
+    <Compile Include="Helper\Video.cs" />
     <Compile Include="Helper\Stream.cs" />
     <Compile Include="Helper\Url.cs" />
-    <Compile Include="Helper\Xml.cs" />
+    <Compile Include="Helper\Xml\Extractor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scaffold\Movie.cs" />
+    <Compile Include="Scaffold\Serie.cs" />
     <Compile Include="Scaffold\Video.cs" />
     <Compile Include="Scaffold\Xml\Catalog.cs" />
     <Compile Include="Scaffold\Xml\Group.cs" />

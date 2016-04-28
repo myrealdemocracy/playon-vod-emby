@@ -8,9 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace PlayOn.Tools.Helper
+namespace PlayOn.Tools.Helper.Xml
 {
-    public class Xml
+    public class Extractor
     {
         protected static MemoryCache Cache = new MemoryCache("PlayOnXML");
 

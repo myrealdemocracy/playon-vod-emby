@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace PlayOn.Tools.Scaffold
 {
-    public class Video
+    public class Serie
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public string Overview { get; set; }
-        public string Series { get; set; }
-        public bool IsLive { get; set; }
+        public List<Video> Videos { get; set; }
     }
 }
