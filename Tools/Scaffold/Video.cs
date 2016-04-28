@@ -8,9 +8,10 @@ namespace PlayOn.Tools.Scaffold
 {
     public class Video
     {
+        public int Id { get; set; }
         public string Path { get; set; }
         public string Name { get; set; }
         public string Overview { get; set; }
-        public string Series { get; set; }
+        public string SeriesName { get; set; }
     }
 }

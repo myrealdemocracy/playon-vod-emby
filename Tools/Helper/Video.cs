@@ -71,7 +71,7 @@ namespace PlayOn.Tools.Helper
                 Path = path,
                 Name = name,
                 Overview = video.Description.Name,
-                Series = video.Series.Name
+                SeriesName = video.Series.Name
             };
         }
     }

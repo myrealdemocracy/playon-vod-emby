@@ -11,6 +11,11 @@ namespace PlayOn.Model.Logic
         public static List<Tools.Scaffold.Movie> All()
         {
             return new List<Tools.Scaffold.Movie>();
-        } 
+        }
+
+        public static void Save(Ado.Video video)
+        {
+            
+        }
     }
 }

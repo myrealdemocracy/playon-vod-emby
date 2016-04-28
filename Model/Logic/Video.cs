@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -9,21 +10,73 @@ namespace PlayOn.Model.Logic
 {
     public class Video
     {
+        public static List<Tools.Scaffold.Video> All()
+        {
+            var videos = new List<Tools.Scaffold.Video>();
+
+            using (var db = new Ado.PlayOnEntities())
+            {
+                foreach (var video in db.Videos)
+                {
+                    videos.Add(new Tools.Scaffold.Video
+                    {
+                        Id = video.Id,
+                        Name = video.Name,
+                        Overview = video.Overview,
+                        Path = video.Path
+                    });
+                }
+            }
+
+            return videos;
+        }
+
         public static void SaveAll()
         {
-            foreach (var video in Tools.Helper.Video.All())
+            foreach (var item in Tools.Helper.Video.All("nativefox|"))
             {
-                var isSeries = !String.IsNullOrEmpty(video.Series);
-                var rule = new Regex(@"s(?<season>[0-9]+)e(?<episode>[0-9]+)\s*");
-                var regex = rule.Match(video.Name);
-                var season = 0;
-                var episode = 0;
+                var video = Save(item);
 
-                if (regex.Success)
+                if(video.IsLive == 1) continue;
+
+                if (String.IsNullOrEmpty(item.SeriesName))
+                    Movie.Save(video);
+                else
                 {
-                    season = Convert.ToInt32(regex.Groups["season"].Value);
-                    episode = Convert.ToInt32(regex.Groups["episode"].Value);
+                    var serie = Serie.Save(item.SeriesName);
+                    Serie.Save(video, serie);
                 }
+            }
+        }
+
+        public static Ado.Video Save(Tools.Scaffold.Video video)
+        {
+            if(String.IsNullOrEmpty(video?.Path)) return new Ado.Video();
+
+            using (var db = new Ado.PlayOnEntities())
+            {
+                var adoVideo = db.Videos.FirstOrDefault(q => q.Path == video.Path) ?? new Ado.Video();
+
+                adoVideo.UpdatedAt = DateTime.UtcNow;
+
+                if (adoVideo.Id == 0)
+                {
+                    adoVideo.Name = video.Name;
+                    adoVideo.Path = video.Path;
+                    adoVideo.Provider = video.Path.Split(Convert.ToChar("|"))[0];
+                    adoVideo.IsLive = video.Path.Contains("|live|") || video.Path.Contains("|live tv|") ? 1 : 0;
+                    adoVideo.CreatedAt = DateTime.UtcNow;
+
+                    db.Videos.Add(adoVideo);
+                }
+                else
+                {
+                    db.Entry(adoVideo).State = EntityState.Modified;
+                }
+
+                db.SaveChanges();
+
+                return adoVideo;
             }
         }
     }

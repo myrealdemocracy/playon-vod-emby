@@ -14,7 +14,7 @@ namespace PlayOn.Endpoints.Controllers
         [HttpGet]
         public List<Tools.Scaffold.Video> All()
         {
-            return Tools.Helper.Video.All("nativefox|");
+            return Model.Logic.Video.All();
         }
 
         [Route("movies")]
@@ -29,6 +29,13 @@ namespace PlayOn.Endpoints.Controllers
         public List<Tools.Scaffold.Serie> Series()
         {
             return Model.Logic.Serie.All();
+        }
+
+        [Route("save/all")]
+        [HttpGet]
+        public void SaveAll()
+        {
+            Model.Logic.Video.SaveAll();
         }
     }
 }

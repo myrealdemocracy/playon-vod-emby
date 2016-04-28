@@ -8,7 +8,7 @@ namespace PlayOn.Tools.Scaffold
 {
     public class SeriesVideo : Video
     {
-        public int Season { get; set; }
-        public int Episode { get; set; }
+        public int? Season { get; set; }
+        public int? Episode { get; set; }
     }
 }
