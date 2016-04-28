@@ -22,6 +22,8 @@ namespace PlayOn.Model.Logic
 
                 using (var db = new Ado.PlayOnEntities())
                 {
+                    video = db.Videos.FirstOrDefault(q => q.Id == video.Id);
+
                     var adoMovie = db.Movies.FirstOrDefault(q => q.Name == name);
 
                     if (adoMovie == null) adoMovie = new Ado.Movie();

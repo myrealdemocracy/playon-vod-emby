@@ -88,8 +88,6 @@ namespace PlayOn.Model.Logic
         {
             var adoVideo = new Ado.Video();
 
-            if (String.IsNullOrEmpty(video?.Path)) return adoVideo;
-
             try
             {
                 using (var db = new Ado.PlayOnEntities())

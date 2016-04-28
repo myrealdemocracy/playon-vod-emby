@@ -42,7 +42,7 @@ namespace PlayOn.Endpoints.Controllers
         [HttpGet]
         public void SaveAll()
         {
-            Model.Logic.Video.SaveAll("hulu|");
+            Model.Logic.Video.SaveAll();
         }
     }
 }
