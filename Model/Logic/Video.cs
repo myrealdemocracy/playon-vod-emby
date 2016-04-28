@@ -37,7 +37,7 @@ namespace PlayOn.Model.Logic
             {
                 var video = Save(item);
 
-                if(video.IsLive == 1) continue;
+                if (video.IsLive == 1) continue;
 
                 if (String.IsNullOrEmpty(item.SeriesName))
                     Movie.Save(video);
