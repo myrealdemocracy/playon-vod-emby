@@ -10,7 +10,7 @@ namespace PlayOn.Model.Logic
 {
     public class Serie
     {
-        public static List<Tools.Scaffold.Serie> All()
+        public static List<Tools.Scaffold.Serie> All(int season = 0)
         {
             var series = new List<Tools.Scaffold.Serie>();
 
@@ -22,6 +22,8 @@ namespace PlayOn.Model.Logic
 
                     foreach (var video in serie.VideoSeries)
                     {
+                        if(season != 0 && season != video.Season) continue;
+
                         videos.Add(new Tools.Scaffold.SeriesVideo
                         {
                             Id = video.IdVideo,
@@ -37,7 +39,6 @@ namespace PlayOn.Model.Logic
                     {
                         Id = serie.Id,
                         Name = serie.Name,
-                        Path = serie.Path,
                         Videos = videos
                     });
                 }
@@ -46,54 +47,73 @@ namespace PlayOn.Model.Logic
             return series;
         }
 
-        public static void Save(Ado.Video video, Ado.Serie serie)
-        {
-            var rule = new Regex(@"s(?<season>[0-9]+)e(?<episode>[0-9]+)\s*");
-            var regex = rule.Match(video.Name);
-            var season = 0;
-            var episode = 0;
-
-            if (regex.Success)
-            {
-                season = Convert.ToInt32(regex.Groups["season"].Value);
-                episode = Convert.ToInt32(regex.Groups["episode"].Value);
-            }
-
-            using (var db = new Ado.PlayOnEntities())
-            {
-                if(db.VideoSeries.Any(q => q.IdVideo == video.Id && q.IdSerie == serie.Id)) return;
-
-                db.VideoSeries.Add(new Ado.VideoSerie
-                {
-                    Season = season,
-                    Episode = episode,
-                    Video = video,
-                    Serie = serie
-                });
-
-                db.SaveChanges();
-            }
-        }
-
         public static Ado.Serie Save(string seriesName)
         {
-            seriesName = seriesName.Trim();
+            var adoSerie = new Ado.Serie();
 
-            using (var db = new Ado.PlayOnEntities())
+            try
             {
-                var adoSerie = db.Series.FirstOrDefault(q => q.Name == seriesName) ?? new Ado.Serie();
+                seriesName = seriesName.Trim();
 
-                if (adoSerie.Id == 0)
+                using (var db = new Ado.PlayOnEntities())
                 {
-                    adoSerie.Name = seriesName;
-                    adoSerie.Path = seriesName.ToLower() + "|";
+                    adoSerie = db.Series.FirstOrDefault(q => q.Name == seriesName);
 
-                    db.Series.Add(adoSerie);
+                    if (adoSerie == null) adoSerie = new Ado.Serie();
+
+                    if (adoSerie.Id == 0)
+                    {
+                        adoSerie.Name = seriesName;
+
+                        db.Series.Add(adoSerie);
+
+                        db.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+            }
+
+            return adoSerie;
+        }
+
+        public static void Save(Ado.Video video, Ado.Serie serie)
+        {
+            try
+            {
+                var rule = new Regex(@"s(?<season>[0-9]+)e(?<episode>[0-9]+)\s*");
+                var regex = rule.Match(video.Name);
+                var season = 0;
+                var episode = 0;
+
+                if (regex.Success)
+                {
+                    season = Convert.ToInt32(regex.Groups["season"].Value);
+                    episode = Convert.ToInt32(regex.Groups["episode"].Value);
                 }
 
-                db.SaveChanges();
+                using (var db = new Ado.PlayOnEntities())
+                {
+                    var adoVideoSerie = db.VideoSeries.FirstOrDefault(q => q.IdVideo == video.Id && q.IdSerie == serie.Id);
 
-                return adoSerie;
+                    if (adoVideoSerie != null) return;
+
+                    db.VideoSeries.Add(new Ado.VideoSerie
+                    {
+                        IdVideo = video.Id,
+                        IdSerie = serie.Id,
+                        Season = season,
+                        Episode = episode,
+                        //Video = video,
+                        //Serie = serie
+                    });
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception exception)
+            {
             }
         }
     }

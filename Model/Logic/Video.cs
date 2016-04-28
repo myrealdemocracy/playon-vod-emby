@@ -31,53 +31,99 @@ namespace PlayOn.Model.Logic
             return videos;
         }
 
-        public static void SaveAll()
+        public static void SaveAll(string path = null)
         {
-            foreach (var item in Tools.Helper.Video.All("nativefox|"))
+            var url = Tools.Helper.Url.Generate(path);
+
+            var items = String.IsNullOrEmpty(path)
+                ? Tools.Helper.Xml.Extractor.Items<Tools.Scaffold.Xml.Catalog>(url).Items
+                : Tools.Helper.Xml.Extractor.Items<Tools.Scaffold.Xml.Group>(url).Items;
+
+            foreach (var item in items)
             {
-                var video = Save(item);
+                Generate(item, items, path);
+            }
+        }
 
-                if (video.IsLive == 1) continue;
+        public static void Generate(Tools.Scaffold.Xml.Item item, List<Tools.Scaffold.Xml.Item> items, string path)
+        {
+            if (item.Href.Contains("playon") ||
+                item.Href.Contains("playmark") ||
+                item.Href.Contains("playlater") ||
+                item.Name == "Clips" ||
+                item.Name == "Video Clips" ||
+                item.Name == "Clips & Extras" ||
+                item.Name == "Episode Highlights" ||
+                item.Name == "Your History" ||
+                item.Name == "Your Queue" ||
+                item.Name == "Your Subscriptions" ||
+                item.Name == "Playback Options" ||
+                item.Name.Contains("This folder contains no content"))
 
-                if (String.IsNullOrEmpty(item.SeriesName))
+                return;
+
+            if (item.Type == "video")
+            {
+                var videoItem = Tools.Helper.Video.Mapper(item.Href, path);
+
+                var video = Save(videoItem);
+
+                if (video.IsLive == 1) return;
+
+                if (String.IsNullOrEmpty(videoItem.SeriesName))
+                {
                     Movie.Save(video);
+                }
                 else
                 {
-                    var serie = Serie.Save(item.SeriesName);
+                    var serie = Serie.Save(videoItem.SeriesName);
                     Serie.Save(video, serie);
                 }
             }
+            else
+                SaveAll(path + item.Name.ToLower() + "|");
         }
 
         public static Ado.Video Save(Tools.Scaffold.Video video)
         {
-            if(String.IsNullOrEmpty(video?.Path)) return new Ado.Video();
+            var adoVideo = new Ado.Video();
 
-            using (var db = new Ado.PlayOnEntities())
+            if (String.IsNullOrEmpty(video?.Path)) return adoVideo;
+
+            try
             {
-                var adoVideo = db.Videos.FirstOrDefault(q => q.Path == video.Path) ?? new Ado.Video();
-
-                adoVideo.UpdatedAt = DateTime.UtcNow;
-
-                if (adoVideo.Id == 0)
+                using (var db = new Ado.PlayOnEntities())
                 {
-                    adoVideo.Name = video.Name;
-                    adoVideo.Path = video.Path;
-                    adoVideo.Provider = video.Path.Split(Convert.ToChar("|"))[0];
-                    adoVideo.IsLive = video.Path.Contains("|live|") || video.Path.Contains("|live tv|") ? 1 : 0;
-                    adoVideo.CreatedAt = DateTime.UtcNow;
+                    adoVideo = db.Videos.FirstOrDefault(q => q.Path == video.Path);
 
-                    db.Videos.Add(adoVideo);
+                    if (adoVideo == null) adoVideo = new Ado.Video();
+
+                    adoVideo.UpdatedAt = DateTime.UtcNow;
+
+                    if (adoVideo.Id == 0)
+                    {
+                        adoVideo.Name = video.Name;
+                        adoVideo.Overview = video.Overview;
+                        adoVideo.Path = video.Path;
+                        adoVideo.Provider = video.Path.Split(Convert.ToChar("|"))[0];
+                        adoVideo.IsLive = video.Path.Contains("|live|") || video.Path.Contains("|live tv|") ? 1 : 0;
+                        adoVideo.CreatedAt = DateTime.UtcNow;
+
+                        db.Videos.Add(adoVideo);
+                    }
+                    else
+                    {
+                        db.Entry(adoVideo).State = EntityState.Modified;
+                    }
+
+                    db.SaveChanges();
                 }
-                else
-                {
-                    db.Entry(adoVideo).State = EntityState.Modified;
-                }
-
-                db.SaveChanges();
-
-                return adoVideo;
             }
+            catch (Exception exception)
+            {
+            }
+
+            return adoVideo;
         }
     }
 }

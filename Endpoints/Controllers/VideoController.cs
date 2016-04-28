@@ -17,25 +17,32 @@ namespace PlayOn.Endpoints.Controllers
             return Model.Logic.Video.All();
         }
 
-        [Route("movies")]
+        [Route("movies/all")]
         [HttpGet]
         public List<Tools.Scaffold.Movie> Movies()
         {
             return Model.Logic.Movie.All();
         }
 
-        [Route("series")]
+        [Route("series/all")]
         [HttpGet]
         public List<Tools.Scaffold.Serie> Series()
         {
             return Model.Logic.Serie.All();
         }
 
+        [Route("series/{season:int}")]
+        [HttpGet]
+        public List<Tools.Scaffold.Serie> SerieSeason(int season)
+        {
+            return Model.Logic.Serie.All(season);
+        }
+
         [Route("save/all")]
         [HttpGet]
         public void SaveAll()
         {
-            Model.Logic.Video.SaveAll();
+            Model.Logic.Video.SaveAll("hulu|");
         }
     }
 }

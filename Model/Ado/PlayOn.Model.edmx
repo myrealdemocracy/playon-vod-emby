@@ -11,22 +11,20 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="200" />
-          <Property Name="Path" Type="nvarchar" MaxLength="450" Nullable="false" />
         </EntityType>
         <EntityType Name="Serie">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="200" />
-          <Property Name="Path" Type="nvarchar" MaxLength="450" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" Nullable="false" />
         </EntityType>
         <EntityType Name="Video">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="200" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="Overview" Type="nvarchar(max)" />
           <Property Name="Path" Type="nvarchar" MaxLength="450" Nullable="false" />
           <Property Name="Provider" Type="nvarchar" MaxLength="50" />
@@ -155,7 +153,6 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Path" Type="String" MaxLength="450" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Videos" Relationship="PlayOn.Model.Ado.VideoMovie" FromRole="Movie" ToRole="Video" />
         </EntityType>
         <EntityType Name="Serie">
@@ -163,8 +160,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Path" Type="String" MaxLength="450" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="VideoSeries" Relationship="PlayOn.Model.Ado.FK_VideoSerie_Serie" FromRole="Serie" ToRole="VideoSerie" />
         </EntityType>
         <EntityType Name="Video">
@@ -172,7 +168,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="Overview" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Path" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
           <Property Name="Provider" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
@@ -235,7 +231,6 @@
           <EntitySetMapping Name="Movies">
             <EntityTypeMapping TypeName="PlayOn.Model.Ado.Movie">
               <MappingFragment StoreEntitySet="Movie">
-                <ScalarProperty Name="Path" ColumnName="Path" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
@@ -244,7 +239,6 @@
           <EntitySetMapping Name="Series">
             <EntityTypeMapping TypeName="PlayOn.Model.Ado.Serie">
               <MappingFragment StoreEntitySet="Serie">
-                <ScalarProperty Name="Path" ColumnName="Path" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
