@@ -42,6 +42,15 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Ado\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Tools\PlayOn.Tools.csproj">
+      <Project>{08d5420b-4ee6-468d-9bb8-12ce9437ef1b}</Project>
+      <Name>PlayOn.Tools</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace PlayOn.Tools.Scaffold
+namespace PlayOn.Tools.Scaffold.Xml
 {
     [Serializable]
     [XmlRoot(ElementName = "group")]

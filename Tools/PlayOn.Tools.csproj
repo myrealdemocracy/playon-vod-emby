@@ -34,18 +34,6 @@
       <HintPath>..\packages\Interfaces.IO.1.0.0.5\lib\portable-net45+sl4+wp71+win8+wpa81\Interfaces.IO.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MediaBrowser.Common, Version=3.0.5942.36705, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MediaBrowser.Common.3.0.645\lib\net45\MediaBrowser.Common.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MediaBrowser.Controller, Version=3.0.5942.36704, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MediaBrowser.Server.Core.3.0.645\lib\net45\MediaBrowser.Controller.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MediaBrowser.Model, Version=3.0.5942.36706, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MediaBrowser.Common.3.0.645\lib\net45\MediaBrowser.Model.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Caching" />
@@ -57,19 +45,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helper\Folder.cs" />
-    <Compile Include="Helper\Id.cs" />
     <Compile Include="Helper\Image.cs" />
     <Compile Include="Helper\Item.cs" />
     <Compile Include="Helper\Stream.cs" />
     <Compile Include="Helper\Url.cs" />
-    <Compile Include="Helper\Video.cs" />
     <Compile Include="Helper\Xml.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scaffold\Catalog.cs" />
-    <Compile Include="Scaffold\Group.cs" />
-    <Compile Include="Scaffold\Item.cs" />
     <Compile Include="Scaffold\Video.cs" />
+    <Compile Include="Scaffold\Xml\Catalog.cs" />
+    <Compile Include="Scaffold\Xml\Group.cs" />
+    <Compile Include="Scaffold\Xml\Item.cs" />
+    <Compile Include="Scaffold\Xml\Video.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

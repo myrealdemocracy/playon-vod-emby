@@ -15,7 +15,6 @@ using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Logging;
 using MediaBrowser.Model.MediaInfo;
 using MediaBrowser.Model.Serialization;
-using Helper = PlayOn.Tools.Helper;
 
 namespace PlayOn.Emby
 {
@@ -23,14 +22,14 @@ namespace PlayOn.Emby
     {
         public static IHttpClient HttpClient;
         public static ILogger Logger;
-        public static IXmlSerializer XmlSerializer;
+        public static IJsonSerializer JsonSerializer;
         public static CancellationToken CancellationToken;
 
-        public Channel(IHttpClient httpClient, ILogManager logManager, IXmlSerializer xmlSerializer)
+        public Channel(IHttpClient httpClient, ILogManager logManager, IJsonSerializer jsonSerializer)
         {
             HttpClient = httpClient;
             Logger = logManager.GetLogger(GetType().Name);
-            XmlSerializer = xmlSerializer;
+            JsonSerializer = jsonSerializer;
         }
 
         public InternalChannelFeatures GetChannelFeatures()
@@ -51,7 +50,7 @@ namespace PlayOn.Emby
 
                 SupportsContentDownloading = true,
                 SupportsSortOrderToggle = false,
-                AutoRefreshLevels = 3
+                AutoRefreshLevels = 5
             };
         }
 
@@ -66,7 +65,7 @@ namespace PlayOn.Emby
 
             return Task.Run(() =>
             {
-                var channelItemInfos = Helper.Item.List(query.FolderId);
+                var channelItemInfos = Helper.Channel.Items(query.FolderId);
 
                 return new ChannelItemResult
                 {

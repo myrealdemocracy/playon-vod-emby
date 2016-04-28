@@ -10,63 +10,64 @@ namespace PlayOn.Tools.Helper
     {
         public const string Base = "http://192.168.3.200:54479";
         public const string Xml = "/data/data.xml";
-        public const string Video = "http://playon.local/video?id=";
-        public const string Image = "http://playon.local/image?id=";
+        public const string Video = "http://playon.local/url/video?id=";
+        public const string Image = "http://playon.local/url/image?id=";
 
-        public static string Generate(string query = null)
+        public static string Generate(string path = null)
         {
-            var url = Xml;
+            var baseUrl = Xml;
 
-            if (!String.IsNullOrEmpty(query))
+            if (!String.IsNullOrEmpty(path))
             {
-                query = Clean(query);
+                path = Clean(path);
 
-                var terms = query.Split(Convert.ToChar("|"));
+                var terms = path.Split(Convert.ToChar("|"));
 
-                url += "?id=" + terms[0];
+                baseUrl += "?id=" + terms[0];
 
                 if (terms.Length > 0)
                 {
-                    query = query.Replace(terms[0] + "|", "");
+                    path = path.Replace(terms[0] + "|", "");
 
-                    query = query.Length > 1 ? query.Substring(0, query.Length - 1) : query;
+                    path = path.Length > 1 ? path.Substring(0, path.Length - 1) : path;
 
-                    url = Find(url, query);
+                    baseUrl = Find(baseUrl, path);
                 }
             }
 
-            return url;
+            return baseUrl;
         }
 
-        public static string Find(string url, string query)
+        public static string Find(string baseUrl, string path)
         {
             var count = 0;
-            var items = Helper.Xml.Items<Scaffold.Group>(url).Items;
-            var subItem = new Scaffold.Item();
+            var items = Helper.Xml.Items<Scaffold.Xml.Group>(baseUrl).Items;
+            var subItem = new Scaffold.Xml.Item();
+            var terms = path.Split(Convert.ToChar("|"));
 
-            foreach (var item in query.Split(Convert.ToChar("|")))
+            foreach (var term in terms)
             {
-                switch (item)
+                switch (term)
                 {
                     case "video":
-                        url = Base + "/" + Helper.Xml.Items<Scaffold.Video>(url).Item.Src;
+                        baseUrl = Base + "/" + Helper.Xml.Items<Scaffold.Xml.Video>(baseUrl).Item.Src;
                         break;
                     case "image":
-                        url = count == 0 ? Helper.Image.Default(url, true) : Helper.Image.Mapper(subItem);
+                        baseUrl = count == 0 ? Helper.Image.Default(baseUrl, true) : Helper.Image.Mapper(subItem);
                         break;
                     default:
-                        if (count > 0) items = Helper.Xml.Items<Scaffold.Group>(url).Items;
+                        if (count > 0) items = Helper.Xml.Items<Scaffold.Xml.Group>(baseUrl).Items;
 
-                        subItem = items.FirstOrDefault(q => String.Equals(Clean(q.Name), item, StringComparison.CurrentCultureIgnoreCase));
+                        subItem = items.FirstOrDefault(q => String.Equals(Clean(q.Name), term, StringComparison.CurrentCultureIgnoreCase));
 
-                        if (subItem != null) url = subItem.Href;
+                        if (subItem != null) baseUrl = subItem.Href;
                         break;
                 }
 
                 count++;
             }
 
-            return url;
+            return baseUrl;
         }
 
         public static string Clean(string url)

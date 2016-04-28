@@ -8,7 +8,7 @@ namespace PlayOn.Tools.Helper
 {
     public class Image
     {
-        public static string Mapper(Scaffold.Item item)
+        public static string Mapper(Scaffold.Xml.Item item)
         {
             var image = "";
 
@@ -21,7 +21,13 @@ namespace PlayOn.Tools.Helper
 
         public static string Default(string href, bool addBase = false)
         {
-            var providerId = Id.Mapper(href);
+            var providerId = href.Split(Convert.ToChar("="))[1];
+
+            if (providerId.Contains("-"))
+            {
+                providerId = providerId.Split(Convert.ToChar("-"))[0];
+            }
+
             var providerImage = "/images/provider.png?id=" + providerId;
 
             return (addBase ? Url.Base : "") + providerImage;
