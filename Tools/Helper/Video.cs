@@ -15,6 +15,8 @@ namespace PlayOn.Tools.Helper
 
             if (String.IsNullOrEmpty(video.Item?.Name)) return new Scaffold.Video();
 
+            var folder = path.Split(Convert.ToChar("|")).LastOrDefault();
+
             path = path + video.Item.Name.ToLower() + "|";
 
             if (String.IsNullOrEmpty(video.Series?.Name)) video.Series = new Scaffold.Xml.Info { Name = String.Empty };
@@ -30,6 +32,7 @@ namespace PlayOn.Tools.Helper
                 Path = path,
                 Name = name,
                 Overview = video.Description.Name,
+                Folder = folder,
                 SeriesName = video.Series.Name
             };
         }

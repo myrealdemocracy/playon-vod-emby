@@ -16,23 +16,38 @@ namespace PlayOn.Tools.Helper.Xml
 
         public static T Items<T>(string url) where T : class, new()
         {
-            var finalUrl = Url.Base + url + (url.Contains("?") ? "&" : "?") + "flm=long";
+            var xml = new T();
 
-            if (url.Contains("error")) return new T();
+            try
+            {
+                var finalUrl = Url.Base + url + (url.Contains("?") ? "&" : "?") + "flm=long";
 
-            if (Cache[url] != null) return Cache[url] as T;
+                if (url.Contains("error")) return new T();
 
-            var client = new WebClient();
+                if (Cache[url] != null) return Cache[url] as T;
 
-            var data = client.DownloadString(finalUrl);
+                var client = new WebClient();
 
-            var xmlSerializer = new XmlSerializer(typeof (T));
+                var data = client.DownloadString(finalUrl);
 
-            var xml = xmlSerializer.Deserialize(Stream.GenerateFromString(data)) as T;
+                var xmlSerializer = new XmlSerializer(typeof(T));
 
-            if (xml == null) return new T();
+                xml = xmlSerializer.Deserialize(Stream.GenerateFromString(data)) as T;
 
-            Cache.Add(url, xml, DateTimeOffset.Now.AddDays(1));
+                if (xml == null) return new T();
+
+                Cache.Add(url, xml, DateTimeOffset.Now.AddHours(6));
+            }
+            catch (WebException webException)
+            {
+                if (((HttpWebResponse)webException.Response).StatusCode == HttpStatusCode.NotFound)
+                {
+                    foreach (var cache in Cache.Select(s => s.Key))
+                    {
+                        Cache.Remove(cache);
+                    }
+                }
+            }
 
             return xml;
         }

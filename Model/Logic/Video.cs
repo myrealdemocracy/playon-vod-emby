@@ -58,6 +58,8 @@ namespace PlayOn.Model.Logic
                 item.Name == "Your Queue" ||
                 item.Name == "Your Subscriptions" ||
                 item.Name == "Playback Options" ||
+                item.Name == "Suggestions For You" ||
+                item.Name.StartsWith("Top Picks for") ||
                 item.Name.Contains("This folder contains no content"))
 
                 return;
