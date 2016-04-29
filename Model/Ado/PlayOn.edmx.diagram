@@ -12,6 +12,9 @@
         <AssociationConnector Association="PlayOn.Model.Ado.FK_VideoSerie_Serie" ManuallyRouted="false" />
         <AssociationConnector Association="PlayOn.Model.Ado.FK_VideoSerie_Video" ManuallyRouted="false" />
         <AssociationConnector Association="PlayOn.Model.Ado.VideoMovie" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="PlayOn.Model.Ado.Category" Width="1.5" PointX="3.875" PointY="4.625" />
+        <AssociationConnector Association="PlayOn.Model.Ado.MovieCategory" />
+        <AssociationConnector Association="PlayOn.Model.Ado.SerieCategory" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

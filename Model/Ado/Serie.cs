@@ -18,6 +18,7 @@ namespace PlayOn.Model.Ado
         public Serie()
         {
             this.VideoSeries = new HashSet<VideoSerie>();
+            this.Categories = new HashSet<Category>();
         }
     
         public int Id { get; set; }
@@ -25,5 +26,7 @@ namespace PlayOn.Model.Ado
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<VideoSerie> VideoSeries { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Category> Categories { get; set; }
     }
 }

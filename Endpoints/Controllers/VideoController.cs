@@ -33,16 +33,9 @@ namespace PlayOn.Endpoints.Controllers
 
         [Route("series/{season:int}")]
         [HttpGet]
-        public List<Tools.Scaffold.Serie> SerieSeason(int season)
+        public List<Tools.Scaffold.Serie> SerieSeason()
         {
-            return Model.Logic.Serie.All(season);
-        }
-
-        [Route("save/all")]
-        [HttpGet]
-        public void SaveAll()
-        {
-            Model.Logic.Video.SaveAll();
+            return Model.Logic.Serie.All();
         }
     }
 }

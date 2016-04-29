@@ -59,6 +59,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ado\Category.cs">
+      <DependentUpon>PlayOn.tt</DependentUpon>
+    </Compile>
     <Compile Include="Ado\Movie.cs">
       <DependentUpon>PlayOn.tt</DependentUpon>
     </Compile>

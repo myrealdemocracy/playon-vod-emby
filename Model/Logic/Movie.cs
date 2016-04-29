@@ -18,33 +18,22 @@ namespace PlayOn.Model.Logic
             return new List<Tools.Scaffold.Movie>();
         }
 
-        public static void Save(Ado.Video video)
+        public static void Save(Ado.Video video, Ado.Movie movie)
         {
             try
             {
-                var name = video.Name.Trim();
-
                 using (var db = new Ado.PlayOnEntities())
                 {
                     video = db.Videos.FirstOrDefault(q => q.Id == video.Id);
 
-                    var adoMovie = db.Movies.FirstOrDefault(q => q.Name == name);
+                    movie = db.Movies.FirstOrDefault(q => q.Id == movie.Id);
+                    movie.Videos.Add(video);
 
-                    if (adoMovie == null) adoMovie = new Ado.Movie();
+                    var anime = db.Categories.FirstOrDefault(q => q.Name == "Anime");
 
-                    if (adoMovie.Id == 0)
-                    {
-                        adoMovie.Name = name;
+                    if(video.Path.Contains("|anime|")) movie.Categories.Add(anime);
 
-                        db.Movies.Add(adoMovie);
-                    }
-                    else
-                    {
-                        db.Entry(adoMovie).State = EntityState.Modified;
-                    }
-
-                    adoMovie.Videos.Add(video);
-
+                    db.Entry(movie).State = EntityState.Modified;
                     db.SaveChanges();
                 }
             }
@@ -52,6 +41,37 @@ namespace PlayOn.Model.Logic
             {
                 Logger.Error(exception);
             }
+        }
+
+        public static Ado.Movie Save(string name)
+        {
+            var adoMovie = new Ado.Movie();
+
+            try
+            {
+                using (var db = new Ado.PlayOnEntities())
+                {
+                    adoMovie = db.Movies.FirstOrDefault(q => q.Name == name);
+
+                    if (adoMovie == null)
+                    {
+                        adoMovie = new Ado.Movie
+                        {
+                            Name = name
+                        };
+
+                        db.Movies.Add(adoMovie);
+
+                        db.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+            }
+
+            return adoMovie;
         }
     }
 }

@@ -41,17 +41,17 @@ namespace PlayOn.Model.Logic
 
             foreach (var item in items)
             {
-                Logger.Debug("SaveAll --- item.Name: " + item.Name);
-                Logger.Debug("SaveAll --- item.Href: " + item.Href);
+                Logger.Debug("item.Name: " + item.Name);
+                Logger.Debug("item.Href: " + item.Href);
 
                 if (Tools.Helper.Ignore.Item(item))
                 {
-                    Logger.Debug("SaveAll --- ignoring");
+                    Logger.Debug("ignoring");
 
                     continue;
                 }
 
-                Logger.Debug("SaveAll --- calling SaveLoop");
+                Logger.Debug("calling SaveLoop");
 
                 SaveLoop(item.Href.Split(Convert.ToChar("="))[1] + "|");
             }
@@ -61,9 +61,9 @@ namespace PlayOn.Model.Logic
         {
             var url = Tools.Helper.Url.Generate(path);
 
-            Logger.Debug("SaveLoo --- path     : " + path);
-            Logger.Debug("SaveLoo --- url      : " + url);
-            Logger.Debug("SaveLoo --- calling SaveForEach");
+            Logger.Debug("path: " + path);
+            Logger.Debug("url: " + url);
+            Logger.Debug("calling SaveForEach");
 
             SaveForEach(url, path);
         }
@@ -74,30 +74,30 @@ namespace PlayOn.Model.Logic
             {
                 var nextPath = path + item.Name.ToLower() + "|";
 
-                Logger.Debug("SaveFor --- path     : " + path);
-                Logger.Debug("SaveFor --- nextPath : " + nextPath);
-                Logger.Debug("SaveFor --- item.Name: " + item.Name);
-                Logger.Debug("SaveFor --- item.Type: " + item.Type);
-                Logger.Debug("SaveFor --- item.Href: " + item.Href);
+                Logger.Debug("path: " + path);
+                Logger.Debug("nextPath: " + nextPath);
+                Logger.Debug("item.Name: " + item.Name);
+                Logger.Debug("item.Type: " + item.Type);
+                Logger.Debug("item.Href: " + item.Href);
 
 
                 if (Tools.Helper.Ignore.Item(item) ||
                     String.IsNullOrEmpty(nextPath) ||
                     path == nextPath)
                 {
-                    Logger.Debug("SaveFor --- ignoring");
+                    Logger.Debug("ignoring");
                     continue;
                 }
 
                 if (item.Type != "video")
                 {
-                    Logger.Debug("SaveFor --- next loop");
+                    Logger.Debug("next loop");
 
                     SaveLoop(nextPath);
                 }
                 else
                 {
-                    Logger.Debug("SaveFor --- saving video");
+                    Logger.Debug("saving video");
 
                     var videoItem = Tools.Helper.Video.Mapper(item.Href, path);
 
@@ -107,7 +107,8 @@ namespace PlayOn.Model.Logic
 
                     if (String.IsNullOrEmpty(videoItem.SeriesName))
                     {
-                        Movie.Save(video);
+                        var movie = Movie.Save(videoItem.Name);
+                        Movie.Save(video, movie);
                     }
                     else
                     {

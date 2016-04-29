@@ -12,21 +12,21 @@ namespace PlayOn.Model.Ado
     using System;
     using System.Collections.Generic;
     
-    public partial class Movie
+    public partial class Category
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Movie()
+        public Category()
         {
-            this.Videos = new HashSet<Video>();
-            this.Categories = new HashSet<Category>();
+            this.Movies = new HashSet<Movie>();
+            this.Series = new HashSet<Serie>();
         }
     
         public int Id { get; set; }
         public string Name { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Video> Videos { get; set; }
+        public virtual ICollection<Movie> Movies { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Category> Categories { get; set; }
+        public virtual ICollection<Serie> Series { get; set; }
     }
 }

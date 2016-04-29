@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constant\Category.cs" />
     <Compile Include="Helper\Ignore.cs" />
     <Compile Include="Helper\Image.cs" />
     <Compile Include="Helper\Serie.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="Scaffold\BaseVideo.cs" />
     <Compile Include="Scaffold\Movie.cs" />
     <Compile Include="Scaffold\MovieVideo.cs" />
+    <Compile Include="Scaffold\Season.cs" />
     <Compile Include="Scaffold\Serie.cs" />
     <Compile Include="Scaffold\SeriesVideo.cs" />
     <Compile Include="Scaffold\Video.cs" />

@@ -13,7 +13,7 @@ namespace PlayOn.Model.Logic
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public static List<Tools.Scaffold.Serie> All(int season = 0)
+        public static List<Tools.Scaffold.Serie> All()
         {
             var series = new List<Tools.Scaffold.Serie>();
 
@@ -21,20 +21,32 @@ namespace PlayOn.Model.Logic
             {
                 foreach (var serie in db.Series)
                 {
-                    var videos = new List<Tools.Scaffold.SeriesVideo>();
+                    var seasons = new List<Tools.Scaffold.Season>();
 
-                    foreach (var video in serie.VideoSeries)
+                    for (var season = 0; season < 3000; season++)
                     {
-                        if(season != 0 && season != video.Season) continue;
+                        var videosSeason = serie.VideoSeries.Where(q => q.Season == season);
 
-                        videos.Add(new Tools.Scaffold.SeriesVideo
+                        if(videosSeason.Count() == 0) continue;
+
+                        var videos = new List<Tools.Scaffold.SeriesVideo>();
+
+                        foreach (var video in videosSeason)
                         {
-                            Id = video.IdVideo,
-                            Name = video.Video.Name,
-                            Overview = video.Video.Overview,
-                            Path = video.Video.Path,
-                            Season = video.Season,
-                            Episode = video.Episode
+                            videos.Add(new Tools.Scaffold.SeriesVideo
+                            {
+                                Id = video.IdVideo,
+                                Episode = video.Episode,
+                                Name = video.Video.Name,
+                                Overview = video.Video.Overview,
+                                Path = video.Video.Path
+                            });
+                        }
+
+                        seasons.Add(new Tools.Scaffold.Season
+                        {
+                            Number = season,
+                            Videos = videos
                         });
                     }
 
@@ -42,7 +54,7 @@ namespace PlayOn.Model.Logic
                     {
                         Id = serie.Id,
                         Name = serie.Name,
-                        Videos = videos
+                        Seasons = seasons
                     });
                 }
             }
@@ -102,6 +114,10 @@ namespace PlayOn.Model.Logic
                     var adoVideoSerie = db.VideoSeries.FirstOrDefault(q => q.IdVideo == video.Id && q.IdSerie == serie.Id);
 
                     if (adoVideoSerie != null) return;
+
+                    var anime = db.Categories.FirstOrDefault(q => q.Name == "Anime");
+
+                    if (video.Path.Contains("|anime|")) serie.Categories.Add(anime);
 
                     db.VideoSeries.Add(new Ado.VideoSerie
                     {
