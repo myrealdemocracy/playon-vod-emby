@@ -26,7 +26,7 @@ namespace PlayOn.Emby.Rest
                 {
                     var response = HttpClient.SendAsync(new HttpRequestOptions
                     {
-                        Url = route,
+                        Url = "http://playon.local" + route,
                         EnableHttpCompression = true,
                         CacheMode = CacheMode.None,
                         CancellationToken = cancellationToken

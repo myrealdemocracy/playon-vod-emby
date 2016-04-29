@@ -25,6 +25,8 @@ namespace PlayOn.Emby
         public static IJsonSerializer JsonSerializer;
         public static CancellationToken CancellationToken;
 
+        public static Scaffold.Category Categories { get; set; }
+
         public Channel(IHttpClient httpClient, ILogManager logManager, IJsonSerializer jsonSerializer)
         {
             HttpClient = httpClient;
