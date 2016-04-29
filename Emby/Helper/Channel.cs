@@ -14,49 +14,57 @@ namespace PlayOn.Emby.Helper
     {
         protected static ILogger Logger = Emby.Channel.Logger;
 
-        public static List<ChannelItemInfo> Items(string currentFolder)
+        public static async Task<List<ChannelItemInfo>> Items(string currentFolder, CancellationToken cancellationToken)
         {
-            var channelItemInfos = new List<ChannelItemInfo>();
+            return await Task.Run(async () =>
+            {
+                var channelItemInfos = new List<ChannelItemInfo>();
 
-            if (String.IsNullOrEmpty(currentFolder))
-            {
-                channelItemInfos = new List<ChannelItemInfo>
+                if (String.IsNullOrEmpty(currentFolder))
                 {
-                    new ChannelItemInfo
+                    channelItemInfos = new List<ChannelItemInfo>
                     {
-                        Id = "movies",
-                        Name = "Movies",
-                        Type = ChannelItemType.Folder
-                    },
-                    new ChannelItemInfo
-                    {
-                        Id = "series",
-                        Name = "TV Shows",
-                        Type = ChannelItemType.Folder
-                    }
-                };
-            }
-            else if(currentFolder == "movies" || currentFolder == "series")
-            {
-                var categories = Task.Run(async () =>
+                        new ChannelItemInfo
+                        {
+                            Id = "movies",
+                            Name = "Movies",
+                            Type = ChannelItemType.Folder
+                        },
+                        new ChannelItemInfo
+                        {
+                            Id = "series",
+                            Name = "TV Shows",
+                            Type = ChannelItemType.Folder
+                        }
+                    };
+                }
+                else if (currentFolder == "movies" || currentFolder == "series")
                 {
                     var rest = new Rest.Category();
 
-                    return await rest.All(Emby.Channel.CancellationToken);
-                });
+                    var categories = await rest.All(cancellationToken);
 
-                foreach (var item in categories.Result.All)
-                {
-                    channelItemInfos.Add(new ChannelItemInfo
+                    foreach (var item in categories.All)
                     {
-                        Id = currentFolder + "|" + item.Key.ToLower(),
-                        Name = item.Key,
-                        Type = ChannelItemType.Folder
-                    });
+                        channelItemInfos.Add(new ChannelItemInfo
+                        {
+                            Id = currentFolder + "|" + item.ToLower(),
+                            Name = item,
+                            Type = ChannelItemType.Folder
+                        });
+                    }
                 }
-            }
+                else if (currentFolder.Contains("movies|"))
+                {
 
-            return channelItemInfos;
+                }
+                else if (currentFolder.Contains("series|"))
+                {
+
+                }
+
+                return channelItemInfos;
+            }, cancellationToken);
         }
     }
 }

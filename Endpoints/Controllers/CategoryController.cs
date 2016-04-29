@@ -16,7 +16,7 @@ namespace PlayOn.Endpoints.Controllers
         {
             return new Tools.Constant.Category
             {
-                All = Tools.Constant.Category.Items
+                All = Tools.Constant.Category.Items.Select(s => s.Key).ToList()
             };
         }
     }

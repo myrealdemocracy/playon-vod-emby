@@ -15,7 +15,31 @@ namespace PlayOn.Model.Logic
 
         public static List<Tools.Scaffold.Movie> All()
         {
-            return new List<Tools.Scaffold.Movie>();
+            var movies = new List<Tools.Scaffold.Movie>();
+
+            using (var db = new Ado.PlayOnEntities())
+            {
+                foreach (var movie in db.Movies)
+                {
+                    movies.Add(new Tools.Scaffold.Movie
+                    {
+                        Id = movie.Id,
+                        Name = movie.Name
+                    });
+                }
+            }
+
+            return movies;
+        }
+
+        public static List<Tools.Scaffold.Movie> ByCategory(string category)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static List<Tools.Scaffold.Video> ByName(string category)
+        {
+            throw new NotImplementedException();
         }
 
         public static void Save(Ado.Video video, Ado.Movie movie)

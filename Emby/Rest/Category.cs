@@ -15,9 +15,7 @@ namespace PlayOn.Emby.Rest
 
             try
             {
-                if (Channel.Categories != null) return Channel.Categories;
-
-                Channel.Categories = await Request<Scaffold.Category>("/category/all", cancellationToken);
+                categories = await Request<Scaffold.Category>("/category/all", cancellationToken);
             }
             catch (Exception exception)
             {

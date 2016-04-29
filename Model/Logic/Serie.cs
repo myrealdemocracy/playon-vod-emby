@@ -21,45 +21,35 @@ namespace PlayOn.Model.Logic
             {
                 foreach (var serie in db.Series)
                 {
-                    var seasons = new List<Tools.Scaffold.Season>();
-
-                    for (var season = 0; season < 3000; season++)
-                    {
-                        var videosSeason = serie.VideoSeries.Where(q => q.Season == season);
-
-                        if(videosSeason.Count() == 0) continue;
-
-                        var videos = new List<Tools.Scaffold.SeriesVideo>();
-
-                        foreach (var video in videosSeason)
-                        {
-                            videos.Add(new Tools.Scaffold.SeriesVideo
-                            {
-                                Id = video.IdVideo,
-                                Episode = video.Episode,
-                                Name = video.Video.Name,
-                                Overview = video.Video.Overview,
-                                Path = video.Video.Path
-                            });
-                        }
-
-                        seasons.Add(new Tools.Scaffold.Season
-                        {
-                            Number = season,
-                            Videos = videos
-                        });
-                    }
-
                     series.Add(new Tools.Scaffold.Serie
                     {
                         Id = serie.Id,
-                        Name = serie.Name,
-                        Seasons = seasons
+                        Name = serie.Name
                     });
                 }
             }
 
             return series;
+        }
+
+        public static List<Tools.Scaffold.Season> AllSeasons(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static List<Tools.Scaffold.Serie> ByCategory(string category)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static List<Tools.Scaffold.Season> BySeason(string name, int season)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static List<Tools.Scaffold.Video> ByEpisode(string name, int season, int episode)
+        {
+            throw new NotImplementedException();
         }
 
         public static Ado.Serie Save(string seriesName)

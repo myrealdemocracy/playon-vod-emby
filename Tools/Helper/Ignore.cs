@@ -25,7 +25,6 @@ namespace PlayOn.Tools.Helper
                 item.Name.ToLower() == "my list" ||
                 item.Name.ToLower() == "recently added" ||
                 item.Name.ToLower() == "new releases" ||
-                (item.Href.Contains("netflix") && item.Name.ToLower() == "browse genres") ||
                 item.Name.StartsWith("Top Picks for") ||
                 item.Name.Contains("This folder contains no content") ||
                 String.IsNullOrEmpty(item.Name);

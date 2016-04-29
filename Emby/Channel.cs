@@ -23,9 +23,6 @@ namespace PlayOn.Emby
         public static IHttpClient HttpClient;
         public static ILogger Logger;
         public static IJsonSerializer JsonSerializer;
-        public static CancellationToken CancellationToken;
-
-        public static Scaffold.Category Categories { get; set; }
 
         public Channel(IHttpClient httpClient, ILogManager logManager, IJsonSerializer jsonSerializer)
         {
@@ -63,11 +60,9 @@ namespace PlayOn.Emby
 
         public Task<ChannelItemResult> GetChannelItems(InternalChannelItemQuery query, CancellationToken cancellationToken)
         {
-            CancellationToken = cancellationToken;
-
-            return Task.Run(() =>
+            return Task.Run(async () =>
             {
-                var channelItemInfos = Helper.Channel.Items(query.FolderId);
+                var channelItemInfos = await Helper.Channel.Items(query.FolderId, cancellationToken);
 
                 return new ChannelItemResult
                 {

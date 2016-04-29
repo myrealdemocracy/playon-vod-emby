@@ -8,6 +8,6 @@ namespace PlayOn.Emby.Scaffold
 {
     public class Category
     {
-        public Dictionary<string, List<string>> All { get; set;}
+        public List<string> All { get; set;}
     }
 }

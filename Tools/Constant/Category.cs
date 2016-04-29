@@ -4,7 +4,7 @@ namespace PlayOn.Tools.Constant
 {
     public class Category
     {
-        public Dictionary<string, List<string>> All { get; set; }
+        public List<string> All { get; set; }
 
         public static Dictionary<string, List<string>> Items = new Dictionary<string, List<string>>
         {
@@ -142,6 +142,13 @@ namespace PlayOn.Tools.Constant
                 {
                     "|kids|",
                     "|just for kids|"
+                }
+            },
+            {
+                "Drama",
+                new List<string>
+                {
+                    "|tv drama|"
                 }
             }
         };

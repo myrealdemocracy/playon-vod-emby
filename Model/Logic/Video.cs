@@ -55,6 +55,8 @@ namespace PlayOn.Model.Logic
 
                 SaveLoop(item.Href.Split(Convert.ToChar("="))[1] + "|");
             }
+
+            //SaveLoop("mtv|");
         }
 
         public static void SaveLoop(string path)
@@ -79,7 +81,6 @@ namespace PlayOn.Model.Logic
                 Logger.Debug("item.Name: " + item.Name);
                 Logger.Debug("item.Type: " + item.Type);
                 Logger.Debug("item.Href: " + item.Href);
-
 
                 if (Tools.Helper.Ignore.Item(item) ||
                     String.IsNullOrEmpty(nextPath) ||
