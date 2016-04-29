@@ -115,10 +115,6 @@ namespace PlayOn.Model.Logic
 
                     if (adoVideoSerie != null) return;
 
-                    var anime = db.Categories.FirstOrDefault(q => q.Name == "Anime");
-
-                    if (video.Path.Contains("|anime|")) serie.Categories.Add(anime);
-
                     db.VideoSeries.Add(new Ado.VideoSerie
                     {
                         IdVideo = video.Id,
@@ -130,6 +126,36 @@ namespace PlayOn.Model.Logic
                     });
 
                     db.SaveChanges();
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+            }
+
+            try
+            {
+                using (var db = new Ado.PlayOnEntities())
+                {
+                    serie = db.Series.FirstOrDefault(q => q.Id == serie.Id);
+
+                    foreach (var item in Tools.Constant.Category.Items)
+                    {
+                        var isIn = false;
+
+                        foreach (var name in item.Value)
+                        {
+                            isIn = video.Path.Contains(name);
+
+                            if (isIn) break;
+                        }
+
+                        if (!isIn) continue;
+
+                        var category = db.Categories.FirstOrDefault(q => q.Name == item.Key);
+
+                        serie.Categories.Add(category);
+                    }
                 }
             }
             catch (Exception exception)

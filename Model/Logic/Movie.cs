@@ -29,9 +29,40 @@ namespace PlayOn.Model.Logic
                     movie = db.Movies.FirstOrDefault(q => q.Id == movie.Id);
                     movie.Videos.Add(video);
 
-                    var anime = db.Categories.FirstOrDefault(q => q.Name == "Anime");
+                    db.Entry(movie).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+            }
 
-                    if(video.Path.Contains("|anime|")) movie.Categories.Add(anime);
+            try
+            {
+                using (var db = new Ado.PlayOnEntities())
+                {
+                    video = db.Videos.FirstOrDefault(q => q.Id == video.Id);
+
+                    movie = db.Movies.FirstOrDefault(q => q.Id == movie.Id);
+
+                    foreach (var item in Tools.Constant.Category.Items)
+                    {
+                        var isIn = false;
+
+                        foreach (var name in item.Value)
+                        {
+                            isIn = video.Path.Contains(name);
+
+                            if (isIn) break;
+                        }
+
+                        if (!isIn) continue;
+
+                        var category = db.Categories.FirstOrDefault(q => q.Name == item.Key);
+
+                        movie.Categories.Add(category);
+                    }
 
                     db.Entry(movie).State = EntityState.Modified;
                     db.SaveChanges();
