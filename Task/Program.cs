@@ -10,6 +10,7 @@ namespace PlayOn.Task
     {
         static void Main(string[] args)
         {
+            Model.Logic.Video.SaveAll();
         }
     }
 }

@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayOn.Tools", "Tools\PlayO
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayOn.Emby", "Emby\PlayOn.Emby.csproj", "{6D38BA43-3F5B-4A61-969C-9AFC1FBDB042}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayOn.Task", "PlayOn.Task\PlayOn.Task.csproj", "{2C63060F-F445-4FB7-8C28-67736279C6C2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayOn.Task", "Task\PlayOn.Task.csproj", "{2C63060F-F445-4FB7-8C28-67736279C6C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
