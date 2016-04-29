@@ -26,7 +26,6 @@ namespace PlayOn.Model.Ado
         public string Overview { get; set; }
         public string Path { get; set; }
         public string Provider { get; set; }
-        public string ContainerFolder { get; set; }
         public Nullable<int> IsLive { get; set; }
         public Nullable<System.DateTime> CreatedAt { get; set; }
         public Nullable<System.DateTime> UpdatedAt { get; set; }

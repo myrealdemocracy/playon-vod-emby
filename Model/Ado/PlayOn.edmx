@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="PlayOn.Model.Ado.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="PlayOn.Model.Ado.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Movie">
           <Key>
             <PropertyRef Name="Id" />
@@ -28,7 +28,6 @@
           <Property Name="Overview" Type="nvarchar(max)" />
           <Property Name="Path" Type="nvarchar" MaxLength="450" Nullable="false" />
           <Property Name="Provider" Type="nvarchar" MaxLength="50" />
-          <Property Name="ContainerFolder" Type="nvarchar" MaxLength="50" />
           <Property Name="IsLive" Type="int" />
           <Property Name="CreatedAt" Type="datetime" />
           <Property Name="UpdatedAt" Type="datetime" />
@@ -126,8 +125,7 @@
             <End Role="VideoSerie" EntitySet="VideoSerie" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="PlayOn.Model.Ado" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -156,7 +154,6 @@
           <Property Name="Overview" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Path" Type="String" MaxLength="450" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Provider" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ContainerFolder" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="IsLive" Type="Int32" />
           <Property Name="CreatedAt" Type="DateTime" Precision="3" />
           <Property Name="UpdatedAt" Type="DateTime" Precision="3" />
@@ -255,7 +252,6 @@
                 <ScalarProperty Name="Overview" ColumnName="Overview" />
                 <ScalarProperty Name="Path" ColumnName="Path" />
                 <ScalarProperty Name="Provider" ColumnName="Provider" />
-                <ScalarProperty Name="ContainerFolder" ColumnName="ContainerFolder" />
                 <ScalarProperty Name="IsLive" ColumnName="IsLive" />
                 <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
                 <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />

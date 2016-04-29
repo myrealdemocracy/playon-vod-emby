@@ -34,42 +34,71 @@ namespace PlayOn.Model.Logic
             return videos;
         }
 
-        public static void SaveAll(string path = null)
+        public static void SaveAll()
         {
-            var url = Tools.Helper.Url.Generate(path);
-
-            Logger.Debug("path: " + path);
-            Logger.Debug("url: " + url);
-
-            var items = String.IsNullOrEmpty(path)
-                ? Tools.Helper.Xml.Extractor.Items<Tools.Scaffold.Xml.Catalog>(url).Items
-                : Tools.Helper.Xml.Extractor.Items<Tools.Scaffold.Xml.Group>(url).Items;
+            const string url = Tools.Helper.Url.Xml;
+            var items = Tools.Helper.Xml.Extractor.Items<Tools.Scaffold.Xml.Catalog>(url).Items;
 
             foreach (var item in items)
             {
+                Logger.Debug("SaveAll --- item.Name: " + item.Name);
+                Logger.Debug("SaveAll --- item.Href: " + item.Href);
+
+                if (Tools.Helper.Ignore.Item(item))
+                {
+                    Logger.Debug("SaveAll --- ignoring");
+
+                    continue;
+                }
+
+                Logger.Debug("SaveAll --- calling SaveLoop");
+
+                SaveLoop(item.Href.Split(Convert.ToChar("="))[1] + "|");
+            }
+        }
+
+        public static void SaveLoop(string path)
+        {
+            var url = Tools.Helper.Url.Generate(path);
+
+            Logger.Debug("SaveLoo --- path     : " + path);
+            Logger.Debug("SaveLoo --- url      : " + url);
+            Logger.Debug("SaveLoo --- calling SaveForEach");
+
+            SaveForEach(url, path);
+        }
+
+        public static void SaveForEach(string url, string path)
+        {
+            foreach (var item in Tools.Helper.Xml.Extractor.Items<Tools.Scaffold.Xml.Group>(url).Items)
+            {
                 var nextPath = path + item.Name.ToLower() + "|";
 
-                if (item.Href.Contains("playon") ||
-                item.Href.Contains("playmark") ||
-                item.Href.Contains("playlater") ||
-                item.Name == "Clips" ||
-                item.Name == "Video Clips" ||
-                item.Name == "Clips & Extras" ||
-                item.Name == "Episode Highlights" ||
-                item.Name == "Your History" ||
-                item.Name == "Your Queue" ||
-                item.Name == "Your Subscriptions" ||
-                item.Name == "Playback Options" ||
-                item.Name == "Suggestions For You" ||
-                item.Name == "My List" ||
-                item.Name.StartsWith("Top Picks for") ||
-                String.IsNullOrEmpty(item.Name) ||
-                path == nextPath ||
-                item.Name.Contains("This folder contains no content")) continue;
+                Logger.Debug("SaveFor --- path     : " + path);
+                Logger.Debug("SaveFor --- nextPath : " + nextPath);
+                Logger.Debug("SaveFor --- item.Name: " + item.Name);
+                Logger.Debug("SaveFor --- item.Type: " + item.Type);
+                Logger.Debug("SaveFor --- item.Href: " + item.Href);
 
-                if (item.Type != "video") SaveAll(nextPath);
+
+                if (Tools.Helper.Ignore.Item(item) ||
+                    String.IsNullOrEmpty(nextPath) ||
+                    path == nextPath)
+                {
+                    Logger.Debug("SaveFor --- ignoring");
+                    continue;
+                }
+
+                if (item.Type != "video")
+                {
+                    Logger.Debug("SaveFor --- next loop");
+
+                    SaveLoop(nextPath);
+                }
                 else
                 {
+                    Logger.Debug("SaveFor --- saving video");
+
                     var videoItem = Tools.Helper.Video.Mapper(item.Href, path);
 
                     var video = Save(videoItem);
@@ -85,7 +114,7 @@ namespace PlayOn.Model.Logic
                         var serie = Serie.Save(videoItem.SeriesName);
                         Serie.Save(video, serie);
                     }
-                }   
+                }
             }
         }
 
@@ -111,7 +140,6 @@ namespace PlayOn.Model.Logic
                         adoVideo.Overview = video.Overview;
                         adoVideo.Path = video.Path;
                         adoVideo.Provider = pathTerms[0];
-                        adoVideo.ContainerFolder = pathTerms.Last();
                         adoVideo.IsLive = video.Path.Contains("|live|") || video.Path.Contains("|live tv|") ? 1 : 0;
                         adoVideo.CreatedAt = DateTime.UtcNow;
 
