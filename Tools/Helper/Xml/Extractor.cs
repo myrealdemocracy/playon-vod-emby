@@ -7,11 +7,13 @@ using System.Runtime.Caching;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using NLog;
 
 namespace PlayOn.Tools.Helper.Xml
 {
     public class Extractor
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         protected static MemoryCache Cache = new MemoryCache("PlayOnXML");
 
         public static T Items<T>(string url) where T : class, new()
@@ -40,6 +42,8 @@ namespace PlayOn.Tools.Helper.Xml
             }
             catch (WebException webException)
             {
+                Logger.Error(webException);
+
                 if (((HttpWebResponse)webException.Response).StatusCode == HttpStatusCode.NotFound)
                 {
                     foreach (var cache in Cache.Select(s => s.Key))

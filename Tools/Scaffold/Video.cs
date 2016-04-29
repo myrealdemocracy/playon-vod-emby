@@ -12,7 +12,6 @@ namespace PlayOn.Tools.Scaffold
         public string Path { get; set; }
         public string Name { get; set; }
         public string Overview { get; set; }
-        public string Folder { get; set; }
         public string SeriesName { get; set; }
     }
 }

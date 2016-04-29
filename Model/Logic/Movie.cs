@@ -4,11 +4,15 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NLog;
+using NLog.Fluent;
 
 namespace PlayOn.Model.Logic
 {
     public class Movie
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public static List<Tools.Scaffold.Movie> All()
         {
             return new List<Tools.Scaffold.Movie>();
@@ -46,7 +50,7 @@ namespace PlayOn.Model.Logic
             }
             catch (Exception exception)
             {
-                
+                Logger.Error(exception);
             }
         }
     }

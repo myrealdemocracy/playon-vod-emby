@@ -5,11 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using NLog;
 
 namespace PlayOn.Model.Logic
 {
     public class Serie
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public static List<Tools.Scaffold.Serie> All(int season = 0)
         {
             var series = new List<Tools.Scaffold.Serie>();
@@ -73,6 +76,7 @@ namespace PlayOn.Model.Logic
             }
             catch (Exception exception)
             {
+                Logger.Error(exception);
             }
 
             return adoSerie;
@@ -114,6 +118,7 @@ namespace PlayOn.Model.Logic
             }
             catch (Exception exception)
             {
+                Logger.Error(exception);
             }
         }
     }

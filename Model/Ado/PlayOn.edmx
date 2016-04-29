@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="PlayOn.Model.Ado.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="PlayOn.Model.Ado.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Movie">
           <Key>
             <PropertyRef Name="Id" />
@@ -28,6 +28,7 @@
           <Property Name="Overview" Type="nvarchar(max)" />
           <Property Name="Path" Type="nvarchar" MaxLength="450" Nullable="false" />
           <Property Name="Provider" Type="nvarchar" MaxLength="50" />
+          <Property Name="ContainerFolder" Type="nvarchar" MaxLength="50" />
           <Property Name="IsLive" Type="int" />
           <Property Name="CreatedAt" Type="datetime" />
           <Property Name="UpdatedAt" Type="datetime" />
@@ -125,58 +126,42 @@
             <End Role="VideoSerie" EntitySet="VideoSerie" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="PlayOn.Model.Ado" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityContainer Name="PlayOnEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Movies" EntityType="PlayOn.Model.Ado.Movie" />
-          <EntitySet Name="Series" EntityType="PlayOn.Model.Ado.Serie" />
-          <EntitySet Name="Videos" EntityType="PlayOn.Model.Ado.Video" />
-          <EntitySet Name="VideoSeries" EntityType="PlayOn.Model.Ado.VideoSerie" />
-          <AssociationSet Name="FK_VideoSerie_Serie" Association="PlayOn.Model.Ado.FK_VideoSerie_Serie">
-            <End Role="Serie" EntitySet="Series" />
-            <End Role="VideoSerie" EntitySet="VideoSeries" />
-          </AssociationSet>
-          <AssociationSet Name="FK_VideoSerie_Video" Association="PlayOn.Model.Ado.FK_VideoSerie_Video">
-            <End Role="Video" EntitySet="Videos" />
-            <End Role="VideoSerie" EntitySet="VideoSeries" />
-          </AssociationSet>
-          <AssociationSet Name="VideoMovie" Association="PlayOn.Model.Ado.VideoMovie">
-            <End Role="Movie" EntitySet="Movies" />
-            <End Role="Video" EntitySet="Videos" />
-          </AssociationSet>
-        </EntityContainer>
         <EntityType Name="Movie">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Videos" Relationship="PlayOn.Model.Ado.VideoMovie" FromRole="Movie" ToRole="Video" />
+          <NavigationProperty Name="Videos" Relationship="Self.VideoMovie" FromRole="Movie" ToRole="Video" />
         </EntityType>
         <EntityType Name="Serie">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="VideoSeries" Relationship="PlayOn.Model.Ado.FK_VideoSerie_Serie" FromRole="Serie" ToRole="VideoSerie" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="VideoSeries" Relationship="Self.FK_VideoSerie_Serie" FromRole="Serie" ToRole="VideoSerie" />
         </EntityType>
         <EntityType Name="Video">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Overview" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Path" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="Path" Type="String" MaxLength="450" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Provider" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ContainerFolder" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="IsLive" Type="Int32" />
           <Property Name="CreatedAt" Type="DateTime" Precision="3" />
           <Property Name="UpdatedAt" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="VideoSeries" Relationship="PlayOn.Model.Ado.FK_VideoSerie_Video" FromRole="Video" ToRole="VideoSerie" />
-          <NavigationProperty Name="Movies" Relationship="PlayOn.Model.Ado.VideoMovie" FromRole="Video" ToRole="Movie" />
+          <NavigationProperty Name="VideoSeries" Relationship="Self.FK_VideoSerie_Video" FromRole="Video" ToRole="VideoSerie" />
+          <NavigationProperty Name="Movies" Relationship="Self.VideoMovie" FromRole="Video" ToRole="Movie" />
         </EntityType>
         <EntityType Name="VideoSerie">
           <Key>
@@ -187,14 +172,14 @@
           <Property Name="IdSerie" Type="Int32" Nullable="false" />
           <Property Name="Season" Type="Int32" />
           <Property Name="Episode" Type="Int32" />
-          <NavigationProperty Name="Serie" Relationship="PlayOn.Model.Ado.FK_VideoSerie_Serie" FromRole="VideoSerie" ToRole="Serie" />
-          <NavigationProperty Name="Video" Relationship="PlayOn.Model.Ado.FK_VideoSerie_Video" FromRole="VideoSerie" ToRole="Video" />
+          <NavigationProperty Name="Serie" Relationship="Self.FK_VideoSerie_Serie" FromRole="VideoSerie" ToRole="Serie" />
+          <NavigationProperty Name="Video" Relationship="Self.FK_VideoSerie_Video" FromRole="VideoSerie" ToRole="Video" />
         </EntityType>
         <Association Name="FK_VideoSerie_Serie">
-          <End Type="PlayOn.Model.Ado.Serie" Role="Serie" Multiplicity="1">
+          <End Role="Serie" Type="Self.Serie" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Type="PlayOn.Model.Ado.VideoSerie" Role="VideoSerie" Multiplicity="*" />
+          <End Role="VideoSerie" Type="Self.VideoSerie" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Serie">
               <PropertyRef Name="Id" />
@@ -205,10 +190,10 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_VideoSerie_Video">
-          <End Type="PlayOn.Model.Ado.Video" Role="Video" Multiplicity="1">
+          <End Role="Video" Type="Self.Video" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Type="PlayOn.Model.Ado.VideoSerie" Role="VideoSerie" Multiplicity="*" />
+          <End Role="VideoSerie" Type="Self.VideoSerie" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Video">
               <PropertyRef Name="Id" />
@@ -219,9 +204,27 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="VideoMovie">
-          <End Type="PlayOn.Model.Ado.Movie" Role="Movie" Multiplicity="*" />
-          <End Type="PlayOn.Model.Ado.Video" Role="Video" Multiplicity="*" />
+          <End Role="Movie" Type="Self.Movie" Multiplicity="*" />
+          <End Role="Video" Type="Self.Video" Multiplicity="*" />
         </Association>
+        <EntityContainer Name="PlayOnEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Movies" EntityType="Self.Movie" />
+          <EntitySet Name="Series" EntityType="Self.Serie" />
+          <EntitySet Name="Videos" EntityType="Self.Video" />
+          <EntitySet Name="VideoSeries" EntityType="Self.VideoSerie" />
+          <AssociationSet Name="FK_VideoSerie_Serie" Association="Self.FK_VideoSerie_Serie">
+            <End Role="Serie" EntitySet="Series" />
+            <End Role="VideoSerie" EntitySet="VideoSeries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VideoSerie_Video" Association="Self.FK_VideoSerie_Video">
+            <End Role="Video" EntitySet="Videos" />
+            <End Role="VideoSerie" EntitySet="VideoSeries" />
+          </AssociationSet>
+          <AssociationSet Name="VideoMovie" Association="Self.VideoMovie">
+            <End Role="Movie" EntitySet="Movies" />
+            <End Role="Video" EntitySet="Videos" />
+          </AssociationSet>
+        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -231,49 +234,50 @@
           <EntitySetMapping Name="Movies">
             <EntityTypeMapping TypeName="PlayOn.Model.Ado.Movie">
               <MappingFragment StoreEntitySet="Movie">
-                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Series">
             <EntityTypeMapping TypeName="PlayOn.Model.Ado.Serie">
               <MappingFragment StoreEntitySet="Serie">
-                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Videos">
             <EntityTypeMapping TypeName="PlayOn.Model.Ado.Video">
               <MappingFragment StoreEntitySet="Video">
-                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
-                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
-                <ScalarProperty Name="IsLive" ColumnName="IsLive" />
-                <ScalarProperty Name="Provider" ColumnName="Provider" />
-                <ScalarProperty Name="Path" ColumnName="Path" />
-                <ScalarProperty Name="Overview" ColumnName="Overview" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Overview" ColumnName="Overview" />
+                <ScalarProperty Name="Path" ColumnName="Path" />
+                <ScalarProperty Name="Provider" ColumnName="Provider" />
+                <ScalarProperty Name="ContainerFolder" ColumnName="ContainerFolder" />
+                <ScalarProperty Name="IsLive" ColumnName="IsLive" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="VideoSeries">
             <EntityTypeMapping TypeName="PlayOn.Model.Ado.VideoSerie">
               <MappingFragment StoreEntitySet="VideoSerie">
-                <ScalarProperty Name="Episode" ColumnName="Episode" />
-                <ScalarProperty Name="Season" ColumnName="Season" />
-                <ScalarProperty Name="IdSerie" ColumnName="IdSerie" />
                 <ScalarProperty Name="IdVideo" ColumnName="IdVideo" />
+                <ScalarProperty Name="IdSerie" ColumnName="IdSerie" />
+                <ScalarProperty Name="Season" ColumnName="Season" />
+                <ScalarProperty Name="Episode" ColumnName="Episode" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <AssociationSetMapping Name="VideoMovie" TypeName="PlayOn.Model.Ado.VideoMovie" StoreEntitySet="VideoMovie">
-            <EndProperty Name="Video">
-              <ScalarProperty Name="Id" ColumnName="IdVideo" />
-            </EndProperty>
             <EndProperty Name="Movie">
               <ScalarProperty Name="Id" ColumnName="IdMovie" />
+            </EndProperty>
+            <EndProperty Name="Video">
+              <ScalarProperty Name="Id" ColumnName="IdVideo" />
             </EndProperty>
           </AssociationSetMapping>
         </EntityContainerMapping>

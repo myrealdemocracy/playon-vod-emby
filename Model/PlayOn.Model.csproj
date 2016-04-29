@@ -72,10 +72,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>PlayOn.tt</DependentUpon>
     </Compile>
-    <Compile Include="Ado\PlayOn.Model.Designer.cs">
+    <Compile Include="Ado\PlayOn.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>PlayOn.Model.edmx</DependentUpon>
+      <DependentUpon>PlayOn.edmx</DependentUpon>
     </Compile>
     <Compile Include="Ado\Serie.cs">
       <DependentUpon>PlayOn.tt</DependentUpon>
@@ -91,7 +91,6 @@
     <Compile Include="Logic\Video.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Tools\PlayOn.Tools.csproj">
       <Project>{08d5420b-4ee6-468d-9bb8-12ce9437ef1b}</Project>
@@ -99,32 +98,30 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EntityDeploy Include="Ado\PlayOn.Model.edmx">
+    <EntityDeploy Include="Ado\PlayOn.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>PlayOn.Model.Designer.cs</LastGenOutput>
+      <LastGenOutput>PlayOn.Designer.cs</LastGenOutput>
     </EntityDeploy>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Ado\PlayOn.Model.edmx.diagram">
-      <DependentUpon>PlayOn.Model.edmx</DependentUpon>
+    <None Include="Ado\PlayOn.edmx.diagram">
+      <DependentUpon>PlayOn.edmx</DependentUpon>
     </None>
     <None Include="App.Config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Ado\PlayOn.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>PlayOn.Model.edmx</DependentUpon>
+      <DependentUpon>PlayOn.edmx</DependentUpon>
       <LastGenOutput>PlayOn.Context.cs</LastGenOutput>
     </Content>
     <Content Include="Ado\PlayOn.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>PlayOn.Model.edmx</DependentUpon>
+      <DependentUpon>PlayOn.edmx</DependentUpon>
       <LastGenOutput>PlayOn.cs</LastGenOutput>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
