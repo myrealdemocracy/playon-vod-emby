@@ -154,6 +154,8 @@ namespace PlayOn.Model.Logic
 
                         var category = db.Categories.FirstOrDefault(q => q.Name == item.Key);
 
+                        if (serie.Categories.Any(q => q.Id == category.Id)) continue;
+
                         serie.Categories.Add(category);
                     }
                 }

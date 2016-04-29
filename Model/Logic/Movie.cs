@@ -61,6 +61,8 @@ namespace PlayOn.Model.Logic
 
                         var category = db.Categories.FirstOrDefault(q => q.Name == item.Key);
 
+                        if(movie.Categories.Any(q => q.Id == category.Id)) continue;
+
                         movie.Categories.Add(category);
                     }
 
