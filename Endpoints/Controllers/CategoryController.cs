@@ -12,11 +12,11 @@ namespace PlayOn.Endpoints.Controllers
     {
         [Route("all")]
         [HttpGet]
-        public Tools.Constant.Category All()
+        public Tools.Scaffold.Category All()
         {
-            return new Tools.Constant.Category
+            return new Tools.Scaffold.Category
             {
-                All = Tools.Constant.Category.Items.Select(s => s.Key).ToList()
+                Categories = Tools.Constant.Category.Items.Select(s => s.Key).ToList()
             };
         }
     }

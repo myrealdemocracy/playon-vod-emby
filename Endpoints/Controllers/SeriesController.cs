@@ -24,9 +24,16 @@ namespace PlayOn.Endpoints.Controllers
             return Model.Logic.Series.ByCategory(category);
         }
 
+        [Route("name/{name}")]
+        [HttpGet]
+        public List<Tools.Scaffold.Season> ByName(string name)
+        {
+            return Model.Logic.Series.ByName(name);
+        }
+
         [Route("name/{name}/s/{season:int}")]
         [HttpGet]
-        public List<Tools.Scaffold.Season> BySeason(string name, int season)
+        public List<Tools.Scaffold.Episode> BySeason(string name, int season)
         {
             return Model.Logic.Series.BySeason(name, season);
         }

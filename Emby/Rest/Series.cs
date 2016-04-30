@@ -24,5 +24,37 @@ namespace PlayOn.Emby.Rest
 
             return series;
         }
+
+        public async Task<List<Scaffold.Season>> Seasons(string series, CancellationToken cancellationToken)
+        {
+            var seasons = new List<Scaffold.Season>();
+
+            try
+            {
+                seasons = await Request<List<Scaffold.Season>>("/series/name/" + series, cancellationToken);
+            }
+            catch (Exception exception)
+            {
+                Logger.ErrorException("Loading seasons error, API call failed", exception);
+            }
+
+            return seasons;
+        }
+
+        public async Task<List<Scaffold.Episode>> Episodes(string series, int season, CancellationToken cancellationToken)
+        {
+            var episodes = new List<Scaffold.Episode>();
+
+            try
+            {
+                episodes = await Request<List<Scaffold.Episode>>("/series/name/" + series + "/s/" + season, cancellationToken);
+            }
+            catch (Exception exception)
+            {
+                Logger.ErrorException("Loading episodes error, API call failed", exception);
+            }
+
+            return episodes;
+        }
     }
 }

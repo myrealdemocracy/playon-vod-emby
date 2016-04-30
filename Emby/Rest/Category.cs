@@ -9,13 +9,15 @@ namespace PlayOn.Emby.Rest
 {
     public class Category : Base
     {
-        public async Task<Scaffold.Category> All(CancellationToken cancellationToken)
+        public async Task<List<string>> All(CancellationToken cancellationToken)
         {
-            var categories = new Scaffold.Category();
+            var categories = new List<string>();
 
             try
             {
-                categories = await Request<Scaffold.Category>("/category/all", cancellationToken);
+                var result = await Request<Scaffold.Category>("/category/all", cancellationToken);
+
+                categories = result.Categories;
             }
             catch (Exception exception)
             {

@@ -17,12 +17,11 @@ namespace PlayOn.Emby.Helper
         {
             return await Task.Run(async () =>
             {
+                var rest = new Rest.Series();
                 var channelItemInfos = new List<ChannelItemInfo>();
 
                 if (currentFolder == "series")
                 {
-                    var rest = new Rest.Series();
-
                     var series = await rest.All(cancellationToken);
 
                     foreach (var item in series)
@@ -41,6 +40,18 @@ namespace PlayOn.Emby.Helper
                     var name = terms[1];
                     var season = Convert.ToInt32(terms[2]);
                     var episode = Convert.ToInt32(terms[3]);
+
+                    if (season == 0 && episode == 0)
+                    {
+                        var seasons = await rest.Seasons(name, cancellationToken);
+                    }
+                    else if (season > 0 && episode == 0)
+                    {
+                        var episodes = await rest.Episodes(name, season, cancellationToken);
+                    }
+                    else if(season > 0 && episode > 0)
+                    {
+                    }
                 }
 
                 return channelItemInfos;

@@ -25,7 +25,7 @@ namespace PlayOn.Emby.Helper
 
                     var categories = await rest.All(cancellationToken);
 
-                    foreach (var item in categories.All)
+                    foreach (var item in categories)
                     {
                         channelItemInfos.Add(new ChannelItemInfo
                         {

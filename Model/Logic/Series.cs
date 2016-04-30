@@ -32,17 +32,17 @@ namespace PlayOn.Model.Logic
             return series;
         }
 
-        public static List<Tools.Scaffold.Season> AllSeasons(string name)
-        {
-            throw new NotImplementedException();
-        }
-
         public static List<Tools.Scaffold.Series> ByCategory(string category)
         {
             throw new NotImplementedException();
         }
 
-        public static List<Tools.Scaffold.Season> BySeason(string name, int season)
+        public static List<Tools.Scaffold.Season> ByName(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static List<Tools.Scaffold.Episode> BySeason(string name, int season)
         {
             throw new NotImplementedException();
         }

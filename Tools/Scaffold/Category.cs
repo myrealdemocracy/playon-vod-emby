@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PlayOn.Emby.Scaffold
+namespace PlayOn.Tools.Scaffold
 {
     public class Category
     {
-        public List<string> Categories { get; set; }
+        public List<string> Categories { get; set; } 
     }
 }

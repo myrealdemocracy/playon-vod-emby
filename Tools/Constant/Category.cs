@@ -4,8 +4,6 @@ namespace PlayOn.Tools.Constant
 {
     public class Category
     {
-        public List<string> All { get; set; }
-
         public static Dictionary<string, List<string>> Items = new Dictionary<string, List<string>>
         {
             {
