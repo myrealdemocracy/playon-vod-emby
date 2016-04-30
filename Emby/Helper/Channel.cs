@@ -35,55 +35,21 @@ namespace PlayOn.Emby.Helper
                             Id = "series",
                             Name = "TV Shows",
                             Type = ChannelItemType.Folder
+                        },
+                        new ChannelItemInfo
+                        {
+                            Id = "categories",
+                            Name = "Categories",
+                            Type = ChannelItemType.Folder
                         }
                     };
                 }
                 else if (currentFolder == "movies" || currentFolder.Contains("movies|"))
-                {
-                    if (currentFolder == "movies")
-                    {
-                        var rest = new Rest.Movie();
-
-                        var movies = await rest.All(cancellationToken);
-
-                        foreach (var item in movies)
-                        {
-                            channelItemInfos.Add(new ChannelItemInfo
-                            {
-                                Id = "movies|" + item.Name.ToLower(),
-                                Name = item.Name,
-                                Type = ChannelItemType.Folder
-                            });
-                        }
-                    }
-                    else
-                    {
-
-                    }
-                }
+                    channelItemInfos = await Movie.Items(currentFolder, cancellationToken);
                 else if (currentFolder == "series" || currentFolder.Contains("series|"))
-                {
-                    if (currentFolder == "series")
-                    {
-                        var rest = new Rest.Series();
-
-                        var series = await rest.All(cancellationToken);
-
-                        foreach (var item in series)
-                        {
-                            channelItemInfos.Add(new ChannelItemInfo
-                            {
-                                Id = "series|" + item.Name.ToLower(),
-                                Name = item.Name,
-                                Type = ChannelItemType.Folder
-                            });
-                        }
-                    }
-                    else
-                    {
-                        
-                    }
-                }
+                    channelItemInfos = await Series.Items(currentFolder, cancellationToken);
+                else if (currentFolder == "categories" || currentFolder.Contains("categories|"))
+                    channelItemInfos = await Category.Items(currentFolder, cancellationToken);
 
                 return channelItemInfos;
             }, cancellationToken);
