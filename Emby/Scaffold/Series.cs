@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PlayOn.Tools.Scaffold
+namespace PlayOn.Emby.Scaffold
 {
-    public class Movie : Video
+    public class Series : Video
     {
-        public List<Video> Videos { get; set; }
+        public List<Season> Seasons { get; set; }
     }
 }

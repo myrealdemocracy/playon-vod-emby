@@ -57,7 +57,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rest\Base.cs" />
     <Compile Include="Rest\Category.cs" />
+    <Compile Include="Rest\Movie.cs" />
+    <Compile Include="Rest\Series.cs" />
     <Compile Include="Scaffold\Category.cs" />
+    <Compile Include="Scaffold\Episode.cs" />
+    <Compile Include="Scaffold\Movie.cs" />
+    <Compile Include="Scaffold\Season.cs" />
+    <Compile Include="Scaffold\Series.cs" />
+    <Compile Include="Scaffold\Video.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

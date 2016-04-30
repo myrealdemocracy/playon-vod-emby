@@ -90,7 +90,7 @@
       <DependentUpon>PlayOn.tt</DependentUpon>
     </Compile>
     <Compile Include="Logic\Movie.cs" />
-    <Compile Include="Logic\Serie.cs" />
+    <Compile Include="Logic\Series.cs" />
     <Compile Include="Logic\Video.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

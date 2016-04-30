@@ -113,8 +113,8 @@ namespace PlayOn.Model.Logic
                     }
                     else
                     {
-                        var serie = Serie.Save(videoItem.SeriesName);
-                        Serie.Save(video, serie);
+                        var serie = Series.Save(videoItem.SeriesName);
+                        Series.Save(video, serie);
                     }
                 }
             }

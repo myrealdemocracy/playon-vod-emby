@@ -38,29 +38,51 @@ namespace PlayOn.Emby.Helper
                         }
                     };
                 }
-                else if (currentFolder == "movies" || currentFolder == "series")
+                else if (currentFolder == "movies" || currentFolder.Contains("movies|"))
                 {
-                    var rest = new Rest.Category();
-
-                    var categories = await rest.All(cancellationToken);
-
-                    foreach (var item in categories.All)
+                    if (currentFolder == "movies")
                     {
-                        channelItemInfos.Add(new ChannelItemInfo
+                        var rest = new Rest.Movie();
+
+                        var movies = await rest.All(cancellationToken);
+
+                        foreach (var item in movies)
                         {
-                            Id = currentFolder + "|" + item.ToLower(),
-                            Name = item,
-                            Type = ChannelItemType.Folder
-                        });
+                            channelItemInfos.Add(new ChannelItemInfo
+                            {
+                                Id = "movies|" + item.Name.ToLower(),
+                                Name = item.Name,
+                                Type = ChannelItemType.Folder
+                            });
+                        }
+                    }
+                    else
+                    {
+
                     }
                 }
-                else if (currentFolder.Contains("movies|"))
+                else if (currentFolder == "series" || currentFolder.Contains("series|"))
                 {
+                    if (currentFolder == "series")
+                    {
+                        var rest = new Rest.Series();
 
-                }
-                else if (currentFolder.Contains("series|"))
-                {
+                        var series = await rest.All(cancellationToken);
 
+                        foreach (var item in series)
+                        {
+                            channelItemInfos.Add(new ChannelItemInfo
+                            {
+                                Id = "series|" + item.Name.ToLower(),
+                                Name = item.Name,
+                                Type = ChannelItemType.Folder
+                            });
+                        }
+                    }
+                    else
+                    {
+                        
+                    }
                 }
 
                 return channelItemInfos;

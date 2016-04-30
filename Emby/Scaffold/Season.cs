@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PlayOn.Tools.Scaffold
+namespace PlayOn.Emby.Scaffold
 {
     public class Season
     {

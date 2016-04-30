@@ -62,12 +62,10 @@
     <Compile Include="Helper\Url.cs" />
     <Compile Include="Helper\Xml\Extractor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scaffold\BaseVideo.cs" />
     <Compile Include="Scaffold\Movie.cs" />
-    <Compile Include="Scaffold\MovieVideo.cs" />
     <Compile Include="Scaffold\Season.cs" />
-    <Compile Include="Scaffold\Serie.cs" />
-    <Compile Include="Scaffold\SeriesVideo.cs" />
+    <Compile Include="Scaffold\Series.cs" />
+    <Compile Include="Scaffold\Episode.cs" />
     <Compile Include="Scaffold\Video.cs" />
     <Compile Include="Scaffold\Xml\Catalog.cs" />
     <Compile Include="Scaffold\Xml\Group.cs" />

@@ -112,7 +112,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\MovieController.cs" />
-    <Compile Include="Controllers\SerieController.cs" />
+    <Compile Include="Controllers\SeriesController.cs" />
     <Compile Include="Controllers\UrlController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

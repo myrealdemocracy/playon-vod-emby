@@ -9,19 +9,19 @@ using NLog;
 
 namespace PlayOn.Model.Logic
 {
-    public class Serie
+    public class Series
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public static List<Tools.Scaffold.Serie> All()
+        public static List<Tools.Scaffold.Series> All()
         {
-            var series = new List<Tools.Scaffold.Serie>();
+            var series = new List<Tools.Scaffold.Series>();
 
             using (var db = new Ado.PlayOnEntities())
             {
                 foreach (var serie in db.Series)
                 {
-                    series.Add(new Tools.Scaffold.Serie
+                    series.Add(new Tools.Scaffold.Series
                     {
                         Id = serie.Id,
                         Name = serie.Name
@@ -37,7 +37,7 @@ namespace PlayOn.Model.Logic
             throw new NotImplementedException();
         }
 
-        public static List<Tools.Scaffold.Serie> ByCategory(string category)
+        public static List<Tools.Scaffold.Series> ByCategory(string category)
         {
             throw new NotImplementedException();
         }
