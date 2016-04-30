@@ -24,25 +24,25 @@ namespace PlayOn.Endpoints.Controllers
             return Model.Logic.Series.ByCategory(category);
         }
 
-        [Route("name/{name}")]
-        [HttpGet]
-        public List<Tools.Scaffold.Season> ByName(string name)
+        [Route("name")]
+        [HttpPost]
+        public List<Tools.Scaffold.Season> ByName(Tools.Scaffold.Form.Series series)
         {
-            return Model.Logic.Series.ByName(name);
+            return Model.Logic.Series.ByName(series.Name);
         }
 
-        [Route("name/{name}/s/{season:int}")]
-        [HttpGet]
-        public List<Tools.Scaffold.Episode> BySeason(string name, int season)
+        [Route("season")]
+        [HttpPost]
+        public List<Tools.Scaffold.Episode> BySeason(Tools.Scaffold.Form.Series series)
         {
-            return Model.Logic.Series.BySeason(name, season);
+            return Model.Logic.Series.BySeason(series.Name, series.Season);
         }
 
-        [Route("name/{name}/s/{season:int}/e/{episode:int}")]
-        [HttpGet]
-        public List<Tools.Scaffold.Video> ByEpisode(string name, int season, int episode)
+        [Route("episode")]
+        [HttpPost]
+        public List<Tools.Scaffold.Video> ByEpisode(Tools.Scaffold.Form.Series series)
         {
-            return Model.Logic.Series.ByEpisode(name, season, episode);
+            return Model.Logic.Series.ByEpisode(series.Name, series.Season, series.Episode);
         }
     }
 }

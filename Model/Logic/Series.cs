@@ -39,15 +39,37 @@ namespace PlayOn.Model.Logic
 
         public static List<Tools.Scaffold.Season> ByName(string name)
         {
-            throw new NotImplementedException();
+            var seasons = new List<Tools.Scaffold.Season>();
+
+            try
+            {
+                using (var db = new Ado.PlayOnEntities())
+                {
+                    var series = db.Series.FirstOrDefault(q => q.Name == name);
+
+                    foreach (var video in series.VideoSeries.GroupBy(g => g.Season).Select(s => s.First()))
+                    {
+                        seasons.Add(new Tools.Scaffold.Season
+                        {
+                            Number = video.Season
+                        });
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+            }
+
+            return seasons;
         }
 
-        public static List<Tools.Scaffold.Episode> BySeason(string name, int season)
+        public static List<Tools.Scaffold.Episode> BySeason(string name, int? season)
         {
             throw new NotImplementedException();
         }
 
-        public static List<Tools.Scaffold.Video> ByEpisode(string name, int season, int episode)
+        public static List<Tools.Scaffold.Video> ByEpisode(string name, int? season, int? episode)
         {
             throw new NotImplementedException();
         }

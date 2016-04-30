@@ -16,21 +16,27 @@ namespace PlayOn.Emby.Rest
         protected static ILogger Logger = Channel.Logger;
         protected static IJsonSerializer JsonSerializer = Channel.JsonSerializer;
 
-        protected static Task<T> Request<T>(string route, CancellationToken cancellationToken) where T : new()
+        protected static Task<T> Request<T>(string route, string method, CancellationToken cancellationToken, string body = null) where T : new()
         {
             Logger.Debug("route: " + route);
+            Logger.Debug("method: " + method);
+            Logger.Debug("body: " + body);
 
             try
             {
                 return Task.Run(() =>
                 {
-                    var response = HttpClient.SendAsync(new HttpRequestOptions
+                    var options = new HttpRequestOptions
                     {
                         Url = "http://playon.local" + route,
                         EnableHttpCompression = true,
                         CacheMode = CacheMode.None,
                         CancellationToken = cancellationToken
-                    }, "GET");
+                    };
+
+                    if(!String.IsNullOrEmpty(body)) options.RequestContent = body;
+
+                    var response = HttpClient.SendAsync(options, method);
 
                     return JsonSerializer.DeserializeFromStream<T>(response.Result.Content);
                 }, cancellationToken);

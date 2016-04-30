@@ -15,7 +15,7 @@ namespace PlayOn.Emby.Rest
 
             try
             {
-                var result = await Request<Scaffold.Category>("/category/all", cancellationToken);
+                var result = await Request<Scaffold.Category>("/category/all", "GET", cancellationToken);
 
                 categories = result.Categories;
             }

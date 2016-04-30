@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PlayOn.Emby.Scaffold
+namespace PlayOn.Tools.Scaffold.Form
 {
-    public class Season
+    public class Movie : Base
     {
-        public int? Number { get; set; }
     }
 }

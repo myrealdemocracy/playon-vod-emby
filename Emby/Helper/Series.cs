@@ -24,12 +24,12 @@ namespace PlayOn.Emby.Helper
                 {
                     var series = await rest.All(cancellationToken);
 
-                    foreach (var item in series)
+                    foreach (var serie in series)
                     {
                         channelItemInfos.Add(new ChannelItemInfo
                         {
-                            Id = "series|" + item.Name.ToLower(),
-                            Name = item.Name,
+                            Id = "series|" + serie.Name.ToLower(),
+                            Name = serie.Name,
                             Type = ChannelItemType.Folder
                         });
                     }
@@ -38,18 +38,29 @@ namespace PlayOn.Emby.Helper
                 {
                     var terms = currentFolder.Split(Convert.ToChar("|"));
                     var name = terms[1];
-                    var season = Convert.ToInt32(terms[2]);
-                    var episode = Convert.ToInt32(terms[3]);
 
-                    if (season == 0 && episode == 0)
+                    var seasonNumber = terms.Length > 2 ? Convert.ToInt32(terms[2]) : 0;
+                    var episodeNumber = terms.Length > 3 ? Convert.ToInt32(terms[3]) : 0;
+
+                    if (seasonNumber == 0 && episodeNumber == 0)
                     {
                         var seasons = await rest.Seasons(name, cancellationToken);
+
+                        foreach (var season in seasons)
+                        {
+                            channelItemInfos.Add(new ChannelItemInfo
+                            {
+                                Id = currentFolder + "|" + season.Number,
+                                Name = "Season " + season.Number,
+                                Type = ChannelItemType.Folder
+                            });
+                        }
                     }
-                    else if (season > 0 && episode == 0)
+                    else if (seasonNumber > 0 && episodeNumber == 0)
                     {
-                        var episodes = await rest.Episodes(name, season, cancellationToken);
+                        var episodes = await rest.Episodes(name, seasonNumber, cancellationToken);
                     }
-                    else if(season > 0 && episode > 0)
+                    else if(seasonNumber > 0 && episodeNumber > 0)
                     {
                     }
                 }

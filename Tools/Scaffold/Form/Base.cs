@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PlayOn.Emby.Scaffold
+namespace PlayOn.Tools.Scaffold.Form
 {
-    public class Season
+    public class Base
     {
-        public int? Number { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -8,6 +8,6 @@ namespace PlayOn.Tools.Scaffold
 {
     public class Season
     {
-        public List<int> Seasons { get; set; }
+        public int? Number { get; set; }
     }
 }

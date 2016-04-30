@@ -63,6 +63,9 @@
     <Compile Include="Helper\Xml\Extractor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scaffold\Category.cs" />
+    <Compile Include="Scaffold\Form\Base.cs" />
+    <Compile Include="Scaffold\Form\Movie.cs" />
+    <Compile Include="Scaffold\Form\Series.cs" />
     <Compile Include="Scaffold\Movie.cs" />
     <Compile Include="Scaffold\Season.cs" />
     <Compile Include="Scaffold\Series.cs" />

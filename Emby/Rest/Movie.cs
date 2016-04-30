@@ -15,7 +15,7 @@ namespace PlayOn.Emby.Rest
 
             try
             {
-                movies = await Request<List<Scaffold.Movie>>("/movie/all", cancellationToken);
+                movies = await Request<List<Scaffold.Movie>>("/movie/all", "GET", cancellationToken);
             }
             catch (Exception exception)
             {

@@ -15,7 +15,7 @@ namespace PlayOn.Emby.Rest
 
             try
             {
-                series = await Request<List<Scaffold.Series>>("/series/all", cancellationToken);
+                series = await Request<List<Scaffold.Series>>("/series/all", "GET", cancellationToken);
             }
             catch (Exception exception)
             {
@@ -25,13 +25,13 @@ namespace PlayOn.Emby.Rest
             return series;
         }
 
-        public async Task<List<Scaffold.Season>> Seasons(string series, CancellationToken cancellationToken)
+        public async Task<List<Scaffold.Season>> Seasons(string name, CancellationToken cancellationToken)
         {
             var seasons = new List<Scaffold.Season>();
 
             try
             {
-                seasons = await Request<List<Scaffold.Season>>("/series/name/" + series, cancellationToken);
+                seasons = await Request<List<Scaffold.Season>>("/series/name", "POST", cancellationToken, "Name=" + name);
             }
             catch (Exception exception)
             {
@@ -41,13 +41,13 @@ namespace PlayOn.Emby.Rest
             return seasons;
         }
 
-        public async Task<List<Scaffold.Episode>> Episodes(string series, int season, CancellationToken cancellationToken)
+        public async Task<List<Scaffold.Episode>> Episodes(string name, int season, CancellationToken cancellationToken)
         {
             var episodes = new List<Scaffold.Episode>();
 
             try
             {
-                episodes = await Request<List<Scaffold.Episode>>("/series/name/" + series + "/s/" + season, cancellationToken);
+                episodes = await Request<List<Scaffold.Episode>>("/series/season", "POST", cancellationToken, "Name=" + name + "&Season=" + season);
             }
             catch (Exception exception)
             {

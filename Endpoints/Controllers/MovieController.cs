@@ -24,11 +24,11 @@ namespace PlayOn.Endpoints.Controllers
             return Model.Logic.Movie.ByCategory(category);
         }
 
-        [Route("name/{name}")]
-        [HttpGet]
-        public List<Tools.Scaffold.Video> ByName(string category)
+        [Route("name")]
+        [HttpPost]
+        public List<Tools.Scaffold.Video> ByName(Tools.Scaffold.Form.Movie movie)
         {
-            return Model.Logic.Movie.ByName(category);
+            return Model.Logic.Movie.ByName(movie.Name);
         }
     }
 }
