@@ -37,7 +37,10 @@ namespace PlayOn.Emby.Helper
                 }
                 else
                 {
-
+                    var terms = currentFolder.Split(Convert.ToChar("|"));
+                    var name = terms[1];
+                    var season = Convert.ToInt32(terms[2]);
+                    var episode = Convert.ToInt32(terms[3]);
                 }
 
                 return channelItemInfos;

@@ -37,7 +37,8 @@ namespace PlayOn.Emby.Helper
                 }
                 else
                 {
-
+                    var terms = currentFolder.Split(Convert.ToChar("|"));
+                    var name = terms[1];
                 }
 
                 return channelItemInfos;
