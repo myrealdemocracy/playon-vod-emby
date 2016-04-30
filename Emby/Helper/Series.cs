@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MediaBrowser.Controller.Channels;
+using MediaBrowser.Model.Channels;
 using MediaBrowser.Model.Logging;
+using MediaBrowser.Model.MediaInfo;
 
 namespace PlayOn.Emby.Helper
 {
@@ -50,8 +53,8 @@ namespace PlayOn.Emby.Helper
                         {
                             channelItemInfos.Add(new ChannelItemInfo
                             {
-                                Id = currentFolder + "|" + season.Number,
-                                Name = "Season " + season.Number,
+                                Id = currentFolder + "|" + season.SeasonNumber,
+                                Name = "Season " + season.SeasonNumber,
                                 Type = ChannelItemType.Folder
                             });
                         }
@@ -59,6 +62,30 @@ namespace PlayOn.Emby.Helper
                     else if (seasonNumber > 0 && episodeNumber == 0)
                     {
                         var episodes = await rest.Episodes(name, seasonNumber, cancellationToken);
+
+                        foreach (var episode in episodes)
+                        {
+                            var mediaSources = new List<ChannelMediaInfo>();
+
+                            foreach (var video in episode.Videos)
+                            {
+                                mediaSources.Add(new ChannelMediaInfo
+                                {
+                                    Path = "http://playon.local/url/video?id=" + WebUtility.UrlEncode(video.Path),
+                                    Protocol = MediaProtocol.Http
+                                });
+                            }
+
+                            channelItemInfos.Add(new ChannelItemInfo
+                            {
+                                Id = currentFolder + "|" + episode.EpisodeNumber,
+                                Name = "S" + seasonNumber + "E" + episode.EpisodeNumber,
+                                Type = ChannelItemType.Media,
+                                ContentType = ChannelMediaContentType.Clip,
+                                MediaType = ChannelMediaType.Video,
+                                MediaSources = mediaSources
+                            });
+                        }
                     }
                     else if(seasonNumber > 0 && episodeNumber > 0)
                     {

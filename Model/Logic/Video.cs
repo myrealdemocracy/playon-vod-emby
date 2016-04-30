@@ -142,7 +142,7 @@ namespace PlayOn.Model.Logic
                         adoVideo.Overview = video.Overview;
                         adoVideo.Path = video.Path;
                         adoVideo.Provider = pathTerms[0];
-                        adoVideo.IsLive = video.Path.Contains("|live|") || video.Path.Contains("|live tv|") ? 1 : 0;
+                        adoVideo.IsLive = video.Path.Contains("|live|") || video.Path.Contains("|live tv|") || video.Path.Contains("|live stream|") ? 1 : 0;
                         adoVideo.CreatedAt = DateTime.UtcNow;
 
                         db.Videos.Add(adoVideo);

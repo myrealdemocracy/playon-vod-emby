@@ -46,12 +46,13 @@ namespace PlayOn.Model.Logic
                 using (var db = new Ado.PlayOnEntities())
                 {
                     var series = db.Series.FirstOrDefault(q => q.Name == name);
+                    var seasonsList = series.VideoSeries.GroupBy(g => g.Season).Select(s => s.First());
 
-                    foreach (var video in series.VideoSeries.GroupBy(g => g.Season).Select(s => s.First()))
+                    foreach (var season in seasonsList)
                     {
                         seasons.Add(new Tools.Scaffold.Season
                         {
-                            Number = video.Season
+                            SeasonNumber = season.Season
                         });
                     }
                 }
@@ -66,7 +67,42 @@ namespace PlayOn.Model.Logic
 
         public static List<Tools.Scaffold.Episode> BySeason(string name, int? season)
         {
-            throw new NotImplementedException();
+            var episodes = new List<Tools.Scaffold.Episode>();
+
+            try
+            {
+                using (var db = new Ado.PlayOnEntities())
+                {
+                    var series = db.Series.FirstOrDefault(q => q.Name == name);
+                    var episodeList = series.VideoSeries.Where(q => q.Season == season).GroupBy(g => g.Episode).Select(s => s.First());
+
+                    foreach (var episode in episodeList)
+                    {
+                        var videos = new List<Tools.Scaffold.Video>();
+
+                        foreach (var video in db.Videos.Where(q => q.VideoSeries.Any(a => a.IdSerie == series.Id && a.Season == season && a.Episode == episode.Episode)))
+                        {
+                            videos.Add(new Tools.Scaffold.Video
+                            {
+                                Name = video.Name,
+                                Path = video.Path
+                            });
+                        }
+
+                        episodes.Add(new Tools.Scaffold.Episode
+                        {
+                            EpisodeNumber = episode.Episode,
+                            Videos = videos
+                        });
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+            }
+
+            return episodes;
         }
 
         public static List<Tools.Scaffold.Video> ByEpisode(string name, int? season, int? episode)

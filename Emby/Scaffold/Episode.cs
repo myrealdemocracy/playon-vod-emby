@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace PlayOn.Emby.Scaffold
 {
-    public class Episode
+    public class Episode : Season
     {
-        public int? Number { get; set; }
+        public int? EpisodeNumber { get; set; }
         public List<Video> Videos { get; set; }
     }
 }

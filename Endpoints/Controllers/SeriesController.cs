@@ -38,6 +38,13 @@ namespace PlayOn.Endpoints.Controllers
             return Model.Logic.Series.BySeason(series.Name, series.Season);
         }
 
+        [Route("name/{name}/season/{season}")]
+        [HttpGet]
+        public List<Tools.Scaffold.Episode> BySeason(string name, int? season)
+        {
+            return Model.Logic.Series.BySeason(name, season);
+        }
+
         [Route("episode")]
         [HttpPost]
         public List<Tools.Scaffold.Video> ByEpisode(Tools.Scaffold.Form.Series series)
