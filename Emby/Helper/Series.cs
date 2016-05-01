@@ -75,7 +75,7 @@ namespace PlayOn.Emby.Helper
 
                         foreach (var episode in episodes)
                         {
-                            var info = await Provider.Series.Info(name, cancellationToken, seasonNumber, episodeNumber);
+                            var info = await Provider.Series.Info(name, cancellationToken, seasonNumber, episode.EpisodeNumber);
                             var mediaSources = new List<ChannelMediaInfo>();
 
                             foreach (var video in episode.Videos)

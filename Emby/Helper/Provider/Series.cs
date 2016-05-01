@@ -14,7 +14,7 @@ namespace PlayOn.Emby.Helper.Provider
 {
     public class Series
     {
-        public static async Task<Scaffold.Series> Info(string name, CancellationToken cancellationToken, int seasonNumber = 0, int episodeNumber = 0)
+        public static async Task<Scaffold.Series> Info(string name, CancellationToken cancellationToken, int seasonNumber = 0, int? episodeNumber = 0)
         {
             return await Task.Run(async () =>
             {
@@ -34,10 +34,18 @@ namespace PlayOn.Emby.Helper.Provider
                     if (episodeNumber > 0) seriesInfo.IndexNumber = episodeNumber;
 
                     var tvdbSerie = await TvdbSeriesProvider.Current.GetMetadata(seriesInfo, cancellationToken);
+
                     seriesItem = tvdbSerie.Item;
+
                     var serieId = seriesItem.GetProviderId(MetadataProviders.Tvdb);
-                    seriesDataPath = TvdbSeriesProvider.GetSeriesDataPath(Emby.Channel.Config.ApplicationPaths,
-                        new Dictionary<string, string> { { MetadataProviders.Tvdb.ToString(), serieId } });
+
+                    seriesDataPath = TvdbSeriesProvider.GetSeriesDataPath(
+                        Emby.Channel.Config.ApplicationPaths,
+                        new Dictionary<string, string> {
+                            {
+                                MetadataProviders.Tvdb.ToString(), serieId
+                            }
+                        });
                 }
                 catch (Exception exception)
                 {}
@@ -73,6 +81,7 @@ namespace PlayOn.Emby.Helper.Provider
                     if (seasonNumber == 0 && episodeNumber == 0)
                     {
                         var tvdbImageProvider = new TvdbSeriesImageProvider(Emby.Channel.Config, Emby.Channel.HttpClient, Emby.Channel.FileSystem);
+
                         tvdbImages = tvdbImageProvider.GetImages(Path.Combine(seriesDataPath, "banners.xml"), "en", cancellationToken);
                     }
                     else if (seasonNumber > 0 && episodeNumber == 0)
@@ -82,6 +91,7 @@ namespace PlayOn.Emby.Helper.Provider
                     else if (seasonNumber > 0 && episodeNumber > 0)
                     {
                         var tvdbImageProvider = new TvdbEpisodeImageProvider(Emby.Channel.Config, Emby.Channel.HttpClient, Emby.Channel.FileSystem);
+
                         tvdbImages = tvdbImageProvider.GetImages(episodeItem, cancellationToken).Result;
                     }
 
