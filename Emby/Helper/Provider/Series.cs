@@ -5,8 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using MediaBrowser.Controller.Entities.TV;
 using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Entities;
+using MediaBrowser.Model.Logging;
 using MediaBrowser.Model.Providers;
 using MediaBrowser.Providers.TV;
 
@@ -14,10 +16,15 @@ namespace PlayOn.Emby.Helper.Provider
 {
     public class Series
     {
-        public static async Task<Scaffold.Series> Info(string name, CancellationToken cancellationToken, int seasonNumber = 0, int? episodeNumber = 0)
+        protected static ILogger Logger = Emby.Channel.Logger;
+
+        public static async Task<Scaffold.Series> Info(string name, CancellationToken cancellationToken, int? seasonNumber = 0, int? episodeNumber = 0)
         {
             return await Task.Run(async () =>
             {
+                seasonNumber = seasonNumber ?? 0;
+                episodeNumber = episodeNumber ?? 0;
+
                 var seriesItem = new MediaBrowser.Controller.Entities.TV.Series();
                 var episodeItem = new MediaBrowser.Controller.Entities.TV.Episode();
                 var series = new Scaffold.Series();
@@ -26,13 +33,16 @@ namespace PlayOn.Emby.Helper.Provider
                 {
                     Name = name,
                     MetadataLanguage = "en",
+                    ParentIndexNumber = seasonNumber,
+                    IndexNumber = episodeNumber
                 };
+
+                Logger.Debug("name: " + name);
+                Logger.Debug("seasonNumber: " + seasonNumber);
+                Logger.Debug("episodeNumber: " + episodeNumber);
 
                 try
                 {
-                    if (seasonNumber > 0) seriesInfo.ParentIndexNumber = seasonNumber;
-                    if (episodeNumber > 0) seriesInfo.IndexNumber = episodeNumber;
-
                     var tvdbSerie = await TvdbSeriesProvider.Current.GetMetadata(seriesInfo, cancellationToken);
 
                     seriesItem = tvdbSerie.Item;
@@ -43,7 +53,8 @@ namespace PlayOn.Emby.Helper.Provider
                         Emby.Channel.Config.ApplicationPaths,
                         new Dictionary<string, string> {
                             {
-                                MetadataProviders.Tvdb.ToString(), serieId
+                                MetadataProviders.Tvdb.ToString(),
+                                serieId
                             }
                         });
                 }
@@ -52,23 +63,28 @@ namespace PlayOn.Emby.Helper.Provider
 
                 try
                 {
-                    if (seasonNumber > 0 && episodeNumber > 0)
+                    var episodeInfo = new EpisodeInfo
                     {
-                        var episodeInfo = new EpisodeInfo
-                        {
-                            ParentIndexNumber = seasonNumber,
-                            IndexNumber = episodeNumber,
-                            SeriesProviderIds = seriesItem.ProviderIds,
-                            MetadataLanguage = seriesItem.GetPreferredMetadataLanguage(),
-                            MetadataCountryCode = seriesItem.GetPreferredMetadataCountryCode()
-                        };
+                        ParentIndexNumber = seasonNumber,
+                        IndexNumber = episodeNumber,
+                        SeriesProviderIds = seriesItem.ProviderIds,
+                        ProviderIds = seriesItem.ProviderIds,
+                        MetadataLanguage = seriesItem.GetPreferredMetadataLanguage(),
+                        MetadataCountryCode = seriesItem.GetPreferredMetadataCountryCode()
+                    };
 
-                        var tvdbEpisode = await TvdbEpisodeProvider.Current.GetMetadata(episodeInfo, cancellationToken);
-                        episodeItem = tvdbEpisode.Item;
+                    var tvdbEpisode = await TvdbEpisodeProvider.Current.GetMetadata(episodeInfo, cancellationToken);
 
-                        series.Name = "S" + seasonNumber + " E" + episodeNumber + " - " + episodeItem.Name;
-                        series.Overview = episodeItem.Overview;
-                    }
+                    episodeItem = tvdbEpisode.Item;
+
+                    Logger.Debug("episodeItem null?: " + (episodeItem == null));
+
+                    if(episodeItem == null) episodeItem = new Episode();
+
+                    Logger.Debug("episodeItem.Series.Name: " + episodeItem.Series.Name);
+
+                    series.Name = "S" + seasonNumber + " E" + episodeNumber + " - " + episodeItem.Name;
+                    series.Overview = episodeItem.Overview;
                 }
                 catch (Exception exception)
                 {}
@@ -86,7 +102,7 @@ namespace PlayOn.Emby.Helper.Provider
                     }
                     else if (seasonNumber > 0 && episodeNumber == 0)
                     {
-                        tvdbImages = TvdbSeasonImageProvider.GetImages(Path.Combine(seriesDataPath, "banners.xml"), "en", seasonNumber, cancellationToken);
+                        tvdbImages = TvdbSeasonImageProvider.GetImages(Path.Combine(seriesDataPath, "banners.xml"), "en", Convert.ToInt32(seasonNumber), cancellationToken);
                     }
                     else if (seasonNumber > 0 && episodeNumber > 0)
                     {
@@ -94,6 +110,9 @@ namespace PlayOn.Emby.Helper.Provider
 
                         tvdbImages = tvdbImageProvider.GetImages(episodeItem, cancellationToken).Result;
                     }
+
+                    if(tvdbImages != null) Logger.Debug("tvdbimages.Count: " + tvdbImages.Count());
+                    else Logger.Debug("tvdbimages?: " + (tvdbImages == null));
 
                     image = tvdbImages.OrderByDescending(o => o.VoteCount).FirstOrDefault(q => q.Type == ImageType.Primary);
 

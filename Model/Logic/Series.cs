@@ -157,6 +157,8 @@ namespace PlayOn.Model.Logic
                     episode = Convert.ToInt32(regex.Groups["episode"].Value);
                 }
 
+                if(season == 0 || episode == 0) return;
+
                 using (var db = new Ado.PlayOnEntities())
                 {
                     var adoVideoSerie = db.VideoSeries.FirstOrDefault(q => q.IdVideo == video.Id && q.IdSerie == serie.Id);

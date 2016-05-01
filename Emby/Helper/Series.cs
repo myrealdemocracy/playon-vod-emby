@@ -58,7 +58,7 @@ namespace PlayOn.Emby.Helper
 
                         foreach (var season in seasons)
                         {
-                            var info = await Provider.Series.Info(name, cancellationToken, seasonNumber);
+                            var info = await Provider.Series.Info(name, cancellationToken, season.SeasonNumber);
 
                             channelItemInfos.Add(new ChannelItemInfo
                             {
@@ -99,9 +99,6 @@ namespace PlayOn.Emby.Helper
                                 MediaSources = mediaSources
                             });
                         }
-                    }
-                    else if(seasonNumber > 0 && episodeNumber > 0)
-                    {
                     }
                 }
 

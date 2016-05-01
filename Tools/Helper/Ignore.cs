@@ -18,9 +18,15 @@ namespace PlayOn.Tools.Helper
                 item.Name.ToLower() == "clips & extras" ||
                 item.Name.ToLower() == "episode highlights" ||
                 item.Name.ToLower() == "playback options" ||
+                item.Name.ToLower() == "backstage & interviews" ||
                 item.Name.ToLower() == "just for kids" ||
                 item.Name.ToLower() == "family" ||
                 item.Name.ToLower() == "kids" ||
+                item.Name.ToLower() == "recaps" ||
+                item.Name.ToLower() == "previews" ||
+                (item.Type == "folder" && item.Name.ToLower() == "moments") ||
+                (item.Type == "folder" && item.Name.ToLower() == "trailers") ||
+                (item.Type == "folder" && item.Name.ToLower() == "webisodes") ||
                 item.Name.Contains("This folder contains no content") ||
                 String.IsNullOrEmpty(item.Name);
         }
