@@ -16,7 +16,7 @@ namespace PlayOn.Tools.Helper
 
             if (String.IsNullOrEmpty(image)) image = Default(item.Href);
 
-            return Url.Base + image;
+            return Constant.Url.Base + image;
         }
 
         public static string Default(string href, bool addBase = false)
@@ -30,7 +30,7 @@ namespace PlayOn.Tools.Helper
 
             var providerImage = "/images/provider.png?id=" + providerId;
 
-            return (addBase ? Url.Base : "") + providerImage;
+            return (addBase ? Constant.Url.Base : "") + providerImage;
         }
     }
 }

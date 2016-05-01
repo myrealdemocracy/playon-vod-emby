@@ -22,7 +22,7 @@ namespace PlayOn.Tools.Helper.Xml
 
             try
             {
-                var finalUrl = Url.Base + url + (url.Contains("?") ? "&" : "?") + "flm=long";
+                var finalUrl = Constant.Url.Base + url + (url.Contains("?") ? "&" : "?") + "flm=long";
 
                 if (url.Contains("error")) return new T();
 

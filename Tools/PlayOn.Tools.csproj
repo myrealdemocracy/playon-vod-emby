@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constant\Category.cs" />
+    <Compile Include="Constant\Url.cs" />
     <Compile Include="Helper\Ignore.cs" />
     <Compile Include="Helper\Image.cs" />
     <Compile Include="Helper\Serie.cs" />

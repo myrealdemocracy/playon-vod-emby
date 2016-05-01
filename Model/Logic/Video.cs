@@ -34,45 +34,15 @@ namespace PlayOn.Model.Logic
             return videos;
         }
 
-        public static void SaveAll()
+        public static void SaveAll(string url = null, string path = null)
         {
-            const string url = Tools.Helper.Url.Xml;
-            var items = Tools.Helper.Xml.Extractor.Items<Tools.Scaffold.Xml.Catalog>(url).Items;
+            url = String.IsNullOrEmpty(url) ? Tools.Constant.Url.Xml : url;
+
+            var items = String.IsNullOrEmpty(path) ? 
+                Tools.Helper.Xml.Extractor.Items<Tools.Scaffold.Xml.Catalog>(url).Items :
+                Tools.Helper.Xml.Extractor.Items<Tools.Scaffold.Xml.Group>(url).Items;
 
             foreach (var item in items)
-            {
-                Logger.Debug("item.Name: " + item.Name);
-                Logger.Debug("item.Href: " + item.Href);
-
-                if (Tools.Helper.Ignore.Item(item))
-                {
-                    Logger.Debug("ignoring");
-
-                    continue;
-                }
-
-                Logger.Debug("calling SaveLoop");
-
-                SaveLoop(item.Href.Split(Convert.ToChar("="))[1] + "|");
-            }
-
-            //SaveLoop("mtv|");
-        }
-
-        public static void SaveLoop(string path)
-        {
-            var url = Tools.Helper.Url.Generate(path);
-
-            Logger.Debug("path: " + path);
-            Logger.Debug("url: " + url);
-            Logger.Debug("calling SaveForEach");
-
-            SaveForEach(url, path);
-        }
-
-        public static void SaveForEach(string url, string path)
-        {
-            foreach (var item in Tools.Helper.Xml.Extractor.Items<Tools.Scaffold.Xml.Group>(url).Items)
             {
                 var nextPath = path + item.Name.ToLower() + "|";
 
@@ -94,7 +64,7 @@ namespace PlayOn.Model.Logic
                 {
                     Logger.Debug("next loop");
 
-                    SaveLoop(nextPath);
+                    SaveAll(item.Href, nextPath);
                 }
                 else
                 {

@@ -8,14 +8,9 @@ namespace PlayOn.Tools.Helper
 {
     public class Url
     {
-        public const string Base = "http://192.168.3.200:54479";
-        public const string Xml = "/data/data.xml";
-        public const string Video = "http://playon.local/url/video?id=";
-        public const string Image = "http://playon.local/url/image?id=";
-
         public static string Generate(string path = null)
         {
-            var baseUrl = Xml;
+            var baseUrl = Constant.Url.Xml;
 
             if (!String.IsNullOrEmpty(path))
             {
@@ -48,13 +43,13 @@ namespace PlayOn.Tools.Helper
                 switch (term)
                 {
                     case "video":
-                        baseUrl = Base + "/" + Helper.Xml.Extractor.Items<Scaffold.Xml.Video>(baseUrl).Item.Src;
+                        baseUrl = Constant.Url.Base + "/" + Xml.Extractor.Items<Scaffold.Xml.Video>(baseUrl).Item.Src;
                         break;
                     case "image":
-                        baseUrl = count == 0 ? Helper.Image.Default(baseUrl, true) : Helper.Image.Mapper(subItem);
+                        baseUrl = count == 0 ? Image.Default(baseUrl, true) : Image.Mapper(subItem);
                         break;
                     default:
-                        if (count > 0) items = Helper.Xml.Extractor.Items<Scaffold.Xml.Group>(baseUrl).Items;
+                        if (count > 0) items = Xml.Extractor.Items<Scaffold.Xml.Group>(baseUrl).Items;
 
                         subItem = items.FirstOrDefault(q => String.Equals(q.Name, term, StringComparison.CurrentCultureIgnoreCase));
 

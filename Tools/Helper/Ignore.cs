@@ -17,19 +17,10 @@ namespace PlayOn.Tools.Helper
                 item.Name.ToLower() == "video clips" ||
                 item.Name.ToLower() == "clips & extras" ||
                 item.Name.ToLower() == "episode highlights" ||
-                item.Name.ToLower() == "your history" ||
-                item.Name.ToLower() == "your queue" ||
-                item.Name.ToLower() == "your subscriptions" ||
                 item.Name.ToLower() == "playback options" ||
-                item.Name.ToLower() == "suggestions for you" ||
-                item.Name.ToLower() == "my list" ||
-                item.Name.ToLower() == "recently added" ||
-                item.Name.ToLower() == "new releases" ||
                 item.Name.ToLower() == "just for kids" ||
-                item.Name.ToLower() == "popular on netflix" ||
-                item.Name.ToLower() == "new releases" ||
-                item.Name.ToLower() == "netflix originals" ||
-                item.Name.StartsWith("Top Picks for") ||
+                item.Name.ToLower() == "family" ||
+                item.Name.ToLower() == "kids" ||
                 item.Name.Contains("This folder contains no content") ||
                 String.IsNullOrEmpty(item.Name);
         }
