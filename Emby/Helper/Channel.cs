@@ -36,12 +36,12 @@ namespace PlayOn.Emby.Helper
                             Name = "TV Shows",
                             Type = ChannelItemType.Folder
                         },
-                        new ChannelItemInfo
-                        {
-                            Id = "categories",
-                            Name = "Categories",
-                            Type = ChannelItemType.Folder
-                        }
+                        //new ChannelItemInfo
+                        //{
+                        //    Id = "categories",
+                        //    Name = "Categories",
+                        //    Type = ChannelItemType.Folder
+                        //}
                     };
                 }
                 else if (currentFolder == "movies" || currentFolder.Contains("movies|"))

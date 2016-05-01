@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommonIO">
+      <HintPath>..\..\Emby\packages\CommonIO.1.0.0.9\lib\net45\CommonIO.dll</HintPath>
+    </Reference>
     <Reference Include="MediaBrowser.Common">
       <HintPath>..\packages\MediaBrowser.Common.3.0.645\lib\net45\MediaBrowser.Common.dll</HintPath>
     </Reference>
@@ -55,6 +58,7 @@
     <Compile Include="Helper\Category.cs" />
     <Compile Include="Helper\Channel.cs" />
     <Compile Include="Helper\Movie.cs" />
+    <Compile Include="Helper\Provider\Series.cs" />
     <Compile Include="Helper\Series.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -77,6 +81,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Constant\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Emby\MediaBrowser.Providers\MediaBrowser.Providers.csproj">
+      <Project>{442B5058-DCAF-4263-BB6A-F21E31120A1B}</Project>
+      <Name>MediaBrowser.Providers</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

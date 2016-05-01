@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MediaBrowser.Controller.Channels;
+using MediaBrowser.Model.Channels;
 using MediaBrowser.Model.Logging;
+using MediaBrowser.Model.MediaInfo;
 
 namespace PlayOn.Emby.Helper
 {
@@ -25,13 +28,27 @@ namespace PlayOn.Emby.Helper
 
                     var movies = await rest.All(cancellationToken);
 
-                    foreach (var item in movies)
+                    foreach (var movie in movies)
                     {
+                        var mediaSources = new List<ChannelMediaInfo>();
+
+                        foreach (var video in movie.Videos)
+                        {
+                            mediaSources.Add(new ChannelMediaInfo
+                            {
+                                Path = "http://playon.local/url/video?id=" + WebUtility.UrlEncode(video.Path),
+                                Protocol = MediaProtocol.Http
+                            });
+                        }
+
                         channelItemInfos.Add(new ChannelItemInfo
                         {
-                            Id = "movies|" + item.Name.ToLower(),
-                            Name = item.Name,
-                            Type = ChannelItemType.Folder
+                            Id = currentFolder + "|" + movie.Name.ToLower(),
+                            Name = movie.Name,
+                            Type = ChannelItemType.Media,
+                            ContentType = ChannelMediaContentType.Clip,
+                            MediaType = ChannelMediaType.Video,
+                            MediaSources = mediaSources
                         });
                     }
                 }

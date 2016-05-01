@@ -21,10 +21,22 @@ namespace PlayOn.Model.Logic
             {
                 foreach (var movie in db.Movies)
                 {
+                    var videos = new List<Tools.Scaffold.Video>();
+
+                    foreach (var video in movie.Videos)
+                    {
+                        videos.Add(new Tools.Scaffold.Video
+                        {
+                            Name = video.Name,
+                            Path = video.Path
+                        });
+                    }
+
                     movies.Add(new Tools.Scaffold.Movie
                     {
                         Id = movie.Id,
-                        Name = movie.Name
+                        Name = movie.Name,
+                        Videos = videos
                     });
                 }
             }

@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MediaBrowser.Controller.Channels;
+using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Channels;
+using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Logging;
 using MediaBrowser.Model.MediaInfo;
+using MediaBrowser.Providers.TV;
 
 namespace PlayOn.Emby.Helper
 {
@@ -29,11 +33,14 @@ namespace PlayOn.Emby.Helper
 
                     foreach (var serie in series)
                     {
+                        var info = await Provider.Series.Info(serie.Name, cancellationToken);
+
                         channelItemInfos.Add(new ChannelItemInfo
                         {
                             Id = "series|" + serie.Name.ToLower(),
                             Name = serie.Name,
-                            Type = ChannelItemType.Folder
+                            Type = ChannelItemType.Folder,
+                            ImageUrl = info.Image
                         });
                     }
                 }
@@ -51,11 +58,14 @@ namespace PlayOn.Emby.Helper
 
                         foreach (var season in seasons)
                         {
+                            var info = await Provider.Series.Info(name, cancellationToken, seasonNumber);
+
                             channelItemInfos.Add(new ChannelItemInfo
                             {
                                 Id = currentFolder + "|" + season.SeasonNumber,
                                 Name = "Season " + season.SeasonNumber,
-                                Type = ChannelItemType.Folder
+                                Type = ChannelItemType.Folder,
+                                ImageUrl = info.Image
                             });
                         }
                     }
@@ -65,6 +75,7 @@ namespace PlayOn.Emby.Helper
 
                         foreach (var episode in episodes)
                         {
+                            var info = await Provider.Series.Info(name, cancellationToken, seasonNumber, episodeNumber);
                             var mediaSources = new List<ChannelMediaInfo>();
 
                             foreach (var video in episode.Videos)
@@ -79,10 +90,12 @@ namespace PlayOn.Emby.Helper
                             channelItemInfos.Add(new ChannelItemInfo
                             {
                                 Id = currentFolder + "|" + episode.EpisodeNumber,
-                                Name = "S" + seasonNumber + "E" + episode.EpisodeNumber,
+                                Name = info.Name,
+                                Overview = info.Overview,
                                 Type = ChannelItemType.Media,
                                 ContentType = ChannelMediaContentType.Clip,
                                 MediaType = ChannelMediaType.Video,
+                                ImageUrl = info.Image,
                                 MediaSources = mediaSources
                             });
                         }
