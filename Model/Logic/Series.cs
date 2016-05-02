@@ -101,11 +101,13 @@ namespace PlayOn.Model.Logic
 
                     foreach (var video in videos)
                     {
-                        url = Tools.Helper.Url.Generate(video.Path);
+                        url = Tools.Helper.Url.Generate(video.Path + "video|");
 
                         if (url.Contains("m3u8")) break;
                     }
                 }
+
+                url = url.Contains("xml") ? "" : url;
             }
             catch (Exception exception)
             {

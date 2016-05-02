@@ -35,14 +35,20 @@ namespace PlayOn.Endpoints.Controllers
         [HttpGet]
         public HttpResponseMessage Video([FromUri] string name, int? season, int? episode)
         {
-            return new HttpResponseMessage
+            var url = Model.Logic.Series.VideoByNameSeasonEpisode(WebUtility.UrlDecode(name), season, episode);
+            var message = new HttpResponseMessage();
+
+            if (String.IsNullOrEmpty(url))
             {
-                StatusCode = HttpStatusCode.Found,
-                Headers =
-                {
-                    Location = new Uri(Model.Logic.Series.VideoByNameSeasonEpisode(WebUtility.UrlDecode(name), season, episode))
-                }
-            };
+                message.StatusCode = HttpStatusCode.Gone;
+            }
+            else
+            {
+                message.StatusCode = HttpStatusCode.Found;
+                message.Headers.Location = new Uri(url);
+            }
+
+            return message;
         }
     }
 }

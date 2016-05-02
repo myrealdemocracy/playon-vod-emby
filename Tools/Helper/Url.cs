@@ -15,20 +15,27 @@ namespace PlayOn.Tools.Helper
         {
             var baseUrl = Constant.Url.Xml;
 
-            if (!String.IsNullOrEmpty(path))
+            try
             {
-                var terms = path.Split(Convert.ToChar("|"));
-
-                baseUrl += "?id=" + terms[0];
-
-                if (terms.Length > 0)
+                if (!String.IsNullOrEmpty(path))
                 {
-                    path = path.Replace(terms[0] + "|", "");
+                    var terms = path.Split(Convert.ToChar("|"));
 
-                    path = path.Length > 1 ? path.Substring(0, path.Length - 1) : path;
+                    baseUrl += "?id=" + terms[0];
 
-                    baseUrl = Find(baseUrl, path);
+                    if (terms.Length > 0)
+                    {
+                        path = path.Replace(terms[0] + "|", "");
+
+                        path = path.Length > 1 ? path.Substring(0, path.Length - 1) : path;
+
+                        baseUrl = Find(baseUrl, path);
+                    }
                 }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
             }
 
             Logger.Debug("baseUrl:" + baseUrl);
@@ -45,34 +52,41 @@ namespace PlayOn.Tools.Helper
 
             Logger.Debug("path:" + path);
 
-            foreach (var term in terms)
+            try
             {
-                Logger.Debug("count:" + count);
-                Logger.Debug("term:" + term);
-
-                switch (term)
+                foreach (var term in terms)
                 {
-                    case "video":
-                        baseUrl = Constant.Url.Base + "/" + Xml.Extractor.Items<Scaffold.Xml.Video>(baseUrl).Item.Src;
-                        break;
-                    case "image":
-                        baseUrl = count == 0 ? Image.Default(baseUrl, true) : Image.Mapper(subItem);
-                        break;
-                    default:
-                        if (count > 0) items = Xml.Extractor.Items<Scaffold.Xml.Group>(baseUrl).Items;
+                    Logger.Debug("count:" + count);
+                    Logger.Debug("term:" + term);
 
-                        subItem = items.FirstOrDefault(q => String.Equals(q.Name, term, StringComparison.CurrentCultureIgnoreCase));
+                    switch (term)
+                    {
+                        case "video":
+                            baseUrl = Constant.Url.Base + "/" + Xml.Extractor.Items<Scaffold.Xml.Video>(baseUrl).Item.Src;
+                            break;
+                        case "image":
+                            baseUrl = count == 0 ? Image.Default(baseUrl, true) : Image.Mapper(subItem);
+                            break;
+                        default:
+                            if (count > 0) items = Xml.Extractor.Items<Scaffold.Xml.Group>(baseUrl).Items;
 
-                        if (subItem != null)
-                        {
-                            baseUrl = subItem.Href;
+                            subItem = items.FirstOrDefault(q => String.Equals(q.Name, term, StringComparison.CurrentCultureIgnoreCase));
 
-                            Logger.Debug("subItem.Href:" + subItem.Href);
-                        }
-                        break;
+                            if (subItem != null)
+                            {
+                                baseUrl = subItem.Href;
+
+                                Logger.Debug("subItem.Href:" + subItem.Href);
+                            }
+                            break;
+                    }
+
+                    count++;
                 }
-
-                count++;
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
             }
 
             Logger.Debug("baseUrl:" + baseUrl);

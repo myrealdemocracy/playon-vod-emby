@@ -17,25 +17,32 @@ namespace PlayOn.Model.Logic
         {
             var movies = new List<Tools.Scaffold.Movie>();
 
-            using (var db = new Ado.PlayOnEntities())
+            try
             {
-                IQueryable<Ado.Movie> dbMovies = db.Movies;
-
-                if (!String.IsNullOrEmpty(letter))
+                using (var db = new Ado.PlayOnEntities())
                 {
-                    dbMovies = letter != "nmb" ? 
-                        db.Movies.Where(q => q.Name.StartsWith(letter)) : 
-                        db.Movies.Where(q => q.Name.StartsWith("0") || q.Name.StartsWith("1") || q.Name.StartsWith("2") || q.Name.StartsWith("3") || q.Name.StartsWith("4") || q.Name.StartsWith("5") || q.Name.StartsWith("6") || q.Name.StartsWith("7") || q.Name.StartsWith("8") || q.Name.StartsWith("9"));
-                }
+                    IQueryable<Ado.Movie> dbMovies = db.Movies;
 
-                foreach (var movie in dbMovies)
-                {
-                    movies.Add(new Tools.Scaffold.Movie
+                    if (!String.IsNullOrEmpty(letter))
                     {
-                        Id = movie.Id,
-                        Name = movie.Name
-                    });
+                        dbMovies = letter != "nmb" ?
+                            db.Movies.Where(q => q.Name.StartsWith(letter)) :
+                            db.Movies.Where(q => q.Name.StartsWith("0") || q.Name.StartsWith("1") || q.Name.StartsWith("2") || q.Name.StartsWith("3") || q.Name.StartsWith("4") || q.Name.StartsWith("5") || q.Name.StartsWith("6") || q.Name.StartsWith("7") || q.Name.StartsWith("8") || q.Name.StartsWith("9"));
+                    }
+
+                    foreach (var movie in dbMovies)
+                    {
+                        movies.Add(new Tools.Scaffold.Movie
+                        {
+                            Id = movie.Id,
+                            Name = movie.Name
+                        });
+                    }
                 }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
             }
 
             return movies;
@@ -45,16 +52,25 @@ namespace PlayOn.Model.Logic
         {
             var url = String.Empty;
 
-            using (var db = new Ado.PlayOnEntities())
+            try
             {
-                var videos = db.Movies.FirstOrDefault(q => q.Name == name).Videos;
-
-                foreach (var video in videos)
+                using (var db = new Ado.PlayOnEntities())
                 {
-                    url = Tools.Helper.Url.Generate(video.Path);
+                    var videos = db.Movies.FirstOrDefault(q => q.Name == name).Videos;
 
-                    if(url.Contains("m3u8")) break;
+                    foreach (var video in videos)
+                    {
+                        url = Tools.Helper.Url.Generate(video.Path + "video|");
+
+                        if (url.Contains("m3u8")) break;
+                    }
                 }
+
+                url = url.Contains("xml") ? "" : url;
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
             }
 
             return url;

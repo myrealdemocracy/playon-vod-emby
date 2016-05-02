@@ -38,7 +38,7 @@ namespace PlayOn.Tools.Helper.Xml
 
                 if (xml == null) return new T();
 
-                Cache.Add(url, xml, DateTimeOffset.Now.AddHours(6));
+                Cache.Add(url, xml, DateTimeOffset.Now.AddDays(1));
             }
             catch (WebException webException)
             {

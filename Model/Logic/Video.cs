@@ -17,18 +17,25 @@ namespace PlayOn.Model.Logic
         {
             var videos = new List<Tools.Scaffold.Video>();
 
-            using (var db = new Ado.PlayOnEntities())
+            try
             {
-                foreach (var video in db.Videos)
+                using (var db = new Ado.PlayOnEntities())
                 {
-                    videos.Add(new Tools.Scaffold.Video
+                    foreach (var video in db.Videos)
                     {
-                        Id = video.Id,
-                        Name = video.Name,
-                        Overview = video.Overview,
-                        Path = video.Path
-                    });
+                        videos.Add(new Tools.Scaffold.Video
+                        {
+                            Id = video.Id,
+                            Name = video.Name,
+                            Overview = video.Overview,
+                            Path = video.Path
+                        });
+                    }
                 }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
             }
 
             return videos;
