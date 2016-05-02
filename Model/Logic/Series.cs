@@ -32,11 +32,6 @@ namespace PlayOn.Model.Logic
             return series;
         }
 
-        public static List<Tools.Scaffold.Series> ByCategory(string category)
-        {
-            throw new NotImplementedException();
-        }
-
         public static List<Tools.Scaffold.Season> ByName(string name)
         {
             var seasons = new List<Tools.Scaffold.Season>();
@@ -78,20 +73,9 @@ namespace PlayOn.Model.Logic
 
                     foreach (var episode in episodeList)
                     {
-                        var videos = new List<Tools.Scaffold.Video>();
-
-                        foreach (var video in db.Videos.Where(q => q.VideoSeries.Any(a => a.IdSerie == series.Id && a.Season == season && a.Episode == episode.Episode)))
-                        {
-                            videos.Add(new Tools.Scaffold.Video
-                            {
-                                Path = video.Path
-                            });
-                        }
-
                         episodes.Add(new Tools.Scaffold.Episode
                         {
-                            EpisodeNumber = episode.Episode,
-                            Videos = videos
+                            EpisodeNumber = episode.Episode
                         });
                     }
                 }
@@ -104,9 +88,31 @@ namespace PlayOn.Model.Logic
             return episodes;
         }
 
-        public static List<Tools.Scaffold.Video> ByEpisode(string name, int? season, int? episode)
+        public static string VideoByNameSeasonEpisode(string name, int? season, int? episode)
         {
-            throw new NotImplementedException();
+            var url = String.Empty;
+
+            try
+            {
+                using (var db = new Ado.PlayOnEntities())
+                {
+                    var series = db.Series.FirstOrDefault(q => q.Name == name);
+                    var videos = db.Videos.Where(q => q.VideoSeries.Any(a => a.IdSerie == series.Id && a.Season == season && a.Episode == episode));
+
+                    foreach (var video in videos)
+                    {
+                        url = Tools.Helper.Url.Generate(video.Path);
+
+                        if (url.Contains("m3u8")) break;
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+            }
+
+            return url;
         }
 
         public static Ado.Serie Save(string seriesName)

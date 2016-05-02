@@ -21,41 +21,56 @@ namespace PlayOn.Emby.Helper
             return await Task.Run(async () =>
             {
                 var channelItemInfos = new List<ChannelItemInfo>();
+                var rest = new Rest.Movie();
 
                 if (currentFolder == "movies")
                 {
-                    var rest = new Rest.Movie();
-
-                    var movies = await rest.All(cancellationToken);
-
-                    foreach (var movie in movies)
+                    channelItemInfos.Add(new ChannelItemInfo
                     {
-                        var mediaSources = new List<ChannelMediaInfo>();
+                        Id = currentFolder + "|nmb",
+                        Name = "#",
+                        Type = ChannelItemType.Folder
+                    });
 
-                        foreach (var video in movie.Videos)
-                        {
-                            mediaSources.Add(new ChannelMediaInfo
-                            {
-                                Path = "http://playon.local/url/video?id=" + WebUtility.UrlEncode(video.Path),
-                                Protocol = MediaProtocol.Http
-                            });
-                        }
-
+                    for (var letter = 'A'; letter <= 'Z'; letter++)
+                    {
                         channelItemInfos.Add(new ChannelItemInfo
                         {
-                            Id = currentFolder + "|" + movie.Name.ToLower(),
-                            Name = movie.Name,
-                            Type = ChannelItemType.Media,
-                            ContentType = ChannelMediaContentType.Clip,
-                            MediaType = ChannelMediaType.Video,
-                            MediaSources = mediaSources
+                            Id = currentFolder + "|" + letter.ToString().ToLower(),
+                            Name = letter.ToString(),
+                            Type = ChannelItemType.Folder
                         });
                     }
                 }
                 else
                 {
                     var terms = currentFolder.Split(Convert.ToChar("|"));
-                    var name = terms[1];
+                    var letter = terms[1];
+
+                    var movies = await rest.All(letter, cancellationToken);
+
+                    foreach (var movie in movies)
+                    {
+                        var info = await Provider.Movie.Info(movie.Name, cancellationToken);
+
+                        channelItemInfos.Add(new ChannelItemInfo
+                        {
+                            Id = "movies|" + movie.Name.ToLower(),
+                            Name = movie.Name,
+                            Type = ChannelItemType.Media,
+                            ContentType = ChannelMediaContentType.Clip,
+                            MediaType = ChannelMediaType.Video,
+                            ImageUrl = info.Image,
+                            MediaSources = new List<ChannelMediaInfo>
+                            {
+                                new ChannelMediaInfo
+                                {
+                                    Path = "http://playon.local/movie/video?name=" + WebUtility.UrlEncode(movie.Name),
+                                    Protocol = MediaProtocol.Http
+                                }
+                            }
+                        });
+                    }
                 }
 
                 return channelItemInfos;

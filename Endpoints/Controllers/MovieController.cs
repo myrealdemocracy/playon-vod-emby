@@ -17,18 +17,25 @@ namespace PlayOn.Endpoints.Controllers
             return Model.Logic.Movie.All();
         }
 
-        [Route("category/{category}")]
+        [Route("all/letter/{letter}")]
         [HttpGet]
-        public List<Tools.Scaffold.Movie> ByCategory(string category)
+        public List<Tools.Scaffold.Movie> ByLetter(string letter)
         {
-            return Model.Logic.Movie.ByCategory(category);
+            return Model.Logic.Movie.All(letter);
         }
 
-        [Route("name")]
-        [HttpPost]
-        public List<Tools.Scaffold.Video> ByName(Tools.Scaffold.Form.Movie movie)
+        [Route("video")]
+        [HttpGet]
+        public HttpResponseMessage Video([FromUri] string name)
         {
-            return Model.Logic.Movie.ByName(movie.Name);
+            return new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.Found,
+                Headers =
+                {
+                    Location = new Uri(Model.Logic.Movie.VideoByName(WebUtility.UrlDecode(name)))
+                }
+            };
         }
     }
 }

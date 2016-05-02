@@ -13,30 +13,27 @@ namespace PlayOn.Model.Logic
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public static List<Tools.Scaffold.Movie> All()
+        public static List<Tools.Scaffold.Movie> All(string letter = null)
         {
             var movies = new List<Tools.Scaffold.Movie>();
 
             using (var db = new Ado.PlayOnEntities())
             {
-                foreach (var movie in db.Movies)
+                IQueryable<Ado.Movie> dbMovies = db.Movies;
+
+                if (!String.IsNullOrEmpty(letter))
                 {
-                    var videos = new List<Tools.Scaffold.Video>();
+                    dbMovies = letter != "nmb" ? 
+                        db.Movies.Where(q => q.Name.StartsWith(letter)) : 
+                        db.Movies.Where(q => q.Name.StartsWith("0") || q.Name.StartsWith("1") || q.Name.StartsWith("2") || q.Name.StartsWith("3") || q.Name.StartsWith("4") || q.Name.StartsWith("5") || q.Name.StartsWith("6") || q.Name.StartsWith("7") || q.Name.StartsWith("8") || q.Name.StartsWith("9"));
+                }
 
-                    foreach (var video in movie.Videos)
-                    {
-                        videos.Add(new Tools.Scaffold.Video
-                        {
-                            Name = video.Name,
-                            Path = video.Path
-                        });
-                    }
-
+                foreach (var movie in dbMovies)
+                {
                     movies.Add(new Tools.Scaffold.Movie
                     {
                         Id = movie.Id,
-                        Name = movie.Name,
-                        Videos = videos
+                        Name = movie.Name
                     });
                 }
             }
@@ -44,14 +41,23 @@ namespace PlayOn.Model.Logic
             return movies;
         }
 
-        public static List<Tools.Scaffold.Movie> ByCategory(string category)
+        public static string VideoByName(string name)
         {
-            throw new NotImplementedException();
-        }
+            var url = String.Empty;
 
-        public static List<Tools.Scaffold.Video> ByName(string category)
-        {
-            throw new NotImplementedException();
+            using (var db = new Ado.PlayOnEntities())
+            {
+                var videos = db.Movies.FirstOrDefault(q => q.Name == name).Videos;
+
+                foreach (var video in videos)
+                {
+                    url = Tools.Helper.Url.Generate(video.Path);
+
+                    if(url.Contains("m3u8")) break;
+                }
+            }
+
+            return url;
         }
 
         public static void Save(Ado.Video video, Ado.Movie movie)

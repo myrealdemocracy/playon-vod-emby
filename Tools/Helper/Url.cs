@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NLog;
 
 namespace PlayOn.Tools.Helper
 {
     public class Url
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public static string Generate(string path = null)
         {
             var baseUrl = Constant.Url.Xml;
@@ -28,18 +31,25 @@ namespace PlayOn.Tools.Helper
                 }
             }
 
+            Logger.Debug("baseUrl:" + baseUrl);
+
             return baseUrl;
         }
 
         public static string Find(string baseUrl, string path)
         {
             var count = 0;
-            var items = Helper.Xml.Extractor.Items<Scaffold.Xml.Group>(baseUrl).Items;
+            var items = Xml.Extractor.Items<Scaffold.Xml.Group>(baseUrl).Items;
             var subItem = new Scaffold.Xml.Item();
             var terms = path.Split(Convert.ToChar("|"));
 
+            Logger.Debug("path:" + path);
+
             foreach (var term in terms)
             {
+                Logger.Debug("count:" + count);
+                Logger.Debug("term:" + term);
+
                 switch (term)
                 {
                     case "video":
@@ -53,12 +63,19 @@ namespace PlayOn.Tools.Helper
 
                         subItem = items.FirstOrDefault(q => String.Equals(q.Name, term, StringComparison.CurrentCultureIgnoreCase));
 
-                        if (subItem != null) baseUrl = subItem.Href;
+                        if (subItem != null)
+                        {
+                            baseUrl = subItem.Href;
+
+                            Logger.Debug("subItem.Href:" + subItem.Href);
+                        }
                         break;
                 }
 
                 count++;
             }
+
+            Logger.Debug("baseUrl:" + baseUrl);
 
             return baseUrl;
         }

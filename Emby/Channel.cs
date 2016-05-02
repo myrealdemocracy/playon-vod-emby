@@ -11,6 +11,7 @@ using CommonIO;
 using MediaBrowser.Common.Net;
 using MediaBrowser.Controller.Channels;
 using MediaBrowser.Controller.Configuration;
+using MediaBrowser.Controller.Library;
 using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Channels;
 using MediaBrowser.Model.Entities;
@@ -23,14 +24,16 @@ namespace PlayOn.Emby
     public class Channel : IChannel//, ISearchableChannel
     {
         public static IServerConfigurationManager Config;
-        public static IFileSystem FileSystem { get; set; }
+        public static ILibraryManager LibraryManager;
+        public static IFileSystem FileSystem;
         public static IHttpClient HttpClient;
         public static ILogger Logger;
         public static IJsonSerializer JsonSerializer;
 
-        public Channel(IServerConfigurationManager configuration, IFileSystem fileSystem, IHttpClient httpClient, ILogManager logManager, IJsonSerializer jsonSerializer)
+        public Channel(IServerConfigurationManager configuration, ILibraryManager libraryManager, IFileSystem fileSystem, IHttpClient httpClient, ILogManager logManager, IJsonSerializer jsonSerializer)
         {
             Config = configuration;
+            LibraryManager = libraryManager;
             FileSystem = fileSystem;
             HttpClient = httpClient;
             Logger = logManager.GetLogger(GetType().Name);
@@ -55,7 +58,7 @@ namespace PlayOn.Emby
 
                 SupportsContentDownloading = true,
                 SupportsSortOrderToggle = false,
-                AutoRefreshLevels = 5
+                //AutoRefreshLevels = 5
             };
         }
 

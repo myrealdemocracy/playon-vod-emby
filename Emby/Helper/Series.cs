@@ -76,16 +76,6 @@ namespace PlayOn.Emby.Helper
                         foreach (var episode in episodes)
                         {
                             var info = await Provider.Series.Info(name, cancellationToken, seasonNumber, episode.EpisodeNumber);
-                            var mediaSources = new List<ChannelMediaInfo>();
-
-                            foreach (var video in episode.Videos)
-                            {
-                                mediaSources.Add(new ChannelMediaInfo
-                                {
-                                    Path = "http://playon.local/url/video?id=" + WebUtility.UrlEncode(video.Path),
-                                    Protocol = MediaProtocol.Http
-                                });
-                            }
 
                             var episodeName = String.IsNullOrEmpty(info.Name)
                                 ? "S" + seasonNumber + " E" + episode.EpisodeNumber
@@ -103,7 +93,14 @@ namespace PlayOn.Emby.Helper
                                 ContentType = ChannelMediaContentType.Clip,
                                 MediaType = ChannelMediaType.Video,
                                 ImageUrl = info.Image,
-                                MediaSources = mediaSources
+                                MediaSources = new List<ChannelMediaInfo>
+                                {
+                                    new ChannelMediaInfo
+                                    {
+                                        Path = "http://playon.local/series/video/s/" + seasonNumber + "/e/" + episode.EpisodeNumber + "?name=" + WebUtility.UrlEncode(name),
+                                        Protocol = MediaProtocol.Http
+                                    }
+                                }
                             });
                         }
                     }

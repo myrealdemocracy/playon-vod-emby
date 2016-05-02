@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Logging;
+using MediaBrowser.Model.Providers;
 using MediaBrowser.Providers.Movies;
+using MediaBrowser.Providers.Omdb;
 
 namespace PlayOn.Emby.Helper.Provider
 {
@@ -25,26 +27,37 @@ namespace PlayOn.Emby.Helper.Provider
                 var movieInfo = new MovieInfo
                 {
                     Name = name,
-                    MetadataLanguage = "en"
+                    MetadataLanguage = "en",
+
                 };
 
                 try
                 {
-                    var movieDb = await MovieDbProvider.Current.GetMetadata(movieInfo, cancellationToken);
+                    var omdbItemProvider = new OmdbItemProvider(Emby.Channel.JsonSerializer, Emby.Channel.HttpClient, Emby.Channel.Logger, Emby.Channel.LibraryManager);
+                    var omdbMovie = await omdbItemProvider.GetMetadata(movieInfo, cancellationToken);
 
-                    movieItem = movieDb.Item;
+                    movieItem = omdbMovie.Item;
 
-                    var movieId = movieItem.GetProviderId(MetadataProviders.Tmdb);
-
-                    movieDataPath = MovieDbProvider.GetMovieDataPath(Emby.Channel.Config.ApplicationPaths, MetadataProviders.Tmdb.ToString());
+                    Logger.Debug("movieItem.Name: " + movieItem.Name);
                 }
                 catch (Exception exception)
-                {
-                }
+                {}
 
                 try
                 {
+                    var image = new RemoteImageInfo();
+                    IEnumerable<RemoteImageInfo> fanartImages = new List<RemoteImageInfo>();
 
+                    var fanartMovieImageProvider = new FanartMovieImageProvider(Emby.Channel.Config, Emby.Channel.HttpClient, Emby.Channel.FileSystem, Emby.Channel.JsonSerializer);
+
+                    fanartImages = await fanartMovieImageProvider.GetImages(movieItem, cancellationToken);
+
+                    Logger.Debug("fanartImages?: " + (fanartImages == null));
+                    if (fanartImages != null) Logger.Debug("fanartImages.Count: " + fanartImages.Count());
+
+                    image = fanartImages.OrderByDescending(o => o.VoteCount).FirstOrDefault(q => q.Type == ImageType.Primary);
+
+                    movie.Image = image.Url;
                 }
                 catch (Exception exception)
                 {}
