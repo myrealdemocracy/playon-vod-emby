@@ -28,17 +28,31 @@ namespace PlayOn.Emby.Helper.Provider
                 {
                     Name = name,
                     MetadataLanguage = "en",
-
                 };
 
                 try
                 {
                     var omdbItemProvider = new OmdbItemProvider(Emby.Channel.JsonSerializer, Emby.Channel.HttpClient, Emby.Channel.Logger, Emby.Channel.LibraryManager);
+
                     var omdbMovie = await omdbItemProvider.GetMetadata(movieInfo, cancellationToken);
 
                     movieItem = omdbMovie.Item;
 
-                    Logger.Debug("movieItem.Name: " + movieItem.Name);
+                    Logger.Debug("omdbMovie.Item.Name: " + movieItem.Name);
+
+                    movieInfo.ProviderIds = movieItem.ProviderIds;
+
+                    var movieDbProvider = new MovieDbProvider(Emby.Channel.JsonSerializer, Emby.Channel.HttpClient, Emby.Channel.FileSystem, Emby.Channel.Config, Emby.Channel.Logger, Emby.Channel.Localization, Emby.Channel.LibraryManager, Emby.Channel.AppHost);
+
+                    var movieDb = await movieDbProvider.GetMetadata(movieInfo, cancellationToken);
+
+                    movieItem = movieDb.Item;
+
+                    Logger.Debug("movieDb.Item.Name: " + movieItem.Name);
+                    Logger.Debug("movieDb.Item.Overview: " + movieItem.Overview);
+
+                    movie.Name = movieItem.Name;
+                    movie.Overview = movieItem.Overview;
                 }
                 catch (Exception exception)
                 {}

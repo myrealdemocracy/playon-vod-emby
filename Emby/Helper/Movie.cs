@@ -53,10 +53,13 @@ namespace PlayOn.Emby.Helper
                     {
                         var info = await Provider.Movie.Info(movie.Name, cancellationToken);
 
+                        var overview = String.IsNullOrEmpty(info.Overview) ? movie.Overview : info.Overview;
+
                         channelItemInfos.Add(new ChannelItemInfo
                         {
                             Id = "movies|" + movie.Name.ToLower(),
                             Name = movie.Name,
+                            Overview = overview,
                             Type = ChannelItemType.Media,
                             ContentType = ChannelMediaContentType.Clip,
                             MediaType = ChannelMediaType.Video,

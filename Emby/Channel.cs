@@ -8,10 +8,12 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using CommonIO;
+using MediaBrowser.Common;
 using MediaBrowser.Common.Net;
 using MediaBrowser.Controller.Channels;
 using MediaBrowser.Controller.Configuration;
 using MediaBrowser.Controller.Library;
+using MediaBrowser.Controller.Localization;
 using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Channels;
 using MediaBrowser.Model.Entities;
@@ -29,8 +31,10 @@ namespace PlayOn.Emby
         public static IHttpClient HttpClient;
         public static ILogger Logger;
         public static IJsonSerializer JsonSerializer;
+        public static ILocalizationManager Localization;
+        public static IApplicationHost AppHost;
 
-        public Channel(IServerConfigurationManager configuration, ILibraryManager libraryManager, IFileSystem fileSystem, IHttpClient httpClient, ILogManager logManager, IJsonSerializer jsonSerializer)
+        public Channel(IServerConfigurationManager configuration, ILibraryManager libraryManager, IFileSystem fileSystem, IHttpClient httpClient, ILogManager logManager, IJsonSerializer jsonSerializer, ILocalizationManager localization, IApplicationHost appHost)
         {
             Config = configuration;
             LibraryManager = libraryManager;
@@ -38,6 +42,8 @@ namespace PlayOn.Emby
             HttpClient = httpClient;
             Logger = logManager.GetLogger(GetType().Name);
             JsonSerializer = jsonSerializer;
+            Localization = localization;
+            AppHost = appHost;
         }
 
         public InternalChannelFeatures GetChannelFeatures()

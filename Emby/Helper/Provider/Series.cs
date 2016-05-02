@@ -9,6 +9,7 @@ using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Logging;
 using MediaBrowser.Model.Providers;
+using MediaBrowser.Providers.Omdb;
 using MediaBrowser.Providers.TV;
 
 namespace PlayOn.Emby.Helper.Provider
@@ -42,6 +43,12 @@ namespace PlayOn.Emby.Helper.Provider
 
                 try
                 {
+                    var omdbItemProvider = new OmdbItemProvider(Emby.Channel.JsonSerializer, Emby.Channel.HttpClient, Emby.Channel.Logger, Emby.Channel.LibraryManager);
+
+                    var omdbSerie = await omdbItemProvider.GetMetadata(seriesInfo, cancellationToken);
+
+                    seriesInfo.ProviderIds = omdbSerie.Item.ProviderIds;
+
                     var tvdbSerie = await TvdbSeriesProvider.Current.GetMetadata(seriesInfo, cancellationToken);
 
                     seriesItem = tvdbSerie.Item;
