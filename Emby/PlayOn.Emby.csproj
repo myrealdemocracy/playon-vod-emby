@@ -58,6 +58,7 @@
     <Compile Include="Helper\Category.cs" />
     <Compile Include="Helper\Channel.cs" />
     <Compile Include="Helper\Movie.cs" />
+    <Compile Include="Helper\Provider\Movie.cs" />
     <Compile Include="Helper\Provider\Series.cs" />
     <Compile Include="Helper\Series.cs" />
     <Compile Include="Plugin.cs" />

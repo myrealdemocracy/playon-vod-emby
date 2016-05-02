@@ -106,6 +106,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="img\movies.png" />
+    <Content Include="img\series.png" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -136,7 +138,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="img\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Model\PlayOn.Model.csproj">

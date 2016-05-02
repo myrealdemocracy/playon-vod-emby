@@ -84,7 +84,6 @@ namespace PlayOn.Model.Logic
                         {
                             videos.Add(new Tools.Scaffold.Video
                             {
-                                Name = video.Name,
                                 Path = video.Path
                             });
                         }

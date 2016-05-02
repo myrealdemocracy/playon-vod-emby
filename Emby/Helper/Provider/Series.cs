@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using MediaBrowser.Controller.Entities.TV;
 using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Logging;
@@ -51,7 +50,8 @@ namespace PlayOn.Emby.Helper.Provider
 
                     seriesDataPath = TvdbSeriesProvider.GetSeriesDataPath(
                         Emby.Channel.Config.ApplicationPaths,
-                        new Dictionary<string, string> {
+                        new Dictionary<string, string>
+                        {
                             {
                                 MetadataProviders.Tvdb.ToString(),
                                 serieId
@@ -78,10 +78,9 @@ namespace PlayOn.Emby.Helper.Provider
                     episodeItem = tvdbEpisode.Item;
 
                     Logger.Debug("episodeItem null?: " + (episodeItem == null));
+                    Logger.Debug("episodeItem.Name: " + episodeItem.Name);
 
-                    if(episodeItem == null) episodeItem = new Episode();
-
-                    Logger.Debug("episodeItem.Series.Name: " + episodeItem.Series.Name);
+                    if (episodeItem.Series != null) Logger.Debug("episodeItem.Series.Name: " + episodeItem.Series.Name);
 
                     series.Name = "S" + seasonNumber + " E" + episodeNumber + " - " + episodeItem.Name;
                     series.Overview = episodeItem.Overview;
@@ -108,11 +107,13 @@ namespace PlayOn.Emby.Helper.Provider
                     {
                         var tvdbImageProvider = new TvdbEpisodeImageProvider(Emby.Channel.Config, Emby.Channel.HttpClient, Emby.Channel.FileSystem);
 
-                        tvdbImages = tvdbImageProvider.GetImages(episodeItem, cancellationToken).Result;
+                        var nodes = TvdbEpisodeProvider.Current.GetEpisodeXmlNodes(seriesDataPath, episodeItem.GetLookupInfo());
+
+                        tvdbImages = nodes.Select(i => tvdbImageProvider.GetImageInfo(i, cancellationToken)).Where(i => i != null).ToList();
                     }
 
-                    if(tvdbImages != null) Logger.Debug("tvdbimages.Count: " + tvdbImages.Count());
-                    else Logger.Debug("tvdbimages?: " + (tvdbImages == null));
+                    Logger.Debug("tvdbimages?: " + (tvdbImages == null));
+                    if (tvdbImages != null) Logger.Debug("tvdbimages.Count: " + tvdbImages.Count());
 
                     image = tvdbImages.OrderByDescending(o => o.VoteCount).FirstOrDefault(q => q.Type == ImageType.Primary);
 

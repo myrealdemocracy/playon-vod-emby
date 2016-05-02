@@ -28,13 +28,15 @@ namespace PlayOn.Emby.Helper
                         {
                             Id = "movies",
                             Name = "Movies",
-                            Type = ChannelItemType.Folder
+                            Type = ChannelItemType.Folder,
+                            ImageUrl = "http://playon.local/img/movies.png"
                         },
                         new ChannelItemInfo
                         {
                             Id = "series",
                             Name = "TV Shows",
-                            Type = ChannelItemType.Folder
+                            Type = ChannelItemType.Folder,
+                            ImageUrl = "http://playon.local/img/series.png"
                         },
                         //new ChannelItemInfo
                         //{

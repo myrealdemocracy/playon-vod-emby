@@ -87,10 +87,17 @@ namespace PlayOn.Emby.Helper
                                 });
                             }
 
+                            var episodeName = String.IsNullOrEmpty(info.Name)
+                                ? "S" + seasonNumber + " E" + episode.EpisodeNumber
+                                : info.Name;
+                            var overview = String.IsNullOrEmpty(info.Overview)
+                                ? episode.Overview
+                                : info.Overview;
+
                             channelItemInfos.Add(new ChannelItemInfo
                             {
                                 Id = currentFolder + "|" + episode.EpisodeNumber,
-                                Name = info.Name,
+                                Name = episodeName,
                                 Overview = info.Overview,
                                 Type = ChannelItemType.Media,
                                 ContentType = ChannelMediaContentType.Clip,
