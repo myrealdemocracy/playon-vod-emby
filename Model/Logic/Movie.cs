@@ -77,6 +77,37 @@ namespace PlayOn.Model.Logic
             return url;
         }
 
+        public static Ado.Movie Save(string name)
+        {
+            var adoMovie = new Ado.Movie();
+
+            try
+            {
+                using (var db = new Ado.PlayOnEntities())
+                {
+                    adoMovie = db.Movies.FirstOrDefault(q => q.Name == name);
+
+                    if (adoMovie == null)
+                    {
+                        adoMovie = new Ado.Movie
+                        {
+                            Name = name
+                        };
+
+                        db.Movies.Add(adoMovie);
+
+                        db.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+            }
+
+            return adoMovie;
+        }
+
         public static void Save(Ado.Video video, Ado.Movie movie)
         {
             try
@@ -86,13 +117,17 @@ namespace PlayOn.Model.Logic
                     video = db.Videos.FirstOrDefault(q => q.Id == video.Id);
 
                     movie = db.Movies.FirstOrDefault(q => q.Id == movie.Id);
+
+                    var adoVideoMovie = db.VideoMovies.FirstOrDefault(q => q.IdVideo == video.Id && q.IdMovie == movie.Id);
+
+                    if (adoVideoMovie != null) return;
+
                     movie.VideoMovies.Add(new Ado.VideoMovie
                     {
                         IdVideo = video.Id,
                         IdMovie = movie.Id
                     });
-
-                    db.Entry(movie).State = EntityState.Modified;
+                    
                     db.SaveChanges();
                 }
             }
@@ -124,12 +159,11 @@ namespace PlayOn.Model.Logic
 
                         var category = db.Categories.FirstOrDefault(q => q.Name == item.Key);
 
-                        if(movie.Categories.Any(q => q.Id == category.Id)) continue;
+                        if (movie.Categories.Any(q => q.Id == category.Id)) continue;
 
                         movie.Categories.Add(category);
                     }
-
-                    db.Entry(movie).State = EntityState.Modified;
+                    
                     db.SaveChanges();
                 }
             }
@@ -137,37 +171,6 @@ namespace PlayOn.Model.Logic
             {
                 Logger.Error(exception);
             }
-        }
-
-        public static Ado.Movie Save(string name)
-        {
-            var adoMovie = new Ado.Movie();
-
-            try
-            {
-                using (var db = new Ado.PlayOnEntities())
-                {
-                    adoMovie = db.Movies.FirstOrDefault(q => q.Name == name);
-
-                    if (adoMovie == null)
-                    {
-                        adoMovie = new Ado.Movie
-                        {
-                            Name = name
-                        };
-
-                        db.Movies.Add(adoMovie);
-
-                        db.SaveChanges();
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(exception);
-            }
-
-            return adoMovie;
         }
     }
 }

@@ -156,6 +156,10 @@ namespace PlayOn.Model.Logic
 
                 using (var db = new Ado.PlayOnEntities())
                 {
+                    video = db.Videos.FirstOrDefault(q => q.Id == video.Id);
+
+                    serie = db.Series.FirstOrDefault(q => q.Id == serie.Id);
+
                     var adoVideoSerie = db.VideoSeries.FirstOrDefault(q => q.IdVideo == video.Id && q.IdSerie == serie.Id);
 
                     if (adoVideoSerie != null) return;
@@ -180,6 +184,8 @@ namespace PlayOn.Model.Logic
             {
                 using (var db = new Ado.PlayOnEntities())
                 {
+                    video = db.Videos.FirstOrDefault(q => q.Id == video.Id);
+
                     serie = db.Series.FirstOrDefault(q => q.Id == serie.Id);
 
                     foreach (var item in Tools.Constant.Category.Items)
@@ -201,6 +207,8 @@ namespace PlayOn.Model.Logic
 
                         serie.Categories.Add(category);
                     }
+
+                    db.SaveChanges();
                 }
             }
             catch (Exception exception)
