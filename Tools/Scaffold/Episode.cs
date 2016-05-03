@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PlayOn.Tools.Scaffold
 {
-    public class Episode
+    public class Episode : Video
     {
         public int? EpisodeNumber { get; set; }
     }

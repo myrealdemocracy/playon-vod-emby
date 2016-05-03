@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace PlayOn.Emby.Helper.Provider
 {
     public class Series
     {
+        protected static MemoryCache Cache = new MemoryCache("PlayOnSeries");
         protected static ILogger Logger = Emby.Channel.Logger;
 
         public static async Task<Scaffold.Series> Info(string name, CancellationToken cancellationToken, int? seasonNumber = 0, int? episodeNumber = 0)
@@ -43,17 +45,29 @@ namespace PlayOn.Emby.Helper.Provider
 
                 try
                 {
-                    var omdbItemProvider = new OmdbItemProvider(Emby.Channel.JsonSerializer, Emby.Channel.HttpClient, Emby.Channel.Logger, Emby.Channel.LibraryManager);
+                    MetadataResult<MediaBrowser.Controller.Entities.TV.Series> omdbSeries;
 
-                    var omdbSerie = await omdbItemProvider.GetMetadata(seriesInfo, cancellationToken);
+                    if (Cache["omdb" + name] == null)
+                    {
+                        var omdbItemProvider = new OmdbItemProvider(Emby.Channel.JsonSerializer, Emby.Channel.HttpClient, Emby.Channel.Logger, Emby.Channel.LibraryManager);
 
-                    seriesInfo.ProviderIds = omdbSerie.Item.ProviderIds;
+                        omdbSeries = await omdbItemProvider.GetMetadata(seriesInfo, cancellationToken);
 
-                    var tvdbSerie = await TvdbSeriesProvider.Current.GetMetadata(seriesInfo, cancellationToken);
+                        Cache.Add("omdb" + name, omdbSeries, DateTimeOffset.Now.AddDays(1));
+                    }
+                    else omdbSeries = Cache["omdb" + name] as MetadataResult<MediaBrowser.Controller.Entities.TV.Series>;
 
-                    seriesItem = tvdbSerie.Item;
+                    seriesInfo.ProviderIds = omdbSeries.Item.ProviderIds;
 
-                    var serieId = seriesItem.GetProviderId(MetadataProviders.Tvdb);
+                    if (Cache["tvdb" + name] == null)
+                    {
+                        var tvdbSeries = await TvdbSeriesProvider.Current.GetMetadata(seriesInfo, cancellationToken);
+
+                        seriesItem = tvdbSeries.Item;
+
+                        Cache.Add("tvdb" + name, seriesItem, DateTimeOffset.Now.AddDays(1));
+                    }
+                    else seriesItem = Cache["tvdb" + name] as MediaBrowser.Controller.Entities.TV.Series;
 
                     seriesDataPath = TvdbSeriesProvider.GetSeriesDataPath(
                         Emby.Channel.Config.ApplicationPaths,
@@ -61,7 +75,7 @@ namespace PlayOn.Emby.Helper.Provider
                         {
                             {
                                 MetadataProviders.Tvdb.ToString(),
-                                serieId
+                                 seriesItem.GetProviderId(MetadataProviders.Tvdb)
                             }
                         });
                 }
