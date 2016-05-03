@@ -152,19 +152,7 @@ namespace PlayOn.Model.Logic
         {
             try
             {
-                var rule = new Regex(@"s(?<season>[0-9]+)e(?<episode>[0-9]+)\s*");
-                var regex = rule.Match(video.Name);
-                int? season = 0;
-                int? episode = 0;
-
-                if (regex.Success)
-                {
-                    season = Convert.ToInt32(regex.Groups["season"].Value);
-                    episode = Convert.ToInt32(regex.Groups["episode"].Value);
-                }
-
-                season = season == 0 ? null : season;
-                episode = episode == 0 ? null : episode;
+                var seasonEpisode = Tools.Helper.SeasonEpisode.Extract(video.Name, video.Path);
 
                 using (var db = new Ado.PlayOnEntities())
                 {
@@ -176,8 +164,8 @@ namespace PlayOn.Model.Logic
                     {
                         IdVideo = video.Id,
                         IdSerie = serie.Id,
-                        Season = season,
-                        Episode = episode
+                        Season = seasonEpisode.Season,
+                        Episode = seasonEpisode.Episode
                     });
 
                     db.SaveChanges();

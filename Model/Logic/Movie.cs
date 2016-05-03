@@ -35,7 +35,8 @@ namespace PlayOn.Model.Logic
                         movies.Add(new Tools.Scaffold.Movie
                         {
                             Id = movie.Id,
-                            Name = movie.Name
+                            Name = movie.Name,
+                            Overview = movie.VideoMovies.FirstOrDefault(q => q.Movie.Id == movie.Id).Video.Overview
                         });
                     }
                 }

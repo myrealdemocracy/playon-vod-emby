@@ -1,0 +1,46 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace PlayOn.Tools.Constant
+{
+    public class Ignore
+    {
+        public static List<string> Name = new List<string>
+        {
+            "clips",
+            "video clips",
+            "clips & extras",
+            "episode highlights",
+            "playback options",
+            "backstage & interviews",
+            "just for kids",
+            "family",
+            "kids",
+            "recaps",
+            "previews",
+            "webisodes",
+            "minisodes",
+            "pbs newshour"
+        };
+
+        public static List<string> NameContains = new List<string>
+        {
+            "this folder contains no content"
+        };
+
+        public static List<string> NameEndsWith = new List<string>
+        {
+            "preview"
+        };
+
+        public static List<string> HrefContains = new List<string>
+        {
+            "playon",
+            "playmark",
+            "playlater"
+        };
+    }
+}

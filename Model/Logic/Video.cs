@@ -59,11 +59,7 @@ namespace PlayOn.Model.Logic
                 Logger.Debug("item.Type: " + item.Type);
                 Logger.Debug("item.Href: " + item.Href);
 
-                if (Tools.Helper.Ignore.Item(items, item))
-                {
-                    Logger.Debug("ignoring");
-                    continue;
-                }
+                if (Tools.Helper.Ignore.Item(items, item)) continue;
 
                 if (item.Type != "video")
                 {
@@ -81,7 +77,13 @@ namespace PlayOn.Model.Logic
 
                     if (Convert.ToInt32(video.Minutes) == 0 || video.IsLive == 1) return;
 
-                    if (String.IsNullOrEmpty(videoItem.SeriesName))
+                    if (String.IsNullOrEmpty(videoItem.SeriesName) && 
+                        !video.Path.Contains("shows") &&
+                        !video.Path.Contains("season") &&
+                        !video.Path.Contains("episodes") &&
+                        !video.Name.ToLower().StartsWith("season") &&
+                        !video.Name.ToLower().StartsWith("episode") && 
+                        !video.Name.ToLower().StartsWith("ep."))
                     {
                         var movie = Movie.Save(videoItem.Name);
                         Movie.Save(video, movie);

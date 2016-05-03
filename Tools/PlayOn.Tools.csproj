@@ -54,9 +54,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constant\Category.cs" />
+    <Compile Include="Constant\Ignore.cs" />
+    <Compile Include="Constant\Regex.cs" />
     <Compile Include="Constant\Url.cs" />
     <Compile Include="Helper\Ignore.cs" />
     <Compile Include="Helper\Image.cs" />
+    <Compile Include="Helper\SeasonEpisode.cs" />
     <Compile Include="Helper\Serie.cs" />
     <Compile Include="Helper\Video.cs" />
     <Compile Include="Helper\Stream.cs" />
@@ -69,6 +72,7 @@
     <Compile Include="Scaffold\Form\Series.cs" />
     <Compile Include="Scaffold\Movie.cs" />
     <Compile Include="Scaffold\Season.cs" />
+    <Compile Include="Scaffold\SeasonEpisode.cs" />
     <Compile Include="Scaffold\Series.cs" />
     <Compile Include="Scaffold\Episode.cs" />
     <Compile Include="Scaffold\Video.cs" />
