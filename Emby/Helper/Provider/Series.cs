@@ -47,9 +47,15 @@ namespace PlayOn.Emby.Helper.Provider
 
                 try
                 {
-                    var tvdbSeries = await TvdbSeriesProvider.Current.GetMetadata(seriesInfo, cancellationToken);
+                    if (Cache["tvdbSeries" + name] == null)
+                    {
+                        var tvdbSeries = await TvdbSeriesProvider.Current.GetMetadata(seriesInfo, cancellationToken);
 
-                    seriesItem = tvdbSeries.Item;
+                        seriesItem = tvdbSeries.Item;
+
+                        Cache.Add("tvdbSeries" + name, seriesItem, DateTimeOffset.Now.AddDays(1));
+                    }
+                    else seriesItem = Cache["tvdbSeries" + name] as MediaBrowser.Controller.Entities.TV.Series;
 
                     foreach (var providerId in seriesItem.ProviderIds)
                     {
