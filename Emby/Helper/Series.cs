@@ -88,7 +88,7 @@ namespace PlayOn.Emby.Helper
                             {
                                 Id = currentFolder + "|" + episode.EpisodeNumber,
                                 Name = episodeName,
-                                Overview = info.Overview,
+                                Overview = overview,
                                 Type = ChannelItemType.Media,
                                 ContentType = ChannelMediaContentType.Clip,
                                 MediaType = ChannelMediaType.Video,

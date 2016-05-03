@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace PlayOn.Emby.Helper.Provider
 {
     public class Movie
     {
+        protected static MemoryCache Cache = new MemoryCache("PlayOnMovies");
         protected static ILogger Logger = Emby.Channel.Logger;
 
         public static async Task<Scaffold.Movie> Info(string name, CancellationToken cancellationToken)
@@ -32,9 +34,11 @@ namespace PlayOn.Emby.Helper.Provider
 
                 try
                 {
+                    MetadataResult<MediaBrowser.Controller.Entities.Movies.Movie> omdbMovie;
+
                     var omdbItemProvider = new OmdbItemProvider(Emby.Channel.JsonSerializer, Emby.Channel.HttpClient, Emby.Channel.Logger, Emby.Channel.LibraryManager);
 
-                    var omdbMovie = await omdbItemProvider.GetMetadata(movieInfo, cancellationToken);
+                    omdbMovie = await omdbItemProvider.GetMetadata(movieInfo, cancellationToken);
 
                     movieItem = omdbMovie.Item;
 
@@ -42,11 +46,13 @@ namespace PlayOn.Emby.Helper.Provider
 
                     movieInfo.ProviderIds = movieItem.ProviderIds;
 
-                    var movieDbProvider = new MovieDbProvider(Emby.Channel.JsonSerializer, Emby.Channel.HttpClient, Emby.Channel.FileSystem, Emby.Channel.Config, Emby.Channel.Logger, Emby.Channel.Localization, Emby.Channel.LibraryManager, Emby.Channel.AppHost);
+                    MetadataResult<MediaBrowser.Controller.Entities.Movies.Movie> moviedb;
 
-                    var movieDb = await movieDbProvider.GetMetadata(movieInfo, cancellationToken);
+                    var moviedbProvider = new MovieDbProvider(Emby.Channel.JsonSerializer, Emby.Channel.HttpClient, Emby.Channel.FileSystem, Emby.Channel.Config, Emby.Channel.Logger, Emby.Channel.Localization, Emby.Channel.LibraryManager, Emby.Channel.AppHost);
 
-                    movieItem = movieDb.Item;
+                    moviedb = await moviedbProvider.GetMetadata(movieInfo, cancellationToken);
+
+                    movieItem = moviedb.Item;
 
                     Logger.Debug("movieDb.Item.Name: " + movieItem.Name);
                     Logger.Debug("movieDb.Item.Overview: " + movieItem.Overview);

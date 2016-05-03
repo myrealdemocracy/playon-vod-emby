@@ -30,6 +30,7 @@ namespace PlayOn.Emby.Helper.Provider
                 var seriesItem = new MediaBrowser.Controller.Entities.TV.Series();
                 var episodeItem = new MediaBrowser.Controller.Entities.TV.Episode();
                 var series = new Scaffold.Series();
+                var seriesId = "";
                 var seriesDataPath = "";
                 var seriesInfo = new SeriesInfo
                 {
@@ -38,6 +39,7 @@ namespace PlayOn.Emby.Helper.Provider
                     ParentIndexNumber = seasonNumber,
                     IndexNumber = episodeNumber
                 };
+                var episodeInfo = new EpisodeInfo();
 
                 Logger.Debug("name: " + name);
                 Logger.Debug("seasonNumber: " + seasonNumber);
@@ -45,29 +47,16 @@ namespace PlayOn.Emby.Helper.Provider
 
                 try
                 {
-                    MetadataResult<MediaBrowser.Controller.Entities.TV.Series> omdbSeries;
+                    var tvdbSeries = await TvdbSeriesProvider.Current.GetMetadata(seriesInfo, cancellationToken);
 
-                    if (Cache["omdb" + name] == null)
+                    seriesItem = tvdbSeries.Item;
+
+                    foreach (var providerId in seriesItem.ProviderIds)
                     {
-                        var omdbItemProvider = new OmdbItemProvider(Emby.Channel.JsonSerializer, Emby.Channel.HttpClient, Emby.Channel.Logger, Emby.Channel.LibraryManager);
-
-                        omdbSeries = await omdbItemProvider.GetMetadata(seriesInfo, cancellationToken);
-
-                        Cache.Add("omdb" + name, omdbSeries, DateTimeOffset.Now.AddDays(1));
+                        Logger.Debug("seriesItem.ProviderId: " + providerId);
                     }
-                    else omdbSeries = Cache["omdb" + name] as MetadataResult<MediaBrowser.Controller.Entities.TV.Series>;
 
-                    seriesInfo.ProviderIds = omdbSeries.Item.ProviderIds;
-
-                    if (Cache["tvdb" + name] == null)
-                    {
-                        var tvdbSeries = await TvdbSeriesProvider.Current.GetMetadata(seriesInfo, cancellationToken);
-
-                        seriesItem = tvdbSeries.Item;
-
-                        Cache.Add("tvdb" + name, seriesItem, DateTimeOffset.Now.AddDays(1));
-                    }
-                    else seriesItem = Cache["tvdb" + name] as MediaBrowser.Controller.Entities.TV.Series;
+                    seriesId = seriesItem.GetProviderId(MetadataProviders.Tvdb);
 
                     seriesDataPath = TvdbSeriesProvider.GetSeriesDataPath(
                         Emby.Channel.Config.ApplicationPaths,
@@ -75,16 +64,22 @@ namespace PlayOn.Emby.Helper.Provider
                         {
                             {
                                 MetadataProviders.Tvdb.ToString(),
-                                 seriesItem.GetProviderId(MetadataProviders.Tvdb)
+                                seriesId
                             }
                         });
+
+                    Logger.Debug("seriesItem.Name: " + seriesItem.Name);
+                    Logger.Debug("seriesId: " + seriesId);
+                    Logger.Debug("seriesDataPath:" + seriesDataPath);
                 }
                 catch (Exception exception)
-                {}
+                {
+                    Logger.ErrorException("seriesItem", exception);
+                }
 
                 try
                 {
-                    var episodeInfo = new EpisodeInfo
+                    episodeInfo = new EpisodeInfo
                     {
                         ParentIndexNumber = seasonNumber,
                         IndexNumber = episodeNumber,
@@ -98,21 +93,25 @@ namespace PlayOn.Emby.Helper.Provider
 
                     episodeItem = tvdbEpisode.Item;
 
+                    foreach (var providerId in episodeItem.ProviderIds)
+                    {
+                        Logger.Debug("episodeItem.ProviderId: " + providerId);
+                    }
+
                     Logger.Debug("episodeItem null?: " + (episodeItem == null));
                     Logger.Debug("episodeItem.Name: " + episodeItem.Name);
-
-                    if (episodeItem.Series != null) Logger.Debug("episodeItem.Series.Name: " + episodeItem.Series.Name);
 
                     series.Name = "S" + seasonNumber + " E" + episodeNumber + " - " + episodeItem.Name;
                     series.Overview = episodeItem.Overview;
                 }
                 catch (Exception exception)
-                {}
+                {
+                    Logger.ErrorException("episodeItem", exception);
+                }
 
                 try
                 {
-                    var image = new RemoteImageInfo();
-                    IEnumerable<RemoteImageInfo> tvdbImages = new List<RemoteImageInfo>();
+                    IEnumerable<RemoteImageInfo> tvdbImages = null;
 
                     if (seasonNumber == 0 && episodeNumber == 0)
                     {
@@ -128,18 +127,38 @@ namespace PlayOn.Emby.Helper.Provider
                     {
                         var tvdbImageProvider = new TvdbEpisodeImageProvider(Emby.Channel.Config, Emby.Channel.HttpClient, Emby.Channel.FileSystem);
 
-                        tvdbImages = await tvdbImageProvider.GetImages(episodeItem, cancellationToken);
+                        //tvdbImages = await tvdbImageProvider.GetImages(episodeItem, cancellationToken);
+
+                        var nodes = TvdbEpisodeProvider.Current.GetEpisodeXmlNodes(seriesDataPath, episodeInfo);
+
+                        tvdbImages = nodes.Select(i => tvdbImageProvider.GetImageInfo(i, cancellationToken)).Where(i => i != null).ToList();
                     }
 
                     Logger.Debug("tvdbimages?: " + (tvdbImages == null));
-                    if (tvdbImages != null) Logger.Debug("tvdbimages.Count: " + tvdbImages.Count());
 
-                    image = tvdbImages.OrderByDescending(o => o.VoteCount).FirstOrDefault(q => q.Type == ImageType.Primary);
+                    if (tvdbImages != null)
+                    {
+                        Logger.Debug("tvdbimages.Count: " + tvdbImages.Count());
 
-                    series.Image = image.Url;
+                        var image = new RemoteImageInfo();
+
+                        foreach (var imageItem in tvdbImages.OrderByDescending(o => o.VoteCount))
+                        {
+                            Logger.Debug("tvdbimages.Type: " + imageItem.Type);
+                            Logger.Debug("tvdbimages.Url: " + imageItem.Url);
+
+                            if (imageItem.Type != ImageType.Primary) continue;
+
+                            image = imageItem;
+                        }
+
+                        series.Image = image.Url;
+                    }
                 }
                 catch (Exception exception)
-                {}
+                {
+                    Logger.ErrorException("tvdbimages", exception);
+                }
 
                 return series;
             }, cancellationToken);
