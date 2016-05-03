@@ -56,7 +56,7 @@ namespace PlayOn.Model.Logic
             {
                 using (var db = new Ado.PlayOnEntities())
                 {
-                    var videos = db.Movies.FirstOrDefault(q => q.Name == name).Videos;
+                    var videos = db.Videos.Where(q => q.VideoMovies.Any(a => a.Movie.Name == name));
 
                     foreach (var video in videos)
                     {
@@ -64,9 +64,9 @@ namespace PlayOn.Model.Logic
 
                         if (url.Contains("m3u8")) break;
                     }
-                }
 
-                url = url.Contains("xml") ? "" : url;
+                    url = url.Contains("xml") ? "" : url;
+                }
             }
             catch (Exception exception)
             {
@@ -85,7 +85,11 @@ namespace PlayOn.Model.Logic
                     video = db.Videos.FirstOrDefault(q => q.Id == video.Id);
 
                     movie = db.Movies.FirstOrDefault(q => q.Id == movie.Id);
-                    movie.Videos.Add(video);
+                    movie.VideoMovies.Add(new Ado.VideoMovie
+                    {
+                        IdVideo = video.Id,
+                        IdMovie = movie.Id
+                    });
 
                     db.Entry(movie).State = EntityState.Modified;
                     db.SaveChanges();

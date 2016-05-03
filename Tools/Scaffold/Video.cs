@@ -12,6 +12,7 @@ namespace PlayOn.Tools.Scaffold
         public string Path { get; set; }
         public string Name { get; set; }
         public string Overview { get; set; }
+        public int? Minutes { get; set; }
         public string SeriesName { get; set; }
     }
 }

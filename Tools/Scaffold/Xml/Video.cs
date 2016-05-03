@@ -29,6 +29,9 @@ namespace PlayOn.Tools.Scaffold.Xml
 
         [XmlElement("date")]
         public Info Date { get; set; }
+
+        [XmlElement("time")]
+        public Info Time { get; set; }
     }
 
     [Serializable]

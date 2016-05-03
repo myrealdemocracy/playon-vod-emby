@@ -18,7 +18,7 @@ namespace PlayOn.Model.Ado
         public Video()
         {
             this.VideoSeries = new HashSet<VideoSerie>();
-            this.Movies = new HashSet<Movie>();
+            this.VideoMovies = new HashSet<VideoMovie>();
         }
     
         public int Id { get; set; }
@@ -29,10 +29,11 @@ namespace PlayOn.Model.Ado
         public Nullable<int> IsLive { get; set; }
         public Nullable<System.DateTime> CreatedAt { get; set; }
         public Nullable<System.DateTime> UpdatedAt { get; set; }
+        public Nullable<int> Minutes { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<VideoSerie> VideoSeries { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Movie> Movies { get; set; }
+        public virtual ICollection<VideoMovie> VideoMovies { get; set; }
     }
 }

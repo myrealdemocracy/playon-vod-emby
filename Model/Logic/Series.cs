@@ -96,8 +96,7 @@ namespace PlayOn.Model.Logic
             {
                 using (var db = new Ado.PlayOnEntities())
                 {
-                    var series = db.Series.FirstOrDefault(q => q.Name == name);
-                    var videos = db.Videos.Where(q => q.VideoSeries.Any(a => a.IdSerie == series.Id && a.Season == season && a.Episode == episode));
+                    var videos = db.Videos.Where(q => q.VideoSeries.Any(a => a.Serie.Name == name && a.Season == season && a.Episode == episode));
 
                     foreach (var video in videos)
                     {
@@ -105,9 +104,9 @@ namespace PlayOn.Model.Logic
 
                         if (url.Contains("m3u8")) break;
                     }
-                }
 
-                url = url.Contains("xml") ? "" : url;
+                    url = url.Contains("xml") ? "" : url;
+                }
             }
             catch (Exception exception)
             {
@@ -178,9 +177,7 @@ namespace PlayOn.Model.Logic
                         IdVideo = video.Id,
                         IdSerie = serie.Id,
                         Season = season,
-                        Episode = episode,
-                        //Video = video,
-                        //Serie = serie
+                        Episode = episode
                     });
 
                     db.SaveChanges();

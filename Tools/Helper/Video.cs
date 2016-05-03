@@ -21,7 +21,18 @@ namespace PlayOn.Tools.Helper
 
             if (String.IsNullOrEmpty(video.Description?.Name)) video.Description = new Scaffold.Xml.Info { Name = String.Empty };
 
+            if (String.IsNullOrEmpty(video.Time?.Name)) video.Time = new Scaffold.Xml.Info { Name = String.Empty };
+
             var name = video.Item.Name;
+
+            var minutes = 0;
+
+            if (video.Time.Name.Contains(":"))
+            {
+                var terms = video.Time.Name.Split(Convert.ToChar(":"));
+
+                minutes = (Convert.ToInt32(terms[0]) * 60) + Convert.ToInt32(terms[1]);
+            }
 
             if (name.Contains(video.Series.Name)) name = name.Replace(video.Series.Name + " - ", "");
 
@@ -30,6 +41,7 @@ namespace PlayOn.Tools.Helper
                 Path = path,
                 Name = name,
                 Overview = video.Description.Name,
+                Minutes = minutes,
                 SeriesName = video.Series.Name
             };
         }

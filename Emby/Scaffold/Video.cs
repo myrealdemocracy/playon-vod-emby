@@ -13,6 +13,7 @@ namespace PlayOn.Emby.Scaffold
         public string Image { get; set; }
         public string Name { get; set; }
         public string Overview { get; set; }
+        public int? Minutes { get; set; }
         public string SeriesName { get; set; }
     }
 }

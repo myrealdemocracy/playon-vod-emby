@@ -86,6 +86,9 @@
     <Compile Include="Ado\Video.cs">
       <DependentUpon>PlayOn.tt</DependentUpon>
     </Compile>
+    <Compile Include="Ado\VideoMovie.cs">
+      <DependentUpon>PlayOn.tt</DependentUpon>
+    </Compile>
     <Compile Include="Ado\VideoSerie.cs">
       <DependentUpon>PlayOn.tt</DependentUpon>
     </Compile>

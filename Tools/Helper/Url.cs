@@ -59,6 +59,8 @@ namespace PlayOn.Tools.Helper
                     Logger.Debug("count:" + count);
                     Logger.Debug("term:" + term);
 
+                    //if(Ignore.Item(new List<Scaffold.Xml.Item>(), new Scaffold.Xml.Item(), term)) continue;
+
                     switch (term)
                     {
                         case "video":

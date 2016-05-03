@@ -6,15 +6,17 @@
     <edmx:Diagrams>
       <Diagram DiagramId="d40be5b937aa4a97821b6f2f06d32f58" Name="Diagram1">
         <EntityTypeShape EntityType="PlayOn.Model.Ado.Movie" Width="1.5" PointX="0.75" PointY="1.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="PlayOn.Model.Ado.Serie" Width="1.5" PointX="8.375" PointY="1.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="PlayOn.Model.Ado.Video" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="PlayOn.Model.Ado.VideoSerie" Width="1.5" PointX="5.25" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PlayOn.Model.Ado.Serie" Width="1.5" PointX="9.875" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PlayOn.Model.Ado.Video" Width="1.5" PointX="5.25" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PlayOn.Model.Ado.VideoSerie" Width="1.5" PointX="7.625" PointY="1.625" IsExpanded="true" />
         <AssociationConnector Association="PlayOn.Model.Ado.FK_VideoSerie_Serie" ManuallyRouted="false" />
         <AssociationConnector Association="PlayOn.Model.Ado.FK_VideoSerie_Video" ManuallyRouted="false" />
-        <AssociationConnector Association="PlayOn.Model.Ado.VideoMovie" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="PlayOn.Model.Ado.Category" Width="1.5" PointX="3.875" PointY="4.625" />
+        <EntityTypeShape EntityType="PlayOn.Model.Ado.Category" Width="1.5" PointX="5.25" PointY="4.625" />
         <AssociationConnector Association="PlayOn.Model.Ado.MovieCategory" />
         <AssociationConnector Association="PlayOn.Model.Ado.SerieCategory" />
+        <EntityTypeShape EntityType="PlayOn.Model.Ado.VideoMovie" Width="1.5" PointX="3" PointY="1.75" />
+        <AssociationConnector Association="PlayOn.Model.Ado.FK_VideoMovie_Movie" />
+        <AssociationConnector Association="PlayOn.Model.Ado.FK_VideoMovie_Video" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

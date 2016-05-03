@@ -41,25 +41,6 @@ namespace PlayOn.Model.Logic
             return videos;
         }
 
-        public static string Url()
-        {
-            var url = String.Empty;
-
-            try
-            {
-                using (var db = new Ado.PlayOnEntities())
-                {
-                    
-                }
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(exception);
-            }
-
-            return url;
-        }
-
         public static void SaveAll(string url = null, string path = null)
         {
             url = String.IsNullOrEmpty(url) ? Tools.Constant.Url.Xml : url;
@@ -98,7 +79,7 @@ namespace PlayOn.Model.Logic
 
                     var video = Save(videoItem);
 
-                    if (video.IsLive == 1) return;
+                    if (Convert.ToInt32(video.Minutes) == 0 || video.IsLive == 1) return;
 
                     if (String.IsNullOrEmpty(videoItem.SeriesName))
                     {
@@ -134,6 +115,7 @@ namespace PlayOn.Model.Logic
                     {
                         adoVideo.Name = video.Name;
                         adoVideo.Overview = video.Overview;
+                        adoVideo.Minutes = video.Minutes;
                         adoVideo.Path = video.Path;
                         adoVideo.Provider = pathTerms[0];
                         adoVideo.IsLive = video.Path.Contains("|live|") || video.Path.Contains("|live tv|") || video.Path.Contains("|live stream|") ? 1 : 0;
