@@ -155,8 +155,8 @@ namespace PlayOn.Model.Logic
             {
                 var rule = new Regex(@"s(?<season>[0-9]+)e(?<episode>[0-9]+)\s*");
                 var regex = rule.Match(video.Name);
-                var season = 0;
-                var episode = 0;
+                int? season = 0;
+                int? episode = 0;
 
                 if (regex.Success)
                 {
@@ -164,7 +164,8 @@ namespace PlayOn.Model.Logic
                     episode = Convert.ToInt32(regex.Groups["episode"].Value);
                 }
 
-                if(season == 0 || episode == 0) return;
+                season = season == 0 ? null : season;
+                episode = episode == 0 ? null : episode;
 
                 using (var db = new Ado.PlayOnEntities())
                 {

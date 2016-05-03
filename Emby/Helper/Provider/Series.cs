@@ -114,9 +114,7 @@ namespace PlayOn.Emby.Helper.Provider
                     {
                         var tvdbImageProvider = new TvdbEpisodeImageProvider(Emby.Channel.Config, Emby.Channel.HttpClient, Emby.Channel.FileSystem);
 
-                        var nodes = TvdbEpisodeProvider.Current.GetEpisodeXmlNodes(seriesDataPath, episodeItem.GetLookupInfo());
-
-                        tvdbImages = nodes.Select(i => tvdbImageProvider.GetImageInfo(i, cancellationToken)).Where(i => i != null).ToList();
+                        tvdbImages = await tvdbImageProvider.GetImages(episodeItem, cancellationToken);
                     }
 
                     Logger.Debug("tvdbimages?: " + (tvdbImages == null));

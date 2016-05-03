@@ -41,6 +41,25 @@ namespace PlayOn.Model.Logic
             return videos;
         }
 
+        public static string Url()
+        {
+            var url = String.Empty;
+
+            try
+            {
+                using (var db = new Ado.PlayOnEntities())
+                {
+                    
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+            }
+
+            return url;
+        }
+
         public static void SaveAll(string url = null, string path = null)
         {
             url = String.IsNullOrEmpty(url) ? Tools.Constant.Url.Xml : url;
@@ -59,9 +78,7 @@ namespace PlayOn.Model.Logic
                 Logger.Debug("item.Type: " + item.Type);
                 Logger.Debug("item.Href: " + item.Href);
 
-                if (Tools.Helper.Ignore.Item(item) ||
-                    String.IsNullOrEmpty(nextPath) ||
-                    path == nextPath)
+                if (Tools.Helper.Ignore.Item(items, item))
                 {
                     Logger.Debug("ignoring");
                     continue;
