@@ -73,9 +73,9 @@ namespace PlayOn.Model.Logic
 
                     var videoItem = Tools.Helper.Video.Mapper(item.Href, path);
 
-                    if (Convert.ToInt32(videoItem.Minutes) == 0)
+                    if (Convert.ToInt32(videoItem.Minutes) <= 5)
                     {
-                        Logger.Debug("Ignoring " + videoItem.Minutes + " minutes video");
+                        Logger.Debug("Ignoring " + videoItem.Minutes + " minute(s) video");
 
                         return;
                     }
@@ -84,20 +84,20 @@ namespace PlayOn.Model.Logic
 
                     if (video.IsLive == 1)
                     {
-                        Logger.Debug("Video  is live feed");
+                        Logger.Debug("Video is live feed");
 
                         return;
                     }
 
-                    if (Tools.Helper.Series.Detected(videoItem))
-                    {
-                        var serie = Series.Save(videoItem.SeriesName);
-                        Series.Save(video, serie);
-                    }
-                    else
+                    if (!Tools.Helper.Series.Detected(videoItem))
                     {
                         var movie = Movie.Save(videoItem.Name);
                         Movie.Save(video, movie);
+                    }
+                    else if (Tools.Helper.Series.Detected(videoItem) && !String.IsNullOrWhiteSpace(videoItem.SeriesName))
+                    {
+                        var serie = Series.Save(videoItem.SeriesName);
+                        Series.Save(video, serie);
                     }
                 }
             }

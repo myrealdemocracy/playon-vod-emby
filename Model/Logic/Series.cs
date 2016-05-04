@@ -73,9 +73,28 @@ namespace PlayOn.Model.Logic
 
                     foreach (var episode in episodeList)
                     {
+                        var episodeNumber = Convert.ToInt32(episode.Episode);
+                        var videos = new List<Tools.Scaffold.Video>();
+
+                        if (episodeNumber == 0)
+                        {
+                            var dbVideos = db.Videos.Where(q => q.VideoSeries.Any(a => a.IdSerie == series.Id && a.Season == season && a.Episode == episodeNumber));
+
+                            foreach (var video in dbVideos)
+                            {
+                                videos.Add(new Tools.Scaffold.Video
+                                {
+                                    Name = video.Name,
+                                    Overview = video.Overview,
+                                    Path = video.Path
+                                });
+                            }
+                        }
+
                         episodes.Add(new Tools.Scaffold.Episode
                         {
-                            EpisodeNumber = episode.Episode
+                            EpisodeNumber = episodeNumber,
+                            Videos = videos
                         });
                     }
                 }

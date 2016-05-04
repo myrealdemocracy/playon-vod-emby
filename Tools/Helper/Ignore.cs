@@ -28,7 +28,7 @@ namespace PlayOn.Tools.Helper
 
             if (!String.IsNullOrEmpty(name)) itemName = name.ToLower();
 
-            if (String.IsNullOrEmpty(itemName))
+            if (String.IsNullOrWhiteSpace(itemName))
             {
                 Logger.Debug("Ignoring null or empty name");
 

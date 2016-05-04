@@ -14,9 +14,9 @@ namespace PlayOn.Tools.Helper
 
         public static bool Detected(Scaffold.Video video)
         {
-            return String.IsNullOrEmpty(video.SeriesName) ||
+            return !String.IsNullOrWhiteSpace(video.SeriesName) ||
                    video.Path.Contains("shows") ||
-                   video.Path.Contains("season") ||
+                   video.Path.Contains("|season") ||
                    video.Path.Contains("episodes") ||
                    video.Name.ToLower().StartsWith("season") ||
                    video.Name.ToLower().StartsWith("episode") ||

@@ -35,6 +35,8 @@ namespace PlayOn.Emby.Helper
                     {
                         var info = await Provider.Series.Info(serie.Name, cancellationToken);
 
+                        if(String.IsNullOrWhiteSpace(info.Image)) continue;
+
                         channelItemInfos.Add(new ChannelItemInfo
                         {
                             Id = "series|" + serie.Name.ToLower(),
@@ -75,33 +77,53 @@ namespace PlayOn.Emby.Helper
 
                         foreach (var episode in episodes)
                         {
-                            var info = await Provider.Series.Info(name, cancellationToken, seasonNumber, episode.EpisodeNumber);
-
-                            var episodeName = String.IsNullOrEmpty(info.Name)
-                                ? "S" + seasonNumber + " E" + episode.EpisodeNumber
-                                : info.Name;
-                            var overview = String.IsNullOrEmpty(info.Overview)
-                                ? episode.Overview
-                                : info.Overview;
-
-                            channelItemInfos.Add(new ChannelItemInfo
+                            if (episode.EpisodeNumber == 0)
                             {
-                                Id = currentFolder + "|" + episode.EpisodeNumber,
-                                Name = episodeName,
-                                Overview = overview,
-                                Type = ChannelItemType.Media,
-                                ContentType = ChannelMediaContentType.Clip,
-                                MediaType = ChannelMediaType.Video,
-                                ImageUrl = info.Image,
-                                MediaSources = new List<ChannelMediaInfo>
+                                foreach (var video in episode.Videos)
                                 {
-                                    new ChannelMediaInfo
+                                    channelItemInfos.Add(new ChannelItemInfo
                                     {
-                                        Path = "http://playon.local/series/video/s/" + seasonNumber + "/e/" + episode.EpisodeNumber + "?name=" + WebUtility.UrlEncode(name),
-                                        Protocol = MediaProtocol.Http
-                                    }
+                                        Id = currentFolder + "|" + video.Name,
+                                        Name = video.Name,
+                                        Overview = video.Overview,
+                                        Type = ChannelItemType.Media,
+                                        ContentType = ChannelMediaContentType.Clip,
+                                        MediaType = ChannelMediaType.Video,
+                                        ImageUrl = "http://playon.local/url/image?path=" + WebUtility.UrlEncode(video.Path),
+                                        MediaSources = new List<ChannelMediaInfo>
+                                        {
+                                            new ChannelMediaInfo
+                                            {
+                                                Path = "http://playon.local/url/video?path=" + WebUtility.UrlEncode(video.Path),
+                                                Protocol = MediaProtocol.Http
+                                            }
+                                        }
+                                    });
                                 }
-                            });
+                            }
+                            else
+                            {
+                                var info = await Provider.Series.Info(name, cancellationToken, seasonNumber, episode.EpisodeNumber);
+
+                                channelItemInfos.Add(new ChannelItemInfo
+                                {
+                                    Id = currentFolder + "|" + episode.EpisodeNumber,
+                                    Name = info.Name,
+                                    Overview = info.Overview,
+                                    Type = ChannelItemType.Media,
+                                    ContentType = ChannelMediaContentType.Clip,
+                                    MediaType = ChannelMediaType.Video,
+                                    ImageUrl = info.Image,
+                                    MediaSources = new List<ChannelMediaInfo>
+                                    {
+                                        new ChannelMediaInfo
+                                        {
+                                            Path = "http://playon.local/series/video/s/" + seasonNumber + "/e/" + episode.EpisodeNumber + "?name=" + WebUtility.UrlEncode(name),
+                                            Protocol = MediaProtocol.Http
+                                        }
+                                    }
+                                });
+                            }
                         }
                     }
                 }

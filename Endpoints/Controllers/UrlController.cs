@@ -12,28 +12,28 @@ namespace PlayOn.Endpoints.Controllers
     {
         [Route("image")]
         [HttpGet]
-        public HttpResponseMessage UrlImage([FromUri] string id)
+        public HttpResponseMessage UrlImage([FromUri] string path)
         {
             return new HttpResponseMessage
             {
                 StatusCode = HttpStatusCode.Found,
                 Headers =
                 {
-                    Location = new Uri(Tools.Helper.Url.Generate(WebUtility.UrlDecode(id) + "image|"))
+                    Location = new Uri(Tools.Helper.Url.Generate(WebUtility.UrlDecode(path) + "image|"))
                 }
             };
         }
 
         [Route("video")]
         [HttpGet]
-        public HttpResponseMessage UrlVideo([FromUri] string id)
+        public HttpResponseMessage UrlVideo([FromUri] string path)
         {
             return new HttpResponseMessage
             {
                 StatusCode = HttpStatusCode.Found,
                 Headers =
                 {
-                    Location = new Uri(Tools.Helper.Url.Generate(WebUtility.UrlDecode(id) + "video|"))
+                    Location = new Uri(Tools.Helper.Url.Generate(WebUtility.UrlDecode(path) + "video|"))
                 }
             };
         }

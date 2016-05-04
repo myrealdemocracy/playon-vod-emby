@@ -9,5 +9,6 @@ namespace PlayOn.Emby.Scaffold
     public class Episode : Video
     {
         public int? EpisodeNumber { get; set; }
+        public List<Video> Videos { get; set; }
     }
 }

@@ -17,7 +17,7 @@ namespace PlayOn.Emby.Helper.Provider
 {
     public class Series
     {
-        protected static MemoryCache Cache = new MemoryCache("PlayOnSeries");
+        protected static MemoryCache Cache = new MemoryCache("TvdbSeriesInfo");
         protected static ILogger Logger = Emby.Channel.Logger;
 
         public static async Task<Scaffold.Series> Info(string name, CancellationToken cancellationToken, int? seasonNumber = 0, int? episodeNumber = 0)
@@ -47,15 +47,24 @@ namespace PlayOn.Emby.Helper.Provider
 
                 try
                 {
-                    if (Cache["tvdbSeries" + name] == null)
+                    if (Cache[name] == null)
                     {
+                        MetadataResult<MediaBrowser.Controller.Entities.TV.Series> omdbSeries;
+
+                        var omdbItemProvider = new OmdbItemProvider(Emby.Channel.JsonSerializer, Emby.Channel.HttpClient, Emby.Channel.Logger, Emby.Channel.LibraryManager);
+
+                        omdbSeries = await omdbItemProvider.GetMetadata(seriesInfo, cancellationToken);
+
+                        seriesInfo.Year = omdbSeries.Item.ProductionYear;
+                        seriesInfo.PremiereDate = omdbSeries.Item.PremiereDate;
+
                         var tvdbSeries = await TvdbSeriesProvider.Current.GetMetadata(seriesInfo, cancellationToken);
 
                         seriesItem = tvdbSeries.Item;
 
-                        Cache.Add("tvdbSeries" + name, seriesItem, DateTimeOffset.Now.AddDays(1));
+                        Cache.Add(name, seriesItem, DateTimeOffset.Now.AddDays(1));
                     }
-                    else seriesItem = Cache["tvdbSeries" + name] as MediaBrowser.Controller.Entities.TV.Series;
+                    else seriesItem = Cache[name] as MediaBrowser.Controller.Entities.TV.Series;
 
                     foreach (var providerId in seriesItem.ProviderIds)
                     {
@@ -124,10 +133,14 @@ namespace PlayOn.Emby.Helper.Provider
                         var tvdbImageProvider = new TvdbSeriesImageProvider(Emby.Channel.Config, Emby.Channel.HttpClient, Emby.Channel.FileSystem);
 
                         tvdbImages = tvdbImageProvider.GetImages(Path.Combine(seriesDataPath, "banners.xml"), "en", cancellationToken);
+
+                        tvdbImages = tvdbImages.Where(q => q.Language == "en");
                     }
                     else if (seasonNumber > 0 && episodeNumber == 0)
                     {
                         tvdbImages = TvdbSeasonImageProvider.GetImages(Path.Combine(seriesDataPath, "banners.xml"), "en", Convert.ToInt32(seasonNumber), cancellationToken);
+
+                        tvdbImages = tvdbImages.Where(q => q.Language == "en");
                     }
                     else if (seasonNumber > 0 && episodeNumber > 0)
                     {
@@ -152,6 +165,7 @@ namespace PlayOn.Emby.Helper.Provider
                         {
                             Logger.Debug("tvdbimages.Type: " + imageItem.Type);
                             Logger.Debug("tvdbimages.Url: " + imageItem.Url);
+                            Logger.Debug("tvdbimages.Language: " + imageItem.Language);
 
                             if (imageItem.Type != ImageType.Primary) continue;
 

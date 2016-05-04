@@ -64,7 +64,7 @@ namespace PlayOn.Emby
 
                 SupportsContentDownloading = true,
                 SupportsSortOrderToggle = false,
-                //AutoRefreshLevels = 5
+                AutoRefreshLevels = 2
             };
         }
 

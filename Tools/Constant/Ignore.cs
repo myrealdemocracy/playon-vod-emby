@@ -23,12 +23,16 @@ namespace PlayOn.Tools.Constant
             "previews",
             "webisodes",
             "minisodes",
-            "pbs newshour"
+            "pbs newshour",
+            "web exclusive",
+            "interview"
         };
 
         public static List<string> NameContains = new List<string>
         {
-            "this folder contains no content"
+            "this folder contains no content",
+            "s00",
+            "e00"
         };
 
         public static List<string> NameEndsWith = new List<string>
