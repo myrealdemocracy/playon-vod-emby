@@ -59,8 +59,7 @@
     <Compile Include="Constant\Url.cs" />
     <Compile Include="Helper\Ignore.cs" />
     <Compile Include="Helper\Image.cs" />
-    <Compile Include="Helper\SeasonEpisode.cs" />
-    <Compile Include="Helper\Serie.cs" />
+    <Compile Include="Helper\Series.cs" />
     <Compile Include="Helper\Video.cs" />
     <Compile Include="Helper\Stream.cs" />
     <Compile Include="Helper\Url.cs" />

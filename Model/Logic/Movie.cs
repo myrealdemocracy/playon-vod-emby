@@ -63,6 +63,8 @@ namespace PlayOn.Model.Logic
                     {
                         url = Tools.Helper.Url.Generate(video.Path + "video|");
 
+                        Logger.Debug("url: " + url);
+
                         if (url.Contains("m3u8")) break;
                     }
 

@@ -63,35 +63,41 @@ namespace PlayOn.Model.Logic
 
                 if (item.Type != "video")
                 {
-                    Logger.Debug("next loop");
+                    Logger.Debug("Next loop");
 
                     SaveAll(item.Href, nextPath);
                 }
                 else
                 {
-                    Logger.Debug("saving video");
+                    Logger.Debug("Saving video");
 
                     var videoItem = Tools.Helper.Video.Mapper(item.Href, path);
 
+                    if (Convert.ToInt32(videoItem.Minutes) == 0)
+                    {
+                        Logger.Debug("Ignoring " + videoItem.Minutes + " minutes video");
+
+                        return;
+                    }
+
                     var video = Save(videoItem);
 
-                    if (Convert.ToInt32(video.Minutes) == 0 || video.IsLive == 1) return;
-
-                    if (String.IsNullOrEmpty(videoItem.SeriesName) && 
-                        !video.Path.Contains("shows") &&
-                        !video.Path.Contains("season") &&
-                        !video.Path.Contains("episodes") &&
-                        !video.Name.ToLower().StartsWith("season") &&
-                        !video.Name.ToLower().StartsWith("episode") && 
-                        !video.Name.ToLower().StartsWith("ep."))
+                    if (video.IsLive == 1)
                     {
-                        var movie = Movie.Save(videoItem.Name);
-                        Movie.Save(video, movie);
+                        Logger.Debug("Video  is live feed");
+
+                        return;
                     }
-                    else
+
+                    if (Tools.Helper.Series.Detected(videoItem))
                     {
                         var serie = Series.Save(videoItem.SeriesName);
                         Series.Save(video, serie);
+                    }
+                    else
+                    {
+                        var movie = Movie.Save(videoItem.Name);
+                        Movie.Save(video, movie);
                     }
                 }
             }
@@ -120,7 +126,7 @@ namespace PlayOn.Model.Logic
                         adoVideo.Minutes = video.Minutes;
                         adoVideo.Path = video.Path;
                         adoVideo.Provider = pathTerms[0];
-                        adoVideo.IsLive = video.Path.Contains("|live|") || video.Path.Contains("|live tv|") || video.Path.Contains("|live stream|") ? 1 : 0;
+                        adoVideo.IsLive = video.IsLive ? 1 : 0;
                         adoVideo.CreatedAt = DateTime.UtcNow;
 
                         db.Videos.Add(adoVideo);

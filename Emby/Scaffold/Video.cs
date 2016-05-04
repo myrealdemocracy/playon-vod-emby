@@ -12,8 +12,9 @@ namespace PlayOn.Emby.Scaffold
         public string Path { get; set; }
         public string Image { get; set; }
         public string Name { get; set; }
+        public string SeriesName { get; set; }
         public string Overview { get; set; }
         public int? Minutes { get; set; }
-        public string SeriesName { get; set; }
+        public bool IsLive { get; set; }
     }
 }

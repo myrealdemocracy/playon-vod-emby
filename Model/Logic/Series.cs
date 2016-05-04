@@ -102,6 +102,8 @@ namespace PlayOn.Model.Logic
                     {
                         url = Tools.Helper.Url.Generate(video.Path + "video|");
 
+                        Logger.Debug("url: " + url);
+
                         if (url.Contains("m3u8")) break;
                     }
 
@@ -152,7 +154,7 @@ namespace PlayOn.Model.Logic
         {
             try
             {
-                var seasonEpisode = Tools.Helper.SeasonEpisode.Extract(video.Name, video.Path);
+                var seasonEpisode = Tools.Helper.Series.SeasonEpisodeExtract(video.Name, video.Path);
 
                 using (var db = new Ado.PlayOnEntities())
                 {

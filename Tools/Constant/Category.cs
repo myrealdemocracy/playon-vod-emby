@@ -8,146 +8,83 @@ namespace PlayOn.Tools.Constant
         {
             {
                 "Anime",
-                new List<string>
-                {
-                    "|anime|"
-                }
+                new List<string>()
             },
             {
                 "Animation",
-                new List<string>
-                {
-                    "|animation|"
-                }
+                new List<string>()
             },
             {
                 "Action",
-                new List<string>
-                {
-                    "|action & adventure|",
-                    "|action|"
-                }
+                new List<string>()
             },
             {
                 "Adventure",
-                new List<string>
-                {
-                    "|action & adventure|",
-                    "|adventure|"
-                }
+                new List<string>()
             },
             {
                 "Thriller",
-                new List<string>
-                {
-                    "|thriller|"
-                }
+                new List<string>()
             },
             {
                 "Cult",
-                new List<string>
-                {
-                    "|cult|"
-                }
+                new List<string>()
             },
             {
                 "Comedy",
-                new List<string>
-                {
-                    "|comedy|"
-                }
+                new List<string>()
             },
             {
                 "Documentary",
-                new List<string>
-                {
-                    "|documentary|"
-                }
+                new List<string>()
             },
             {
                 "Reality TV",
-                new List<string>
-                {
-                    "|reality tv|"
-                }
+                new List<string>()
             },
             {
                 "Crime",
-                new List<string>
-                {
-                    "|crime|"
-                }
+                new List<string>()
             },
             {
                 "Sport",
-                new List<string>
-                {
-                    "|sport|"
-                }
+                new List<string>()
             },
             {
                 "Based on Book",
-                new List<string>
-                {
-                    "|based on book|"
-                }
+                new List<string>()
             },
             {
                 "Romantic",
-                new List<string>
-                {
-                    "|romantic|"
-                }
+                new List<string>()
             },
             {
                 "Horror",
-                new List<string>
-                {
-                    "|horror|"
-                }
+                new List<string>()
             },
             {
                 "Music",
-                new List<string>
-                {
-                    "|music|"
-                }
+                new List<string>()
             },
             {
                 "Sci-fi",
-                new List<string>
-                {
-                    "|sci-fi|"
-                }
+                new List<string>()
             },
             {
                 "Fantasy",
-                new List<string>
-                {
-                    "|fantasy|"
-                }
+                new List<string>()
             },
             {
                 "Stand-up",
-                new List<string>
-                {
-                    "|stand-up|"
-                }
+                new List<string>()
             },
             {
                 "Kids",
-                new List<string>
-                {
-                    "|kids|",
-                    "|just for kids|"
-                }
+                new List<string>()
             },
             {
                 "Drama",
-                new List<string>
-                {
-                    "|tv drama|"
-                }
+                new List<string>()
             }
         };
     }

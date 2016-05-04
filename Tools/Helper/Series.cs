@@ -8,11 +8,22 @@ using NLog;
 
 namespace PlayOn.Tools.Helper
 {
-    public class SeasonEpisode
+    public class Series
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public static Scaffold.SeasonEpisode Extract(string name, string path)
+        public static bool Detected(Scaffold.Video video)
+        {
+            return String.IsNullOrEmpty(video.SeriesName) ||
+                   video.Path.Contains("shows") ||
+                   video.Path.Contains("season") ||
+                   video.Path.Contains("episodes") ||
+                   video.Name.ToLower().StartsWith("season") ||
+                   video.Name.ToLower().StartsWith("episode") ||
+                   video.Name.ToLower().StartsWith("ep.");
+        }
+
+        public static Scaffold.SeasonEpisode SeasonEpisodeExtract(string name, string path)
         {
             var seasonEpisode = new Scaffold.SeasonEpisode();
 
@@ -28,7 +39,7 @@ namespace PlayOn.Tools.Helper
             }
             catch (Exception exception)
             {
-                Logger.Error(exception);
+                //Logger.Error(exception);
             }
 
             try
@@ -43,7 +54,7 @@ namespace PlayOn.Tools.Helper
             }
             catch (Exception exception)
             {
-                Logger.Error(exception);
+                //Logger.Error(exception);
             }
 
             try
@@ -63,7 +74,7 @@ namespace PlayOn.Tools.Helper
             }
             catch (Exception exception)
             {
-                Logger.Error(exception);
+                //Logger.Error(exception);
             }
 
             return seasonEpisode;
