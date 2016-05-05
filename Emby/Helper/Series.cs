@@ -47,7 +47,7 @@ namespace PlayOn.Emby.Helper
                             ProductionYear = info.ProductionYear,
                             Studios = info.Studios,
                             ProviderIds = info.ProviderIds,
-                            DateCreated = DateTime.UtcNow
+                            DateCreated = info.PremiereDate
                         });
                     }
                 }
@@ -95,7 +95,6 @@ namespace PlayOn.Emby.Helper
                                         ContentType = ChannelMediaContentType.Clip,
                                         MediaType = ChannelMediaType.Video,
                                         ImageUrl = "http://playon.local/url/image?path=" + WebUtility.UrlEncode(video.Path),
-                                        DateCreated = DateTime.UtcNow,
                                         MediaSources = new List<ChannelMediaInfo>
                                         {
                                             new ChannelMediaInfo
@@ -122,7 +121,7 @@ namespace PlayOn.Emby.Helper
                                     MediaType = ChannelMediaType.Video,
                                     ImageUrl = info.Image,
                                     PremiereDate = info.PremiereDate,
-                                    DateCreated = DateTime.UtcNow,
+                                    DateCreated = info.PremiereDate,
                                     MediaSources = new List<ChannelMediaInfo>
                                     {
                                         new ChannelMediaInfo

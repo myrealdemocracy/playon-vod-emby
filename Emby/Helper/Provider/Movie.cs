@@ -59,6 +59,7 @@ namespace PlayOn.Emby.Helper.Provider
 
                     movie.Name = movieItem.Name;
                     movie.Overview = movieItem.Overview;
+                    movie.PremiereDate = movieItem.PremiereDate;
                     movie.ProductionYear = movieItem.ProductionYear;
                     movie.Genres = movieItem.Genres;
                     movie.OfficialRating = movieItem.OfficialRating;

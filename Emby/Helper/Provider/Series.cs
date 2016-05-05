@@ -88,6 +88,7 @@ namespace PlayOn.Emby.Helper.Provider
                     Logger.Debug("seriesDataPath:" + seriesDataPath);
 
                     series.ProductionYear = seriesItem.ProductionYear;
+                    series.PremiereDate = seriesItem.PremiereDate;
                     series.Studios = seriesItem.Studios;
                     series.Genres = seriesItem.Genres;
                     series.OfficialRating = seriesItem.OfficialRating;

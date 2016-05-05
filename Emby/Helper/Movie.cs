@@ -69,7 +69,7 @@ namespace PlayOn.Emby.Helper
                             ProductionYear = info.ProductionYear,
                             Studios = info.Studios,
                             ProviderIds = info.ProviderIds,
-                            DateCreated = DateTime.UtcNow,
+                            DateCreated = info.PremiereDate,
                             MediaSources = new List<ChannelMediaInfo>
                             {
                                 new ChannelMediaInfo
