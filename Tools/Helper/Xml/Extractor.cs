@@ -40,16 +40,13 @@ namespace PlayOn.Tools.Helper.Xml
 
                 Cache.Add(url, xml, DateTimeOffset.Now.AddDays(1));
             }
-            catch (WebException webException)
+            catch (Exception exception)
             {
-                Logger.Error(webException);
+                Logger.Error(exception);
 
-                if (((HttpWebResponse)webException.Response).StatusCode == HttpStatusCode.NotFound)
+                foreach (var cache in Cache.Select(s => s.Key))
                 {
-                    foreach (var cache in Cache.Select(s => s.Key))
-                    {
-                        Cache.Remove(cache);
-                    }
+                    Cache.Remove(cache);
                 }
             }
 
