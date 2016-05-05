@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.Caching;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,6 +34,8 @@ namespace PlayOn.Emby
         public static IJsonSerializer JsonSerializer;
         public static ILocalizationManager Localization;
         public static IApplicationHost AppHost;
+
+        protected static MemoryCache Cache = new MemoryCache("PlayOnChannel");
 
         public Channel(IServerConfigurationManager configuration, ILibraryManager libraryManager, IFileSystem fileSystem, IHttpClient httpClient, ILogManager logManager, IJsonSerializer jsonSerializer, ILocalizationManager localization, IApplicationHost appHost)
         {
@@ -117,7 +120,18 @@ namespace PlayOn.Emby
 
         public string DataVersion
         {
-            get { return "2016-04-26"; }
+            get
+            {
+                if (Cache["DataVersion"] != null) return Cache["DataVersion"].ToString();
+
+                var rest = new Rest.Video();
+
+                var total = rest.Total(new CancellationToken(false)).Result.Total.ToString();
+
+                Cache.Add("DataVersion", total, DateTimeOffset.Now.AddHours(12));
+
+                return total;
+            }
         }
 
         public string HomePageUrl

@@ -116,6 +116,7 @@
     <Compile Include="Controllers\MovieController.cs" />
     <Compile Include="Controllers\SeriesController.cs" />
     <Compile Include="Controllers\UrlController.cs" />
+    <Compile Include="Controllers\VideoController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

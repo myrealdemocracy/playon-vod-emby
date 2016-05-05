@@ -15,6 +15,7 @@ namespace PlayOn.Emby.Scaffold
         public string Overview { get; set; }
         public int? Minutes { get; set; }
         public bool IsLive { get; set; }
+        public int Total { get; set; }
 
         public List<string> Genres { get; set; }
         public List<string> Studios { get; set; }

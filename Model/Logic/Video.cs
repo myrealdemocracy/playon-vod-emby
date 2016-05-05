@@ -14,32 +14,37 @@ namespace PlayOn.Model.Logic
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public static List<Tools.Scaffold.Video> All()
+        public static Tools.Scaffold.Video Total
         {
-            var videos = new List<Tools.Scaffold.Video>();
-
-            try
+            get
             {
-                using (var db = new Ado.PlayOnEntities())
+                var videos = 0;
+
+                try
                 {
-                    foreach (var video in db.Videos)
+                    using (var db = new Ado.PlayOnEntities())
                     {
-                        videos.Add(new Tools.Scaffold.Video
+                        videos = db.Movies.Count();
+
+                        foreach (var series in db.Series)
                         {
-                            Id = video.Id,
-                            Name = video.Name,
-                            Overview = video.Overview,
-                            Path = video.Path
-                        });
+                            foreach (var season in series.VideoSeries.GroupBy(g => g.Season).Select(s => s.First()))
+                            {
+                                videos += series.VideoSeries.Where(q => q.Season == season.Season).GroupBy(g => g.Episode).Select(s => s.First()).Count();
+                            }
+                        }
                     }
                 }
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(exception);
-            }
+                catch (Exception exception)
+                {
+                    Logger.Error(exception);
+                }
 
-            return videos;
+                return new Tools.Scaffold.Video
+                {
+                    Total = videos
+                };
+            }
         }
 
         public static string Url(IEnumerable<Ado.Video> videos)

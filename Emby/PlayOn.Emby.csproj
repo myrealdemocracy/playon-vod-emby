@@ -68,6 +68,7 @@
     <Compile Include="Rest\Category.cs" />
     <Compile Include="Rest\Movie.cs" />
     <Compile Include="Rest\Series.cs" />
+    <Compile Include="Rest\Video.cs" />
     <Compile Include="Scaffold\Category.cs" />
     <Compile Include="Scaffold\Episode.cs" />
     <Compile Include="Scaffold\Movie.cs" />

@@ -116,11 +116,6 @@ namespace PlayOn.Tools.Helper
             {
                 Logger.Debug("searchUrl: " + searchUrl);
 
-                foreach (var video in Videos)
-                {
-                    Videos.Remove(video.Key);
-                }
-
                 var items = Xml.Extractor.Items<Scaffold.Xml.Group>(searchUrl).Items;
 
                 SearchItems(items, name);
