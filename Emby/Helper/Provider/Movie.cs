@@ -59,6 +59,11 @@ namespace PlayOn.Emby.Helper.Provider
 
                     movie.Name = movieItem.Name;
                     movie.Overview = movieItem.Overview;
+                    movie.ProductionYear = movieItem.ProductionYear;
+                    movie.Genres = movieItem.Genres;
+                    movie.OfficialRating = movieItem.OfficialRating;
+                    movie.Studios = movieItem.Studios;
+                    movie.ProviderIds = movieItem.ProviderIds;
                 }
                 catch (Exception exception)
                 {}

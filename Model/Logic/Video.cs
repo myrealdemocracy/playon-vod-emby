@@ -51,7 +51,9 @@ namespace PlayOn.Model.Logic
 
             foreach (var item in items)
             {
-                var nextPath = path + item.Name.ToLower() + "|";
+                var nextPath = (String.IsNullOrWhiteSpace(path) ? 
+                    item.Href.Split(Convert.ToChar("="))[1] : 
+                    path + item.Name.ToLower()) + "|";
 
                 Logger.Debug("path: " + path);
                 Logger.Debug("nextPath: " + nextPath);
@@ -60,6 +62,11 @@ namespace PlayOn.Model.Logic
                 Logger.Debug("item.Href: " + item.Href);
 
                 if (Tools.Helper.Ignore.Item(items, item)) continue;
+
+                if (String.IsNullOrWhiteSpace(path))
+                {
+                    Provider.Save(item);
+                }
 
                 if (item.Type != "video")
                 {
@@ -116,16 +123,17 @@ namespace PlayOn.Model.Logic
                     if (adoVideo == null) adoVideo = new Ado.Video();
 
                     adoVideo.UpdatedAt = DateTime.UtcNow;
+                    adoVideo.IsFailing = 0;
 
-                    var pathTerms = video.Path.Split(Convert.ToChar("|"));
+                    var providerCode = video.Path.Split(Convert.ToChar("|"))[0];
 
                     if (adoVideo.Id == 0)
                     {
+                        adoVideo.IdProvider = db.Providers.FirstOrDefault(q => q.Code == providerCode).Id;
                         adoVideo.Name = video.Name;
                         adoVideo.Overview = video.Overview;
                         adoVideo.Minutes = video.Minutes;
                         adoVideo.Path = video.Path;
-                        adoVideo.Provider = pathTerms[0];
                         adoVideo.IsLive = video.IsLive ? 1 : 0;
                         adoVideo.CreatedAt = DateTime.UtcNow;
 

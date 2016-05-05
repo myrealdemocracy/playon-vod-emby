@@ -27,6 +27,15 @@
           <Property Name="IdMovie" Type="int" Nullable="false" />
           <Property Name="IdCategory" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Provider">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Code" Type="nvarchar" MaxLength="50" />
+          <Property Name="Searchable" Type="int" />
+        </EntityType>
         <EntityType Name="Serie">
           <Key>
             <PropertyRef Name="Id" />
@@ -47,12 +56,13 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdProvider" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="Overview" Type="nvarchar(max)" />
           <Property Name="Minutes" Type="int" />
           <Property Name="Path" Type="nvarchar" MaxLength="450" Nullable="false" />
-          <Property Name="Provider" Type="nvarchar" MaxLength="50" />
           <Property Name="IsLive" Type="int" />
+          <Property Name="IsFailing" Type="int" />
           <Property Name="CreatedAt" Type="datetime" />
           <Property Name="UpdatedAt" Type="datetime" />
         </EntityType>
@@ -130,6 +140,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Video_Provider">
+          <End Role="Provider" Type="Self.Provider" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Video" Type="Self.Video" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Provider">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Video">
+              <PropertyRef Name="IdProvider" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_VideoMovie_Movie">
           <End Role="Movie" Type="Self.Movie" Multiplicity="1" />
           <End Role="VideoMovie" Type="Self.VideoMovie" Multiplicity="*" />
@@ -186,6 +210,7 @@
           <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Movie" EntityType="Self.Movie" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MovieCategory" EntityType="Self.MovieCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Provider" EntityType="Self.Provider" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Serie" EntityType="Self.Serie" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SerieCategory" EntityType="Self.SerieCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Video" EntityType="Self.Video" Schema="dbo" store:Type="Tables" />
@@ -206,6 +231,10 @@
           <AssociationSet Name="FK_SerieCategory_Serie" Association="Self.FK_SerieCategory_Serie">
             <End Role="Serie" EntitySet="Serie" />
             <End Role="SerieCategory" EntitySet="SerieCategory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Video_Provider" Association="Self.FK_Video_Provider">
+            <End Role="Provider" EntitySet="Provider" />
+            <End Role="Video" EntitySet="Video" />
           </AssociationSet>
           <AssociationSet Name="FK_VideoMovie_Movie" Association="Self.FK_VideoMovie_Movie">
             <End Role="Movie" EntitySet="Movie" />
@@ -254,13 +283,15 @@
           <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Overview" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Path" Type="String" MaxLength="450" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Provider" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="IsLive" Type="Int32" />
           <Property Name="CreatedAt" Type="DateTime" Precision="3" />
           <Property Name="UpdatedAt" Type="DateTime" Precision="3" />
           <NavigationProperty Name="VideoSeries" Relationship="Self.FK_VideoSerie_Video" FromRole="Video" ToRole="VideoSerie" />
           <NavigationProperty Name="VideoMovies" Relationship="PlayOn.Model.Ado.FK_VideoMovie_Video" FromRole="Video" ToRole="VideoMovie" />
           <Property Name="Minutes" Type="Int32" />
+          <Property Name="IsFailing" Type="Int32" />
+          <Property Name="IdProvider" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Provider" Relationship="PlayOn.Model.Ado.FK_Video_Provider" FromRole="Video" ToRole="Provider" />
         </EntityType>
         <EntityType Name="VideoSerie">
           <Key>
@@ -333,6 +364,11 @@
             <End Role="Video" EntitySet="Videos" />
             <End Role="VideoMovie" EntitySet="VideoMovies" />
           </AssociationSet>
+          <EntitySet Name="Providers" EntityType="PlayOn.Model.Ado.Provider" />
+          <AssociationSet Name="FK_Video_Provider" Association="PlayOn.Model.Ado.FK_Video_Provider">
+            <End Role="Provider" EntitySet="Providers" />
+            <End Role="Video" EntitySet="Videos" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Category">
           <Key>
@@ -385,6 +421,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Provider">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Searchable" Type="Int32" />
+          <NavigationProperty Name="Videos" Relationship="PlayOn.Model.Ado.FK_Video_Provider" FromRole="Provider" ToRole="Video" />
+        </EntityType>
+        <Association Name="FK_Video_Provider">
+          <End Type="PlayOn.Model.Ado.Provider" Role="Provider" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="PlayOn.Model.Ado.Video" Role="Video" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Provider">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Video">
+              <PropertyRef Name="IdProvider" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -410,12 +470,13 @@
           <EntitySetMapping Name="Videos">
             <EntityTypeMapping TypeName="PlayOn.Model.Ado.Video">
               <MappingFragment StoreEntitySet="Video">
+                <ScalarProperty Name="IdProvider" ColumnName="IdProvider" />
+                <ScalarProperty Name="IsFailing" ColumnName="IsFailing" />
                 <ScalarProperty Name="Minutes" ColumnName="Minutes" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Overview" ColumnName="Overview" />
                 <ScalarProperty Name="Path" ColumnName="Path" />
-                <ScalarProperty Name="Provider" ColumnName="Provider" />
                 <ScalarProperty Name="IsLive" ColumnName="IsLive" />
                 <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
                 <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
@@ -461,6 +522,16 @@
               <MappingFragment StoreEntitySet="VideoMovie">
                 <ScalarProperty Name="IdMovie" ColumnName="IdMovie" />
                 <ScalarProperty Name="IdVideo" ColumnName="IdVideo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Providers">
+            <EntityTypeMapping TypeName="PlayOn.Model.Ado.Provider">
+              <MappingFragment StoreEntitySet="Provider">
+                <ScalarProperty Name="Searchable" ColumnName="Searchable" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

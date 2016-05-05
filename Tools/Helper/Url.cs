@@ -15,6 +15,8 @@ namespace PlayOn.Tools.Helper
         {
             var baseUrl = Constant.Url.Xml;
 
+            Logger.Debug("path:" + path);
+
             try
             {
                 if (!String.IsNullOrEmpty(path))
@@ -45,12 +47,10 @@ namespace PlayOn.Tools.Helper
 
         public static string Find(string baseUrl, string path)
         {
+            Scaffold.Xml.Item subItem = null;
             var count = 0;
             var items = Xml.Extractor.Items<Scaffold.Xml.Group>(baseUrl).Items;
-            var subItem = new Scaffold.Xml.Item();
             var terms = path.Split(Convert.ToChar("|"));
-
-            Logger.Debug("path:" + path);
 
             try
             {
@@ -72,16 +72,24 @@ namespace PlayOn.Tools.Helper
                         default:
                             if (count > 0) items = Xml.Extractor.Items<Scaffold.Xml.Group>(baseUrl).Items;
 
-                            subItem = items.FirstOrDefault(q => String.Equals(q.Name, term, StringComparison.CurrentCultureIgnoreCase));
+                            subItem = null;
 
-                            if (subItem != null)
+                            foreach (var item in items)
                             {
-                                baseUrl = subItem.Href;
+                                Logger.Debug("item.Name:" + item.Name);
+                                Logger.Debug("item.Href:" + item.Href);
 
-                                Logger.Debug("subItem.Href:" + subItem.Href);
+                                if (!String.Equals(item.Name, term, StringComparison.InvariantCultureIgnoreCase)) continue;
+
+                                subItem = item;
+                                baseUrl = subItem.Href;
                             }
+
+                            if(subItem == null) throw new Exception("Can't find term " + term);
                             break;
                     }
+
+                    Logger.Debug("baseUrl:" + baseUrl);
 
                     count++;
                 }
@@ -91,7 +99,7 @@ namespace PlayOn.Tools.Helper
                 Logger.Error(exception);
             }
 
-            Logger.Debug("baseUrl:" + baseUrl);
+            Logger.Debug("return baseUrl:" + baseUrl);
 
             return baseUrl;
         }

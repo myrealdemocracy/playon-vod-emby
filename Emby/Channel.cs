@@ -23,7 +23,7 @@ using MediaBrowser.Model.Serialization;
 
 namespace PlayOn.Emby
 {
-    public class Channel : IChannel//, ISearchableChannel
+    public class Channel : IChannel//, ISupportsLatestMedia
     {
         public static IServerConfigurationManager Config;
         public static ILibraryManager LibraryManager;
@@ -72,6 +72,11 @@ namespace PlayOn.Emby
         {
             return true;
         }
+
+        //public Task<IEnumerable<ChannelItemInfo>> GetLatestMedia(ChannelLatestMediaSearch request, CancellationToken cancellationToken)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public Task<ChannelItemResult> GetChannelItems(InternalChannelItemQuery query, CancellationToken cancellationToken)
         {

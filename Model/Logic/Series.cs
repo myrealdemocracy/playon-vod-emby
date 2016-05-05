@@ -123,7 +123,7 @@ namespace PlayOn.Model.Logic
 
                         Logger.Debug("url: " + url);
 
-                        if (url.Contains("m3u8")) break;
+                        if (url.Contains("m3u8") || url.Contains("flv")) break;
                     }
 
                     url = url.Contains("xml") ? "" : url;

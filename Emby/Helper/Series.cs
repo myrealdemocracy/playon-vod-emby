@@ -42,7 +42,12 @@ namespace PlayOn.Emby.Helper
                             Id = "series|" + serie.Name.ToLower(),
                             Name = serie.Name,
                             Type = ChannelItemType.Folder,
-                            ImageUrl = info.Image
+                            Genres = info.Genres,
+                            ImageUrl = info.Image,
+                            ProductionYear = info.ProductionYear,
+                            Studios = info.Studios,
+                            ProviderIds = info.ProviderIds,
+                            DateCreated = DateTime.UtcNow
                         });
                     }
                 }
@@ -90,12 +95,14 @@ namespace PlayOn.Emby.Helper
                                         ContentType = ChannelMediaContentType.Clip,
                                         MediaType = ChannelMediaType.Video,
                                         ImageUrl = "http://playon.local/url/image?path=" + WebUtility.UrlEncode(video.Path),
+                                        DateCreated = DateTime.UtcNow,
                                         MediaSources = new List<ChannelMediaInfo>
                                         {
                                             new ChannelMediaInfo
                                             {
                                                 Path = "http://playon.local/url/video?path=" + WebUtility.UrlEncode(video.Path),
-                                                Protocol = MediaProtocol.Http
+                                                Protocol = MediaProtocol.Http,
+                                                SupportsDirectPlay = true
                                             }
                                         }
                                     });
@@ -114,12 +121,15 @@ namespace PlayOn.Emby.Helper
                                     ContentType = ChannelMediaContentType.Clip,
                                     MediaType = ChannelMediaType.Video,
                                     ImageUrl = info.Image,
+                                    PremiereDate = info.PremiereDate,
+                                    DateCreated = DateTime.UtcNow,
                                     MediaSources = new List<ChannelMediaInfo>
                                     {
                                         new ChannelMediaInfo
                                         {
                                             Path = "http://playon.local/series/video/s/" + seasonNumber + "/e/" + episode.EpisodeNumber + "?name=" + WebUtility.UrlEncode(name),
-                                            Protocol = MediaProtocol.Http
+                                            Protocol = MediaProtocol.Http,
+                                            SupportsDirectPlay = true
                                         }
                                     }
                                 });

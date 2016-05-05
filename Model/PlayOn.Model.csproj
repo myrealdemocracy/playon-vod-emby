@@ -80,6 +80,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>PlayOn.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Ado\Provider.cs">
+      <DependentUpon>PlayOn.tt</DependentUpon>
+    </Compile>
     <Compile Include="Ado\Serie.cs">
       <DependentUpon>PlayOn.tt</DependentUpon>
     </Compile>
@@ -93,6 +96,7 @@
       <DependentUpon>PlayOn.tt</DependentUpon>
     </Compile>
     <Compile Include="Logic\Movie.cs" />
+    <Compile Include="Logic\Provider.cs" />
     <Compile Include="Logic\Series.cs" />
     <Compile Include="Logic\Video.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

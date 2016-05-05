@@ -64,12 +64,19 @@ namespace PlayOn.Emby.Helper
                             ContentType = ChannelMediaContentType.Clip,
                             MediaType = ChannelMediaType.Video,
                             ImageUrl = info.Image,
+                            Genres = info.Genres,
+                            OfficialRating = info.OfficialRating,
+                            ProductionYear = info.ProductionYear,
+                            Studios = info.Studios,
+                            ProviderIds = info.ProviderIds,
+                            DateCreated = DateTime.UtcNow,
                             MediaSources = new List<ChannelMediaInfo>
                             {
                                 new ChannelMediaInfo
                                 {
                                     Path = "http://playon.local/movie/video?name=" + WebUtility.UrlEncode(movie.Name),
-                                    Protocol = MediaProtocol.Http
+                                    Protocol = MediaProtocol.Http,
+                                    SupportsDirectPlay = true
                                 }
                             }
                         });

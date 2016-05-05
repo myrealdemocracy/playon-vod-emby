@@ -25,15 +25,17 @@ namespace PlayOn.Model.Ado
         public string Name { get; set; }
         public string Overview { get; set; }
         public string Path { get; set; }
-        public string Provider { get; set; }
         public Nullable<int> IsLive { get; set; }
         public Nullable<System.DateTime> CreatedAt { get; set; }
         public Nullable<System.DateTime> UpdatedAt { get; set; }
         public Nullable<int> Minutes { get; set; }
+        public Nullable<int> IsFailing { get; set; }
+        public int IdProvider { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<VideoSerie> VideoSeries { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<VideoMovie> VideoMovies { get; set; }
+        public virtual Provider Provider { get; set; }
     }
 }

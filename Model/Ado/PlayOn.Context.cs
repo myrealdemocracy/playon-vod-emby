@@ -31,5 +31,6 @@ namespace PlayOn.Model.Ado
         public virtual DbSet<VideoSerie> VideoSeries { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<VideoMovie> VideoMovies { get; set; }
+        public virtual DbSet<Provider> Providers { get; set; }
     }
 }

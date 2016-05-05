@@ -5,18 +5,20 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="d40be5b937aa4a97821b6f2f06d32f58" Name="Diagram1">
-        <EntityTypeShape EntityType="PlayOn.Model.Ado.Movie" Width="1.5" PointX="0.75" PointY="1.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="PlayOn.Model.Ado.Serie" Width="1.5" PointX="9.875" PointY="1.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="PlayOn.Model.Ado.Video" Width="1.5" PointX="5.25" PointY="1.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="PlayOn.Model.Ado.VideoSerie" Width="1.5" PointX="7.625" PointY="1.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PlayOn.Model.Ado.Movie" Width="1.5" PointX="0.75" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PlayOn.Model.Ado.Serie" Width="1.5" PointX="9.875" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PlayOn.Model.Ado.Video" Width="1.5" PointX="5.25" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PlayOn.Model.Ado.VideoSerie" Width="1.5" PointX="7.625" PointY="3.75" IsExpanded="true" />
         <AssociationConnector Association="PlayOn.Model.Ado.FK_VideoSerie_Serie" ManuallyRouted="false" />
         <AssociationConnector Association="PlayOn.Model.Ado.FK_VideoSerie_Video" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="PlayOn.Model.Ado.Category" Width="1.5" PointX="5.25" PointY="4.625" />
+        <EntityTypeShape EntityType="PlayOn.Model.Ado.Category" Width="1.5" PointX="5.25" PointY="7" />
         <AssociationConnector Association="PlayOn.Model.Ado.MovieCategory" />
         <AssociationConnector Association="PlayOn.Model.Ado.SerieCategory" />
-        <EntityTypeShape EntityType="PlayOn.Model.Ado.VideoMovie" Width="1.5" PointX="3" PointY="1.75" />
+        <EntityTypeShape EntityType="PlayOn.Model.Ado.VideoMovie" Width="1.5" PointX="3" PointY="3.875" />
         <AssociationConnector Association="PlayOn.Model.Ado.FK_VideoMovie_Movie" />
         <AssociationConnector Association="PlayOn.Model.Ado.FK_VideoMovie_Video" />
+        <EntityTypeShape EntityType="PlayOn.Model.Ado.Provider" Width="1.5" PointX="5.25" PointY="0.625" />
+        <AssociationConnector Association="PlayOn.Model.Ado.FK_Video_Provider" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -86,6 +86,12 @@ namespace PlayOn.Emby.Helper.Provider
                     Logger.Debug("seriesItem.Name: " + seriesItem.Name);
                     Logger.Debug("seriesId: " + seriesId);
                     Logger.Debug("seriesDataPath:" + seriesDataPath);
+
+                    series.ProductionYear = seriesItem.ProductionYear;
+                    series.Studios = seriesItem.Studios;
+                    series.Genres = seriesItem.Genres;
+                    series.OfficialRating = seriesItem.OfficialRating;
+                    series.ProviderIds = seriesItem.ProviderIds;
                 }
                 catch (Exception exception)
                 {
@@ -118,6 +124,8 @@ namespace PlayOn.Emby.Helper.Provider
 
                     series.Name = "S" + seasonNumber + " E" + episodeNumber + " - " + episodeItem.Name;
                     series.Overview = episodeItem.Overview;
+                    series.PremiereDate = episodeItem.PremiereDate;
+                    series.OfficialRating = episodeItem.OfficialRating;
                 }
                 catch (Exception exception)
                 {
