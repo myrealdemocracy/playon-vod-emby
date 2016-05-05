@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using NLog;
@@ -10,10 +11,11 @@ namespace PlayOn.Tools.Helper
     public class Url
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private static Dictionary<string, string> Videos = new Dictionary<string, string>();  
 
         public static string Generate(string path = null)
         {
-            var baseUrl = Constant.Url.Xml;
+            var url = Constant.Url.Xml;
 
             Logger.Debug("path:" + path);
 
@@ -23,7 +25,7 @@ namespace PlayOn.Tools.Helper
                 {
                     var terms = path.Split(Convert.ToChar("|"));
 
-                    baseUrl += "?id=" + terms[0];
+                    url += "?id=" + terms[0];
 
                     if (terms.Length > 0)
                     {
@@ -31,7 +33,7 @@ namespace PlayOn.Tools.Helper
 
                         path = path.Length > 1 ? path.Substring(0, path.Length - 1) : path;
 
-                        baseUrl = Find(baseUrl, path);
+                        url = Find(url, path);
                     }
                 }
             }
@@ -40,16 +42,16 @@ namespace PlayOn.Tools.Helper
                 Logger.Error(exception);
             }
 
-            Logger.Debug("baseUrl:" + baseUrl);
+            Logger.Debug("url:" + url);
 
-            return baseUrl;
+            return url;
         }
 
-        public static string Find(string baseUrl, string path)
+        public static string Find(string url, string path)
         {
             Scaffold.Xml.Item subItem = null;
             var count = 0;
-            var items = Xml.Extractor.Items<Scaffold.Xml.Group>(baseUrl).Items;
+            var items = Xml.Extractor.Items<Scaffold.Xml.Group>(url).Items;
             var terms = path.Split(Convert.ToChar("|"));
 
             try
@@ -64,13 +66,13 @@ namespace PlayOn.Tools.Helper
                     switch (term)
                     {
                         case "video":
-                            baseUrl = Constant.Url.Base + "/" + Xml.Extractor.Items<Scaffold.Xml.Video>(baseUrl).Item.Src;
+                            url = Constant.Url.Base + "/" + Xml.Extractor.Items<Scaffold.Xml.Video>(url).Item.Src;
                             break;
                         case "image":
-                            baseUrl = count == 0 ? Image.Default(baseUrl, true) : Image.Mapper(subItem);
+                            url = count == 0 ? Image.Default(url, true) : Image.Mapper(subItem);
                             break;
                         default:
-                            if (count > 0) items = Xml.Extractor.Items<Scaffold.Xml.Group>(baseUrl).Items;
+                            if (count > 0) items = Xml.Extractor.Items<Scaffold.Xml.Group>(url).Items;
 
                             subItem = null;
 
@@ -82,14 +84,14 @@ namespace PlayOn.Tools.Helper
                                 if (!String.Equals(item.Name, term, StringComparison.InvariantCultureIgnoreCase)) continue;
 
                                 subItem = item;
-                                baseUrl = subItem.Href;
+                                url = subItem.Href;
                             }
 
                             if(subItem == null) throw new Exception("Can't find term " + term);
                             break;
                     }
 
-                    Logger.Debug("baseUrl:" + baseUrl);
+                    Logger.Debug("baseUrl:" + url);
 
                     count++;
                 }
@@ -99,9 +101,62 @@ namespace PlayOn.Tools.Helper
                 Logger.Error(exception);
             }
 
-            Logger.Debug("return baseUrl:" + baseUrl);
+            Logger.Debug("return baseUrl:" + url);
 
-            return baseUrl;
+            return url;
+        }
+
+        public static string Search(string provider, string name, string series = null)
+        {
+            var url = "";
+            var searchTerm = (String.IsNullOrEmpty(series) ? name : series).ToLower();
+            var searchUrl = Constant.Url.Xml + "?id=" + provider + "&searchterm=" + WebUtility.UrlEncode(searchTerm);
+
+            try
+            {
+                Logger.Debug("searchUrl: " + searchUrl);
+
+                var items = Xml.Extractor.Items<Scaffold.Xml.Group>(searchUrl).Items;
+
+                SearchItems(items, name);
+
+                url = Videos.FirstOrDefault(q => q.Key == name).Value;
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+            }
+
+            return url;
+        }
+
+        public static void SearchItems(List<Scaffold.Xml.Item> items, string name)
+        {
+            try
+            {
+                foreach (var item in items)
+                {
+                    Logger.Debug("item.Name:" + item.Name);
+                    Logger.Debug("item.Href:" + item.Href);
+
+                    if (Videos.Any(a => a.Key == name)) break;
+
+                    if (item.Type == "folder")
+                        SearchItems(Xml.Extractor.Items<Scaffold.Xml.Group>(item.Href).Items, name);
+
+                    if (!String.Equals(item.Name, name, StringComparison.InvariantCultureIgnoreCase)) continue;
+
+                    var url = Constant.Url.Base + "/" + Xml.Extractor.Items<Scaffold.Xml.Video>(item.Href).Item.Src;
+
+                    Videos.Add(name, url);
+
+                    break;
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+            }
         }
     }
 }

@@ -17,6 +17,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Imdb" Type="nvarchar" MaxLength="50" />
           <Property Name="Name" Type="nvarchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="MovieCategory">
@@ -41,6 +42,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Imdb" Type="nvarchar" MaxLength="50" />
           <Property Name="Name" Type="nvarchar" MaxLength="200" Nullable="false" />
         </EntityType>
         <EntityType Name="SerieCategory">
@@ -265,6 +267,7 @@
           <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Categories" Relationship="PlayOn.Model.Ado.MovieCategory" FromRole="Movie" ToRole="Category" />
           <NavigationProperty Name="VideoMovies" Relationship="PlayOn.Model.Ado.FK_VideoMovie_Movie" FromRole="Movie" ToRole="VideoMovie" />
+          <Property Name="Imdb" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Serie">
           <Key>
@@ -274,6 +277,7 @@
           <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="VideoSeries" Relationship="Self.FK_VideoSerie_Serie" FromRole="Serie" ToRole="VideoSerie" />
           <NavigationProperty Name="Categories" Relationship="PlayOn.Model.Ado.SerieCategory" FromRole="Serie" ToRole="Category" />
+          <Property Name="Imdb" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Video">
           <Key>
@@ -454,6 +458,7 @@
           <EntitySetMapping Name="Movies">
             <EntityTypeMapping TypeName="PlayOn.Model.Ado.Movie">
               <MappingFragment StoreEntitySet="Movie">
+                <ScalarProperty Name="Imdb" ColumnName="Imdb" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>
@@ -462,6 +467,7 @@
           <EntitySetMapping Name="Series">
             <EntityTypeMapping TypeName="PlayOn.Model.Ado.Serie">
               <MappingFragment StoreEntitySet="Serie">
+                <ScalarProperty Name="Imdb" ColumnName="Imdb" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>

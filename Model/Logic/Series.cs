@@ -115,7 +115,7 @@ namespace PlayOn.Model.Logic
             {
                 using (var db = new Ado.PlayOnEntities())
                 {
-                    var videos = db.Videos.Where(q => q.VideoSeries.Any(a => a.Serie.Name == name && a.Season == season && a.Episode == episode));
+                    var videos = db.Videos.Where(q => q.VideoSeries.Any(a => a.Serie.Name == name && a.Season == season && a.Episode == episode)).OrderBy(o => o.FailingCount);
 
                     url = Video.Url(videos);
                 }

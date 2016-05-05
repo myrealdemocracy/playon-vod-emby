@@ -48,21 +48,46 @@ namespace PlayOn.Model.Logic
 
             try
             {
-                foreach (var video in videos)
+                foreach (var video in videos.Where(q => q.Provider.Searchable != 0))
                 {
-                    url = Tools.Helper.Url.Generate(video.Path + "video|");
+                    if (video.VideoSeries.Any())
+                    {
+                        var series = video.VideoSeries.FirstOrDefault().Serie.Name;
 
-                    Logger.Debug("url: " + url);
+                        url = Tools.Helper.Url.Search(video.Provider.Code, video.Name, series);
+                    }
+                    else
+                    {
+                        url = Tools.Helper.Url.Search(video.Provider.Code, video.Name);
+                    }
 
                     if (url.Contains("m3u8") || url.Contains("flv")) break;
                 }
 
-                url = url.Contains("xml") ? "" : url;
+                Logger.Debug("after search - url: " + url);
+
+                if (String.IsNullOrEmpty(url) || url == Tools.Constant.Url.Base)
+                {
+                    foreach (var video in videos)
+                    {
+                        url = Tools.Helper.Url.Generate(video.Path + "video|");
+
+                        Logger.Debug("loop - url: " + url);
+
+                        if (url.Contains("m3u8") || url.Contains("flv")) break;
+                    }
+
+                    Logger.Debug("after path - url: " + url);
+
+                    url = url.Contains("xml") ? "" : url;
+                }
             }
             catch (Exception exception)
             {
                 Logger.Error(exception);
             }
+
+            Logger.Debug("return - url: " + url);
 
             return url;
         }
