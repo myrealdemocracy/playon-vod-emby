@@ -23,9 +23,16 @@ namespace PlayOn.Emby.Helper.Provider
         {
             return await Task.Run(async () =>
             {
-                var movie = new Scaffold.Movie();
                 var movieItem = new MediaBrowser.Controller.Entities.Movies.Movie();
                 var movieDataPath = "";
+
+                var movie = new Scaffold.Movie
+                {
+                    Genres = new List<string>(),
+                    Studios = new List<string>(),
+                    ProviderIds = new Dictionary<string, string>()
+                };
+
                 var movieInfo = new MovieInfo
                 {
                     Name = name,

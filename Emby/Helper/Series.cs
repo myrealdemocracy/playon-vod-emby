@@ -20,27 +20,28 @@ namespace PlayOn.Emby.Helper
     {
         protected static ILogger Logger = Emby.Channel.Logger;
 
-        public static async Task<List<ChannelItemInfo>> Items(string currentFolder, CancellationToken cancellationToken)
+        public static async Task<Scaffold.ChannelList> Items(InternalChannelItemQuery query, CancellationToken cancellationToken)
         {
             return await Task.Run(async () =>
             {
                 var rest = new Rest.Series();
                 var channelItemInfos = new List<ChannelItemInfo>();
+                var totalRecordCount = 0;
 
-                if (currentFolder == "series")
+                if (query.FolderId == "series")
                 {
-                    var series = await rest.All(cancellationToken);
+                    var result = await rest.All(query.StartIndex, query.Limit, cancellationToken);
 
-                    foreach (var serie in series)
+                    totalRecordCount = result.TotalRecordCount;
+
+                    foreach (var series in result.Series)
                     {
-                        var info = await Provider.Series.Info(serie.Name, cancellationToken);
-
-                        if(String.IsNullOrWhiteSpace(info.Image)) continue;
+                        var info = await Provider.Series.Info(series.Name, 0, 0, cancellationToken);
 
                         channelItemInfos.Add(new ChannelItemInfo
                         {
-                            Id = "series|" + serie.Name.ToLower(),
-                            Name = serie.Name,
+                            Id = "series|" + series.Name.ToLower(),
+                            Name = series.Name,
                             Type = ChannelItemType.Folder,
                             Genres = info.Genres,
                             ImageUrl = info.Image,
@@ -53,7 +54,7 @@ namespace PlayOn.Emby.Helper
                 }
                 else
                 {
-                    var terms = currentFolder.Split(Convert.ToChar("|"));
+                    var terms = query.FolderId.Split(Convert.ToChar("|"));
                     var name = terms[1];
 
                     var seasonNumber = terms.Length > 2 ? Convert.ToInt32(terms[2]) : 0;
@@ -65,11 +66,11 @@ namespace PlayOn.Emby.Helper
 
                         foreach (var season in seasons)
                         {
-                            var info = await Provider.Series.Info(name, cancellationToken, season.SeasonNumber);
+                            var info = await Provider.Series.Info(name, season.SeasonNumber, 0, cancellationToken);
 
                             channelItemInfos.Add(new ChannelItemInfo
                             {
-                                Id = currentFolder + "|" + season.SeasonNumber,
+                                Id = query.FolderId + "|" + season.SeasonNumber,
                                 Name = "Season " + season.SeasonNumber,
                                 Type = ChannelItemType.Folder,
                                 ImageUrl = info.Image
@@ -88,7 +89,7 @@ namespace PlayOn.Emby.Helper
                                 {
                                     channelItemInfos.Add(new ChannelItemInfo
                                     {
-                                        Id = currentFolder + "|" + video.Name,
+                                        Id = query.FolderId + "|" + video.Name,
                                         Name = video.Name,
                                         Overview = video.Overview,
                                         Type = ChannelItemType.Media,
@@ -109,11 +110,11 @@ namespace PlayOn.Emby.Helper
                             }
                             else
                             {
-                                var info = await Provider.Series.Info(name, cancellationToken, seasonNumber, episode.EpisodeNumber);
+                                var info = await Provider.Series.Info(name, seasonNumber, episode.EpisodeNumber, cancellationToken);
 
                                 channelItemInfos.Add(new ChannelItemInfo
                                 {
-                                    Id = currentFolder + "|" + episode.EpisodeNumber,
+                                    Id = query.FolderId + "|" + episode.EpisodeNumber,
                                     Name = info.Name,
                                     Overview = info.Overview,
                                     Type = ChannelItemType.Media,
@@ -135,9 +136,15 @@ namespace PlayOn.Emby.Helper
                             }
                         }
                     }
+
+                    totalRecordCount = channelItemInfos.Count;
                 }
 
-                return channelItemInfos;
+                return new Scaffold.ChannelList
+                {
+                    ChannelItemInfos = channelItemInfos,
+                    TotalRecordCount = totalRecordCount
+                };
             }, cancellationToken);
         }
     }

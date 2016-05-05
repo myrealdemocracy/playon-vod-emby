@@ -13,13 +13,14 @@ namespace PlayOn.Model.Logic
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public static List<Tools.Scaffold.Series> All()
+        public static Tools.Scaffold.SeriesList All(int start, int end)
         {
             var series = new List<Tools.Scaffold.Series>();
+            var totalRecordCount = 0;
 
             using (var db = new Ado.PlayOnEntities())
             {
-                foreach (var serie in db.Series)
+                foreach (var serie in db.Series.OrderBy(o => o.Name).Skip(start).Take(end))
                 {
                     series.Add(new Tools.Scaffold.Series
                     {
@@ -29,7 +30,11 @@ namespace PlayOn.Model.Logic
                 }
             }
 
-            return series;
+            return new Tools.Scaffold.SeriesList
+            {
+                Series = series,
+                TotalRecordCount = totalRecordCount
+            };
         }
 
         public static List<Tools.Scaffold.Season> ByName(string name)

@@ -10,18 +10,11 @@ namespace PlayOn.Endpoints.Controllers
     [RoutePrefix("movie")]
     public class MovieController : ApiController
     {
-        [Route("all")]
+        [Route("all/{start}/{end}")]
         [HttpGet]
-        public List<Tools.Scaffold.Movie> All()
+        public Tools.Scaffold.MovieList All(int start, int end)
         {
-            return Model.Logic.Movie.All();
-        }
-
-        [Route("all/letter/{letter}")]
-        [HttpGet]
-        public List<Tools.Scaffold.Movie> ByLetter(string letter)
-        {
-            return Model.Logic.Movie.All(letter);
+            return Model.Logic.Movie.All(start, end);
         }
 
         [Route("video")]

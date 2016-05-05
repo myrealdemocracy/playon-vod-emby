@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,13 +10,13 @@ namespace PlayOn.Emby.Rest
 {
     public class Series : Base
     {
-        public async Task<List<Scaffold.Series>> All(CancellationToken cancellationToken)
+        public async Task<Scaffold.SeriesList> All(int? start, int? end, CancellationToken cancellationToken)
         {
-            var series = new List<Scaffold.Series>();
+            var series = new Scaffold.SeriesList();
 
             try
             {
-                series = await Request<List<Scaffold.Series>>("/series/all", "GET", cancellationToken);
+                series = await Request<Scaffold.SeriesList>("/series/all/" + Convert.ToInt32(start) + "/" + Convert.ToInt32(end), "GET", cancellationToken);
             }
             catch (Exception exception)
             {

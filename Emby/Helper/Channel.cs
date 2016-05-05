@@ -14,46 +14,50 @@ namespace PlayOn.Emby.Helper
     {
         protected static ILogger Logger = Emby.Channel.Logger;
 
-        public static async Task<List<ChannelItemInfo>> Items(string currentFolder, CancellationToken cancellationToken)
+        public static async Task<Scaffold.ChannelList> Items(InternalChannelItemQuery query, CancellationToken cancellationToken)
         {
             return await Task.Run(async () =>
             {
-                var channelItemInfos = new List<ChannelItemInfo>();
+                var channelList = new Scaffold.ChannelList();
 
-                if (String.IsNullOrEmpty(currentFolder))
+                if (String.IsNullOrEmpty(query.FolderId))
                 {
-                    channelItemInfos = new List<ChannelItemInfo>
+                    channelList = new Scaffold.ChannelList
                     {
-                        new ChannelItemInfo
+                        ChannelItemInfos = new List<ChannelItemInfo>
                         {
-                            Id = "movies",
-                            Name = "Movies",
-                            Type = ChannelItemType.Folder,
-                            ImageUrl = "http://playon.local/img/movies.png"
+                            new ChannelItemInfo
+                            {
+                                Id = "movies",
+                                Name = "Movies",
+                                Type = ChannelItemType.Folder,
+                                ImageUrl = "http://playon.local/img/movies.png"
+                            },
+                            new ChannelItemInfo
+                            {
+                                Id = "series",
+                                Name = "TV Shows",
+                                Type = ChannelItemType.Folder,
+                                ImageUrl = "http://playon.local/img/series.png"
+                            },
+                            //new ChannelItemInfo
+                            //{
+                            //    Id = "categories",
+                            //    Name = "Categories",
+                            //    Type = ChannelItemType.Folder
+                            //}
                         },
-                        new ChannelItemInfo
-                        {
-                            Id = "series",
-                            Name = "TV Shows",
-                            Type = ChannelItemType.Folder,
-                            ImageUrl = "http://playon.local/img/series.png"
-                        },
-                        //new ChannelItemInfo
-                        //{
-                        //    Id = "categories",
-                        //    Name = "Categories",
-                        //    Type = ChannelItemType.Folder
-                        //}
+                        TotalRecordCount = 2
                     };
                 }
-                else if (currentFolder == "movies" || currentFolder.Contains("movies|"))
-                    channelItemInfos = await Movie.Items(currentFolder, cancellationToken);
-                else if (currentFolder == "series" || currentFolder.Contains("series|"))
-                    channelItemInfos = await Series.Items(currentFolder, cancellationToken);
-                else if (currentFolder == "categories" || currentFolder.Contains("categories|"))
-                    channelItemInfos = await Category.Items(currentFolder, cancellationToken);
+                else if (query.FolderId == "movies" || query.FolderId.Contains("movies|"))
+                    channelList = await Movie.Items(query, cancellationToken);
+                else if (query.FolderId == "series" || query.FolderId.Contains("series|"))
+                    channelList = await Series.Items(query, cancellationToken);
+                //else if (query.FolderId == "categories" || query.FolderId.Contains("categories|"))
+                //    channelList = await Category.Items(query, cancellationToken);
 
-                return channelItemInfos;
+                return channelList;
             }, cancellationToken);
         }
     }

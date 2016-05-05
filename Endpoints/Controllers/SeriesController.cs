@@ -10,11 +10,11 @@ namespace PlayOn.Endpoints.Controllers
     [RoutePrefix("series")]
     public class SeriesController : ApiController
     {
-        [Route("all")]
+        [Route("all/{start}/{end}")]
         [HttpGet]
-        public List<Tools.Scaffold.Series> All()
+        public Tools.Scaffold.SeriesList All(int start, int end)
         {
-            return Model.Logic.Series.All();
+            return Model.Logic.Series.All(start, end);
         }
 
         [Route("name")]

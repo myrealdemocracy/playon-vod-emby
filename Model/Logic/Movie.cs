@@ -13,30 +13,23 @@ namespace PlayOn.Model.Logic
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public static List<Tools.Scaffold.Movie> All(string letter = null)
+        public static Tools.Scaffold.MovieList All(int start, int end)
         {
             var movies = new List<Tools.Scaffold.Movie>();
+            var totalRecordCount = 0;
 
             try
             {
                 using (var db = new Ado.PlayOnEntities())
                 {
-                    IQueryable<Ado.Movie> dbMovies = db.Movies;
+                    totalRecordCount = db.Movies.Count();
 
-                    if (!String.IsNullOrEmpty(letter))
-                    {
-                        dbMovies = letter != "nmb" ?
-                            db.Movies.Where(q => q.Name.StartsWith(letter)) :
-                            db.Movies.Where(q => q.Name.StartsWith("0") || q.Name.StartsWith("1") || q.Name.StartsWith("2") || q.Name.StartsWith("3") || q.Name.StartsWith("4") || q.Name.StartsWith("5") || q.Name.StartsWith("6") || q.Name.StartsWith("7") || q.Name.StartsWith("8") || q.Name.StartsWith("9"));
-                    }
-
-                    foreach (var movie in dbMovies)
+                    foreach (var movie in db.Movies.OrderBy(o => o.Name).Skip(start).Take(end))
                     {
                         movies.Add(new Tools.Scaffold.Movie
                         {
                             Id = movie.Id,
-                            Name = movie.Name,
-                            Overview = movie.VideoMovies.FirstOrDefault(q => q.Movie.Id == movie.Id).Video.Overview
+                            Name = movie.Name
                         });
                     }
                 }
@@ -46,7 +39,11 @@ namespace PlayOn.Model.Logic
                 Logger.Error(exception);
             }
 
-            return movies;
+            return new Tools.Scaffold.MovieList
+            {
+                Movies = movies,
+                TotalRecordCount = totalRecordCount
+            };
         }
 
         public static string VideoByName(string name)

@@ -67,6 +67,7 @@ namespace PlayOn.Emby
 
                 SupportsContentDownloading = true,
                 SupportsSortOrderToggle = false,
+                MaxPageSize = 200,
                 AutoRefreshLevels = 2
             };
         }
@@ -85,12 +86,12 @@ namespace PlayOn.Emby
         {
             return Task.Run(async () =>
             {
-                var channelItemInfos = await Helper.Channel.Items(query.FolderId, cancellationToken);
+                var channelList = await Helper.Channel.Items(query, cancellationToken);
 
                 return new ChannelItemResult
                 {
-                    Items = channelItemInfos.ToList(),
-                    TotalRecordCount = channelItemInfos.Count
+                    Items = channelList.ChannelItemInfos.ToList(),
+                    TotalRecordCount = channelList.TotalRecordCount
                 };
             }, cancellationToken);
         }

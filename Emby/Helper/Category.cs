@@ -13,13 +13,13 @@ namespace PlayOn.Emby.Helper
     {
         protected static ILogger Logger = Emby.Channel.Logger;
 
-        public static async Task<List<ChannelItemInfo>> Items(string currentFolder, CancellationToken cancellationToken)
+        public static async Task<List<ChannelItemInfo>> Items(InternalChannelItemQuery query, CancellationToken cancellationToken)
         {
             return await Task.Run(async () =>
             {
                 var channelItemInfos = new List<ChannelItemInfo>();
 
-                if (currentFolder == "categories")
+                if (query.FolderId == "categories")
                 {
                     var rest = new Rest.Category();
 
@@ -37,7 +37,7 @@ namespace PlayOn.Emby.Helper
                 }
                 else
                 {
-                    var terms = currentFolder.Split(Convert.ToChar("|"));
+                    var terms = query.FolderId.Split(Convert.ToChar("|"));
                     var name = terms[1];
                 }
 

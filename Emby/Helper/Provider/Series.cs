@@ -20,7 +20,8 @@ namespace PlayOn.Emby.Helper.Provider
         protected static MemoryCache Cache = new MemoryCache("TvdbSeriesInfo");
         protected static ILogger Logger = Emby.Channel.Logger;
 
-        public static async Task<Scaffold.Series> Info(string name, CancellationToken cancellationToken, int? seasonNumber = 0, int? episodeNumber = 0)
+        public static async Task<Scaffold.Series> Info(string name, int? seasonNumber
+            , int? episodeNumber, CancellationToken cancellationToken)
         {
             return await Task.Run(async () =>
             {
@@ -29,9 +30,17 @@ namespace PlayOn.Emby.Helper.Provider
 
                 var seriesItem = new MediaBrowser.Controller.Entities.TV.Series();
                 var episodeItem = new MediaBrowser.Controller.Entities.TV.Episode();
-                var series = new Scaffold.Series();
                 var seriesId = "";
                 var seriesDataPath = "";
+                var episodeInfo = new EpisodeInfo();
+
+                var series = new Scaffold.Series
+                {
+                    Genres = new List<string>(),
+                    Studios = new List<string>(),
+                    ProviderIds = new Dictionary<string, string>()
+                };
+
                 var seriesInfo = new SeriesInfo
                 {
                     Name = name,
@@ -39,7 +48,6 @@ namespace PlayOn.Emby.Helper.Provider
                     ParentIndexNumber = seasonNumber,
                     IndexNumber = episodeNumber
                 };
-                var episodeInfo = new EpisodeInfo();
 
                 Logger.Debug("name: " + name);
                 Logger.Debug("seasonNumber: " + seasonNumber);
@@ -84,6 +92,7 @@ namespace PlayOn.Emby.Helper.Provider
                         });
 
                     Logger.Debug("seriesItem.Name: " + seriesItem.Name);
+                    Logger.Debug("seriesItem.PremiereDate: " + seriesItem.PremiereDate);
                     Logger.Debug("seriesId: " + seriesId);
                     Logger.Debug("seriesDataPath:" + seriesDataPath);
 
@@ -122,6 +131,7 @@ namespace PlayOn.Emby.Helper.Provider
 
                     Logger.Debug("episodeItem null?: " + (episodeItem == null));
                     Logger.Debug("episodeItem.Name: " + episodeItem.Name);
+                    Logger.Debug("episodeItem.PremiereDate: " + episodeItem.PremiereDate);
 
                     series.Name = "S" + seasonNumber + " E" + episodeNumber + " - " + episodeItem.Name;
                     series.Overview = episodeItem.Overview;

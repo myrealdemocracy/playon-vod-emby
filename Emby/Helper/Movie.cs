@@ -16,61 +16,37 @@ namespace PlayOn.Emby.Helper
     {
         protected static ILogger Logger = Emby.Channel.Logger;
 
-        public static async Task<List<ChannelItemInfo>> Items(string currentFolder, CancellationToken cancellationToken)
+        public static async Task<Scaffold.ChannelList> Items(InternalChannelItemQuery query, CancellationToken cancellationToken)
         {
             return await Task.Run(async () =>
             {
                 var channelItemInfos = new List<ChannelItemInfo>();
                 var rest = new Rest.Movie();
 
-                if (currentFolder == "movies")
+                var result = await rest.All(query.StartIndex, query.Limit, cancellationToken);
+
+                foreach (var movie in result.Movies)
                 {
+                    var info = await Provider.Movie.Info(movie.Name, cancellationToken);
+
+                    var overview = String.IsNullOrEmpty(info.Overview) ? movie.Overview : info.Overview;
+
                     channelItemInfos.Add(new ChannelItemInfo
                     {
-                        Id = currentFolder + "|nmb",
-                        Name = "#",
-                        Type = ChannelItemType.Folder
-                    });
-
-                    for (var letter = 'A'; letter <= 'Z'; letter++)
-                    {
-                        channelItemInfos.Add(new ChannelItemInfo
-                        {
-                            Id = currentFolder + "|" + letter.ToString().ToLower(),
-                            Name = letter.ToString(),
-                            Type = ChannelItemType.Folder
-                        });
-                    }
-                }
-                else
-                {
-                    var terms = currentFolder.Split(Convert.ToChar("|"));
-                    var letter = terms[1];
-
-                    var movies = await rest.All(letter, cancellationToken);
-
-                    foreach (var movie in movies)
-                    {
-                        var info = await Provider.Movie.Info(movie.Name, cancellationToken);
-
-                        if (String.IsNullOrWhiteSpace(info.Image)) continue;
-
-                        channelItemInfos.Add(new ChannelItemInfo
-                        {
-                            Id = "movies|" + movie.Name.ToLower(),
-                            Name = movie.Name,
-                            Overview = info.Overview,
-                            Type = ChannelItemType.Media,
-                            ContentType = ChannelMediaContentType.Clip,
-                            MediaType = ChannelMediaType.Video,
-                            ImageUrl = info.Image,
-                            Genres = info.Genres,
-                            OfficialRating = info.OfficialRating,
-                            ProductionYear = info.ProductionYear,
-                            Studios = info.Studios,
-                            ProviderIds = info.ProviderIds,
-                            DateCreated = info.PremiereDate,
-                            MediaSources = new List<ChannelMediaInfo>
+                        Id = "movies|" + movie.Name.ToLower(),
+                        Name = movie.Name,
+                        Overview = overview,
+                        Type = ChannelItemType.Media,
+                        ContentType = ChannelMediaContentType.Clip,
+                        MediaType = ChannelMediaType.Video,
+                        ImageUrl = info.Image,
+                        Genres = info.Genres,
+                        OfficialRating = info.OfficialRating,
+                        ProductionYear = info.ProductionYear,
+                        Studios = info.Studios,
+                        ProviderIds = info.ProviderIds,
+                        DateCreated = info.PremiereDate,
+                        MediaSources = new List<ChannelMediaInfo>
                             {
                                 new ChannelMediaInfo
                                 {
@@ -79,11 +55,14 @@ namespace PlayOn.Emby.Helper
                                     SupportsDirectPlay = true
                                 }
                             }
-                        });
-                    }
+                    });
                 }
 
-                return channelItemInfos;
+                return new Scaffold.ChannelList
+                {
+                    ChannelItemInfos = channelItemInfos,
+                    TotalRecordCount = result.TotalRecordCount
+                };
             }, cancellationToken);
         }
     }
