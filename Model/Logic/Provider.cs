@@ -29,6 +29,8 @@ namespace PlayOn.Model.Logic
                         Name = item.Name,
                         Searchable = item.Searchable == "true" ? 1 : 0
                     });
+
+                    db.SaveChanges();
                 }
             }
             catch (Exception exception)

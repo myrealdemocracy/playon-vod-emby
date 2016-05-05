@@ -59,16 +59,7 @@ namespace PlayOn.Model.Logic
                 {
                     var videos = db.Videos.Where(q => q.VideoMovies.Any(a => a.Movie.Name == name));
 
-                    foreach (var video in videos)
-                    {
-                        url = Tools.Helper.Url.Generate(video.Path + "video|");
-
-                        Logger.Debug("url: " + url);
-
-                        if (url.Contains("m3u8") || url.Contains("flv")) break;
-                    }
-
-                    url = url.Contains("xml") ? "" : url;
+                    url = Video.Url(videos);
                 }
             }
             catch (Exception exception)

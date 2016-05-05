@@ -29,8 +29,8 @@ namespace PlayOn.Model.Ado
         public Nullable<System.DateTime> CreatedAt { get; set; }
         public Nullable<System.DateTime> UpdatedAt { get; set; }
         public Nullable<int> Minutes { get; set; }
-        public Nullable<int> IsFailing { get; set; }
         public int IdProvider { get; set; }
+        public Nullable<int> FailingCount { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<VideoSerie> VideoSeries { get; set; }

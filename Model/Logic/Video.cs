@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -39,6 +40,31 @@ namespace PlayOn.Model.Logic
             }
 
             return videos;
+        }
+
+        public static string Url(IEnumerable<Ado.Video> videos)
+        {
+            var url = String.Empty;
+
+            try
+            {
+                foreach (var video in videos)
+                {
+                    url = Tools.Helper.Url.Generate(video.Path + "video|");
+
+                    Logger.Debug("url: " + url);
+
+                    if (url.Contains("m3u8") || url.Contains("flv")) break;
+                }
+
+                url = url.Contains("xml") ? "" : url;
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+            }
+
+            return url;
         }
 
         public static void SaveAll(string url = null, string path = null)
@@ -123,7 +149,7 @@ namespace PlayOn.Model.Logic
                     if (adoVideo == null) adoVideo = new Ado.Video();
 
                     adoVideo.UpdatedAt = DateTime.UtcNow;
-                    adoVideo.IsFailing = 0;
+                    adoVideo.FailingCount = 0;
 
                     var providerCode = video.Path.Split(Convert.ToChar("|"))[0];
 
