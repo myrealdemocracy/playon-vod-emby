@@ -17,11 +17,11 @@ namespace PlayOn.Endpoints.Controllers
             return Model.Logic.Movie.All(start, end);
         }
 
-        [Route("video")]
+        [Route("video/{imdbId}")]
         [HttpGet]
-        public HttpResponseMessage Video([FromUri] string name)
+        public HttpResponseMessage Video(string imdbId)
         {
-            var url = Model.Logic.Movie.VideoByName(WebUtility.UrlDecode(name));
+            var url = Model.Logic.Movie.VideoByImdbId(imdbId);
             var message = new HttpResponseMessage();
 
             if (String.IsNullOrEmpty(url))

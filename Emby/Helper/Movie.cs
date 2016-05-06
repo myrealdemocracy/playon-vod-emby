@@ -33,7 +33,7 @@ namespace PlayOn.Emby.Helper
 
                     items.Add(new ChannelItemInfo
                     {
-                        Id = "movies|" + movie.Name.ToLower(),
+                        Id = "movies|" + movie.ImdbId,
                         Name = movie.Name,
                         Overview = overview,
                         Type = ChannelItemType.Media,
@@ -50,7 +50,7 @@ namespace PlayOn.Emby.Helper
                             {
                                 new ChannelMediaInfo
                                 {
-                                    Path = "http://playon.local/movie/video?name=" + WebUtility.UrlEncode(movie.Name),
+                                    Path = "http://playon.local/movie/video/" + movie.ImdbId,
                                     Protocol = MediaProtocol.Http,
                                     SupportsDirectPlay = true
                                 }

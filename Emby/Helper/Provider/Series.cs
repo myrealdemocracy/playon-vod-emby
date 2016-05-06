@@ -6,6 +6,8 @@ using System.Runtime.Caching;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
+using MediaBrowser.Common.Net;
 using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Logging;
@@ -20,7 +22,7 @@ namespace PlayOn.Emby.Helper.Provider
         protected static MemoryCache Cache = new MemoryCache("TvdbSeriesInfo");
         protected static ILogger Logger = Emby.Channel.Logger;
 
-        public static async Task<Scaffold.Series> Info(string name, string imdbId, int? seasonNumber
+        public static async Task<Scaffold.Series> Info(string imdbId, int? seasonNumber
             , int? episodeNumber, CancellationToken cancellationToken)
         {
             return await Task.Run(async () =>
@@ -43,38 +45,62 @@ namespace PlayOn.Emby.Helper.Provider
 
                 var seriesInfo = new SeriesInfo
                 {
-                    Name = name,
                     MetadataLanguage = "en",
                     ParentIndexNumber = seasonNumber,
-                    IndexNumber = episodeNumber,
-                    ProviderIds = new Dictionary<string, string>
-                    {
-                        {MetadataProviders.Imdb.ToString(), imdbId}
-                    }
+                    IndexNumber = episodeNumber
                 };
 
-                Logger.Debug("name: " + name);
+                Logger.Debug("imdbId: " + imdbId);
                 Logger.Debug("seasonNumber: " + seasonNumber);
                 Logger.Debug("episodeNumber: " + episodeNumber);
 
                 try
                 {
-                    if (Cache[name] == null)
+                    if (Cache[imdbId] == null)
                     {
+                        using (var result = await Emby.Channel.HttpClient.Get(new HttpRequestOptions
+                        {
+                            Url = "http://www.thetvdb.com/api/GetSeriesByRemoteID.php?language=en&imdbid=" + imdbId,
+                            ResourcePool = new SemaphoreSlim(2, 2),
+                            CancellationToken = cancellationToken
+                        }).ConfigureAwait(false))
+                        {
+                            var doc = new XmlDocument();
+                            doc.Load(result);
+
+                            if (doc.HasChildNodes)
+                            {
+                                var node = doc.SelectSingleNode("//Series/seriesid");
+
+                                if (node != null)
+                                {
+                                    seriesId = node.InnerText;
+                                }
+                            }
+                        }
+
+                        Logger.Debug("seriesId: " + seriesId);
+
+                        seriesInfo.ProviderIds = new Dictionary<string, string>
+                        {
+                            {
+                                MetadataProviders.Tvdb.ToString(),
+                                seriesId
+                            }
+                        };
+
                         var tvdbSeries = await TvdbSeriesProvider.Current.GetMetadata(seriesInfo, cancellationToken);
 
                         seriesItem = tvdbSeries.Item;
 
-                        Cache.Add(name, seriesItem, DateTimeOffset.Now.AddDays(1));
+                        Cache.Add(imdbId, seriesItem, DateTimeOffset.Now.AddDays(1));
                     }
-                    else seriesItem = Cache[name] as MediaBrowser.Controller.Entities.TV.Series;
+                    else seriesItem = Cache[imdbId] as MediaBrowser.Controller.Entities.TV.Series;
 
                     foreach (var providerId in seriesItem.ProviderIds)
                     {
                         Logger.Debug("seriesItem.ProviderId: " + providerId);
                     }
-
-                    seriesId = seriesItem.GetProviderId(MetadataProviders.Tvdb);
 
                     seriesDataPath = TvdbSeriesProvider.GetSeriesDataPath(
                         Emby.Channel.Config.ApplicationPaths,
@@ -82,13 +108,12 @@ namespace PlayOn.Emby.Helper.Provider
                         {
                             {
                                 MetadataProviders.Tvdb.ToString(),
-                                seriesId
+                                seriesItem.GetProviderId(MetadataProviders.Tvdb)
                             }
                         });
 
                     Logger.Debug("seriesItem.Name: " + seriesItem.Name);
                     Logger.Debug("seriesItem.PremiereDate: " + seriesItem.PremiereDate);
-                    Logger.Debug("seriesId: " + seriesId);
                     Logger.Debug("seriesDataPath:" + seriesDataPath);
 
                     series.ProductionYear = seriesItem.ProductionYear;

@@ -47,7 +47,7 @@ namespace PlayOn.Model.Logic
             };
         }
 
-        public static string VideoByName(string name)
+        public static string VideoByImdbId(string imdbId)
         {
             var url = String.Empty;
 
@@ -55,7 +55,7 @@ namespace PlayOn.Model.Logic
             {
                 using (var db = new Ado.PlayOnEntities())
                 {
-                    var videos = db.Videos.Where(q => q.VideoMovies.Any(a => a.Movie.Name == name)).OrderBy(o => o.FailingCount);
+                    var videos = db.Videos.Where(q => q.VideoMovies.Any(a => a.Movie.Imdb == imdbId)).OrderBy(o => o.FailingCount);
 
                     url = Video.Url(videos);
                 }

@@ -36,11 +36,11 @@ namespace PlayOn.Emby.Helper
 
                     foreach (var series in result.Items)
                     {
-                        var info = await Provider.Series.Info(series.Name, series.ImdbId, 0, 0, cancellationToken);
+                        var info = await Provider.Series.Info(series.ImdbId, 0, 0, cancellationToken);
 
                         items.Add(new ChannelItemInfo
                         {
-                            Id = "series|" + series.Name.ToLower(),
+                            Id = "series|" + series.ImdbId,
                             Name = series.Name,
                             Type = ChannelItemType.Folder,
                             Genres = info.Genres,
@@ -55,18 +55,18 @@ namespace PlayOn.Emby.Helper
                 else
                 {
                     var terms = query.FolderId.Split(Convert.ToChar("|"));
-                    var name = terms[1];
+                    var imdbId = terms[1];
 
                     var seasonNumber = terms.Length > 2 ? Convert.ToInt32(terms[2]) : 0;
                     var episodeNumber = terms.Length > 3 ? Convert.ToInt32(terms[3]) : 0;
 
                     if (seasonNumber == 0 && episodeNumber == 0)
                     {
-                        var seasons = await rest.Seasons(name, cancellationToken);
+                        var seasons = await rest.Seasons(imdbId, cancellationToken);
 
                         foreach (var season in seasons)
                         {
-                            var info = await Provider.Series.Info(name, season.SeasonNumber, 0, cancellationToken);
+                            var info = await Provider.Series.Info(imdbId, season.SeasonNumber, 0, cancellationToken);
 
                             items.Add(new ChannelItemInfo
                             {
@@ -79,61 +79,33 @@ namespace PlayOn.Emby.Helper
                     }
                     else if (seasonNumber > 0 && episodeNumber == 0)
                     {
-                        var episodes = await rest.Episodes(name, seasonNumber, cancellationToken);
+                        var episodes = await rest.Episodes(imdbId, seasonNumber, cancellationToken);
 
                         foreach (var episode in episodes)
                         {
-                            if (episode.EpisodeNumber == 0)
-                            {
-                                foreach (var video in episode.Videos)
-                                {
-                                    items.Add(new ChannelItemInfo
-                                    {
-                                        Id = query.FolderId + "|" + video.Name,
-                                        Name = video.Name,
-                                        Overview = video.Overview,
-                                        Type = ChannelItemType.Media,
-                                        ContentType = ChannelMediaContentType.Clip,
-                                        MediaType = ChannelMediaType.Video,
-                                        ImageUrl = "http://playon.local/url/image?path=" + WebUtility.UrlEncode(video.Path),
-                                        MediaSources = new List<ChannelMediaInfo>
-                                        {
-                                            new ChannelMediaInfo
-                                            {
-                                                Path = "http://playon.local/url/video?path=" + WebUtility.UrlEncode(video.Path),
-                                                Protocol = MediaProtocol.Http,
-                                                SupportsDirectPlay = true
-                                            }
-                                        }
-                                    });
-                                }
-                            }
-                            else
-                            {
-                                var info = await Provider.Series.Info(name, seasonNumber, episode.EpisodeNumber, cancellationToken);
+                            var info = await Provider.Series.Info(imdbId, seasonNumber, episode.EpisodeNumber, cancellationToken);
 
-                                items.Add(new ChannelItemInfo
-                                {
-                                    Id = query.FolderId + "|" + episode.EpisodeNumber,
-                                    Name = info.Name,
-                                    Overview = info.Overview,
-                                    Type = ChannelItemType.Media,
-                                    ContentType = ChannelMediaContentType.Clip,
-                                    MediaType = ChannelMediaType.Video,
-                                    ImageUrl = info.Image,
-                                    PremiereDate = info.PremiereDate,
-                                    DateCreated = info.PremiereDate,
-                                    MediaSources = new List<ChannelMediaInfo>
+                            items.Add(new ChannelItemInfo
+                            {
+                                Id = query.FolderId + "|" + episode.EpisodeNumber,
+                                Name = info.Name,
+                                Overview = info.Overview,
+                                Type = ChannelItemType.Media,
+                                ContentType = ChannelMediaContentType.Clip,
+                                MediaType = ChannelMediaType.Video,
+                                ImageUrl = info.Image,
+                                PremiereDate = info.PremiereDate,
+                                DateCreated = info.PremiereDate,
+                                MediaSources = new List<ChannelMediaInfo>
                                     {
                                         new ChannelMediaInfo
                                         {
-                                            Path = "http://playon.local/series/video/s/" + seasonNumber + "/e/" + episode.EpisodeNumber + "?name=" + WebUtility.UrlEncode(name),
+                                            Path = "http://playon.local/series/video/" + imdbId + "/s/" + seasonNumber + "/e/" + episode.EpisodeNumber,
                                             Protocol = MediaProtocol.Http,
                                             SupportsDirectPlay = true
                                         }
                                     }
-                                });
-                            }
+                            });
                         }
                     }
 

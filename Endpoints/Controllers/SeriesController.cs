@@ -17,25 +17,25 @@ namespace PlayOn.Endpoints.Controllers
             return Model.Logic.Series.All(start, end);
         }
 
-        [Route("name")]
-        [HttpPost]
-        public List<Tools.Scaffold.Season> ByName(Tools.Scaffold.Form.Series series)
-        {
-            return Model.Logic.Series.ByName(series.Name);
-        }
-
-        [Route("season")]
-        [HttpPost]
-        public List<Tools.Scaffold.Episode> BySeason(Tools.Scaffold.Form.Series series)
-        {
-            return Model.Logic.Series.BySeason(series.Name, series.Season);
-        }
-
-        [Route("video/s/{season}/e/{episode}")]
+        [Route("seasons/{imdbId}")]
         [HttpGet]
-        public HttpResponseMessage Video([FromUri] string name, int? season, int? episode)
+        public List<Tools.Scaffold.Season> ByName(string imdbId)
         {
-            var url = Model.Logic.Series.VideoByNameSeasonEpisode(WebUtility.UrlDecode(name), season, episode);
+            return Model.Logic.Series.ByName(imdbId);
+        }
+
+        [Route("episodes/{imdbId}/s/{season}")]
+        [HttpGet]
+        public List<Tools.Scaffold.Episode> BySeason(string imdbId, int? season)
+        {
+            return Model.Logic.Series.BySeason(imdbId, season);
+        }
+
+        [Route("video/{imdbId}/s/{season}/e/{episode}")]
+        [HttpGet]
+        public HttpResponseMessage Video(string imdbId, int? season, int? episode)
+        {
+            var url = Model.Logic.Series.VideoByNameSeasonEpisode(imdbId, season, episode);
             var message = new HttpResponseMessage();
 
             if (String.IsNullOrEmpty(url))

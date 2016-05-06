@@ -38,7 +38,7 @@ namespace PlayOn.Model.Logic
             };
         }
 
-        public static List<Tools.Scaffold.Season> ByName(string name)
+        public static List<Tools.Scaffold.Season> ByName(string imdbId)
         {
             var seasons = new List<Tools.Scaffold.Season>();
 
@@ -46,7 +46,7 @@ namespace PlayOn.Model.Logic
             {
                 using (var db = new Ado.PlayOnEntities())
                 {
-                    var series = db.Series.FirstOrDefault(q => q.Name == name);
+                    var series = db.Series.FirstOrDefault(q => q.Imdb == imdbId);
                     var seasonsList = series.VideoSeries.GroupBy(g => g.Season).Select(s => s.First());
 
                     foreach (var season in seasonsList)
@@ -66,7 +66,7 @@ namespace PlayOn.Model.Logic
             return seasons;
         }
 
-        public static List<Tools.Scaffold.Episode> BySeason(string name, int? season)
+        public static List<Tools.Scaffold.Episode> BySeason(string imdbId, int? season)
         {
             var episodes = new List<Tools.Scaffold.Episode>();
 
@@ -74,7 +74,7 @@ namespace PlayOn.Model.Logic
             {
                 using (var db = new Ado.PlayOnEntities())
                 {
-                    var series = db.Series.FirstOrDefault(q => q.Name == name);
+                    var series = db.Series.FirstOrDefault(q => q.Imdb == imdbId);
                     var episodeList = series.VideoSeries.Where(q => q.Season == season).GroupBy(g => g.Episode).Select(s => s.First());
 
                     foreach (var episode in episodeList)
@@ -113,7 +113,7 @@ namespace PlayOn.Model.Logic
             return episodes;
         }
 
-        public static string VideoByNameSeasonEpisode(string name, int? season, int? episode)
+        public static string VideoByNameSeasonEpisode(string imdbId, int? season, int? episode)
         {
             var url = String.Empty;
 
@@ -121,7 +121,7 @@ namespace PlayOn.Model.Logic
             {
                 using (var db = new Ado.PlayOnEntities())
                 {
-                    var videos = db.Videos.Where(q => q.VideoSeries.Any(a => a.Serie.Name == name && a.Season == season && a.Episode == episode)).OrderBy(o => o.FailingCount);
+                    var videos = db.Videos.Where(q => q.VideoSeries.Any(a => a.Serie.Imdb == imdbId && a.Season == season && a.Episode == episode)).OrderBy(o => o.FailingCount);
 
                     url = Video.Url(videos);
                 }
