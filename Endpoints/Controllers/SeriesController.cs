@@ -12,7 +12,7 @@ namespace PlayOn.Endpoints.Controllers
     {
         [Route("all/{start}/{end}")]
         [HttpGet]
-        public Tools.Scaffold.SeriesList All(int start, int end)
+        public Tools.Scaffold.Result.Series All(int start, int end)
         {
             return Model.Logic.Series.All(start, end);
         }

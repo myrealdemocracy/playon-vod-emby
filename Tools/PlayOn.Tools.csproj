@@ -70,12 +70,12 @@
     <Compile Include="Scaffold\Form\Movie.cs" />
     <Compile Include="Scaffold\Form\Series.cs" />
     <Compile Include="Scaffold\Movie.cs" />
-    <Compile Include="Scaffold\MovieList.cs" />
+    <Compile Include="Scaffold\Result\Movie.cs" />
     <Compile Include="Scaffold\Season.cs" />
     <Compile Include="Scaffold\SeasonEpisode.cs" />
     <Compile Include="Scaffold\Series.cs" />
     <Compile Include="Scaffold\Episode.cs" />
-    <Compile Include="Scaffold\SeriesList.cs" />
+    <Compile Include="Scaffold\Result\Series.cs" />
     <Compile Include="Scaffold\Video.cs" />
     <Compile Include="Scaffold\Xml\Catalog.cs" />
     <Compile Include="Scaffold\Xml\Group.cs" />

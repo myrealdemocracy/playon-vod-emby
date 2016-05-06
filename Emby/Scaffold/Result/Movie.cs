@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PlayOn.Emby.Scaffold
+namespace PlayOn.Emby.Scaffold.Result
 {
-    public class MovieList
+    public class Movie
     {
-        public List<Movie> Movies { get; set; }
+        public List<Scaffold.Movie> Items { get; set; }
         public int TotalRecordCount { get; set; }
     }
 }

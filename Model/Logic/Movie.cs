@@ -13,7 +13,7 @@ namespace PlayOn.Model.Logic
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public static Tools.Scaffold.MovieList All(int start, int end)
+        public static Tools.Scaffold.Result.Movie All(int start, int end)
         {
             var movies = new List<Tools.Scaffold.Movie>();
             var totalRecordCount = 0;
@@ -39,9 +39,9 @@ namespace PlayOn.Model.Logic
                 Logger.Error(exception);
             }
 
-            return new Tools.Scaffold.MovieList
+            return new Tools.Scaffold.Result.Movie
             {
-                Movies = movies,
+                Items = movies,
                 TotalRecordCount = totalRecordCount
             };
         }

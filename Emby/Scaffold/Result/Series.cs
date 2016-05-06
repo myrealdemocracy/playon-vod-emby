@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MediaBrowser.Controller.Channels;
 
-namespace PlayOn.Emby.Scaffold
+namespace PlayOn.Emby.Scaffold.Result
 {
-    public class ChannelList
+    public class Series
     {
-        public List<ChannelItemInfo> ChannelItemInfos { get; set; }
+        public List<Scaffold.Series> Items { get; set; }
         public int TotalRecordCount { get; set; }
     }
 }

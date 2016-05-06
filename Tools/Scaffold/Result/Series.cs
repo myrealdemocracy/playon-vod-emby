@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PlayOn.Tools.Scaffold
+namespace PlayOn.Tools.Scaffold.Result
 {
-    public class SeriesList
+    public class Series
     {
-        public List<Series> Series { get; set; }
+        public List<Scaffold.Series> Items { get; set; }
         public int TotalRecordCount { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace PlayOn.Endpoints.Controllers
     {
         [Route("all/{start}/{end}")]
         [HttpGet]
-        public Tools.Scaffold.MovieList All(int start, int end)
+        public Tools.Scaffold.Result.Movie All(int start, int end)
         {
             return Model.Logic.Movie.All(start, end);
         }

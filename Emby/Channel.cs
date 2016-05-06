@@ -90,7 +90,7 @@ namespace PlayOn.Emby
 
                 return new ChannelItemResult
                 {
-                    Items = channelList.ChannelItemInfos.ToList(),
+                    Items = channelList.Items.ToList(),
                     TotalRecordCount = channelList.TotalRecordCount
                 };
             }, cancellationToken);

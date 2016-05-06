@@ -20,12 +20,12 @@ namespace PlayOn.Emby.Helper
     {
         protected static ILogger Logger = Emby.Channel.Logger;
 
-        public static async Task<Scaffold.ChannelList> Items(InternalChannelItemQuery query, CancellationToken cancellationToken)
+        public static async Task<Scaffold.Result.Channel> Items(InternalChannelItemQuery query, CancellationToken cancellationToken)
         {
             return await Task.Run(async () =>
             {
                 var rest = new Rest.Series();
-                var channelItemInfos = new List<ChannelItemInfo>();
+                var items = new List<ChannelItemInfo>();
                 var totalRecordCount = 0;
 
                 if (query.FolderId == "series")
@@ -34,11 +34,11 @@ namespace PlayOn.Emby.Helper
 
                     totalRecordCount = result.TotalRecordCount;
 
-                    foreach (var series in result.Series)
+                    foreach (var series in result.Items)
                     {
                         var info = await Provider.Series.Info(series.Name, 0, 0, cancellationToken);
 
-                        channelItemInfos.Add(new ChannelItemInfo
+                        items.Add(new ChannelItemInfo
                         {
                             Id = "series|" + series.Name.ToLower(),
                             Name = series.Name,
@@ -68,7 +68,7 @@ namespace PlayOn.Emby.Helper
                         {
                             var info = await Provider.Series.Info(name, season.SeasonNumber, 0, cancellationToken);
 
-                            channelItemInfos.Add(new ChannelItemInfo
+                            items.Add(new ChannelItemInfo
                             {
                                 Id = query.FolderId + "|" + season.SeasonNumber,
                                 Name = "Season " + season.SeasonNumber,
@@ -87,7 +87,7 @@ namespace PlayOn.Emby.Helper
                             {
                                 foreach (var video in episode.Videos)
                                 {
-                                    channelItemInfos.Add(new ChannelItemInfo
+                                    items.Add(new ChannelItemInfo
                                     {
                                         Id = query.FolderId + "|" + video.Name,
                                         Name = video.Name,
@@ -112,7 +112,7 @@ namespace PlayOn.Emby.Helper
                             {
                                 var info = await Provider.Series.Info(name, seasonNumber, episode.EpisodeNumber, cancellationToken);
 
-                                channelItemInfos.Add(new ChannelItemInfo
+                                items.Add(new ChannelItemInfo
                                 {
                                     Id = query.FolderId + "|" + episode.EpisodeNumber,
                                     Name = info.Name,
@@ -137,12 +137,12 @@ namespace PlayOn.Emby.Helper
                         }
                     }
 
-                    totalRecordCount = channelItemInfos.Count;
+                    totalRecordCount = items.Count;
                 }
 
-                return new Scaffold.ChannelList
+                return new Scaffold.Result.Channel
                 {
-                    ChannelItemInfos = channelItemInfos,
+                    Items = items,
                     TotalRecordCount = totalRecordCount
                 };
             }, cancellationToken);

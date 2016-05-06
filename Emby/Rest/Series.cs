@@ -10,13 +10,13 @@ namespace PlayOn.Emby.Rest
 {
     public class Series : Base
     {
-        public async Task<Scaffold.SeriesList> All(int? start, int? end, CancellationToken cancellationToken)
+        public async Task<Scaffold.Result.Series> All(int? start, int? end, CancellationToken cancellationToken)
         {
-            var series = new Scaffold.SeriesList();
+            var series = new Scaffold.Result.Series();
 
             try
             {
-                series = await Request<Scaffold.SeriesList>("/series/all/" + Convert.ToInt32(start) + "/" + Convert.ToInt32(end), "GET", cancellationToken);
+                series = await Request<Scaffold.Result.Series>("/series/all/" + Convert.ToInt32(start) + "/" + Convert.ToInt32(end), "GET", cancellationToken);
             }
             catch (Exception exception)
             {

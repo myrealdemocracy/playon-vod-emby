@@ -16,22 +16,22 @@ namespace PlayOn.Emby.Helper
     {
         protected static ILogger Logger = Emby.Channel.Logger;
 
-        public static async Task<Scaffold.ChannelList> Items(InternalChannelItemQuery query, CancellationToken cancellationToken)
+        public static async Task<Scaffold.Result.Channel> Items(InternalChannelItemQuery query, CancellationToken cancellationToken)
         {
             return await Task.Run(async () =>
             {
-                var channelItemInfos = new List<ChannelItemInfo>();
+                var items = new List<ChannelItemInfo>();
                 var rest = new Rest.Movie();
 
                 var result = await rest.All(query.StartIndex, query.Limit, cancellationToken);
 
-                foreach (var movie in result.Movies)
+                foreach (var movie in result.Items)
                 {
                     var info = await Provider.Movie.Info(movie.Name, cancellationToken);
 
                     var overview = String.IsNullOrEmpty(info.Overview) ? movie.Overview : info.Overview;
 
-                    channelItemInfos.Add(new ChannelItemInfo
+                    items.Add(new ChannelItemInfo
                     {
                         Id = "movies|" + movie.Name.ToLower(),
                         Name = movie.Name,
@@ -58,9 +58,9 @@ namespace PlayOn.Emby.Helper
                     });
                 }
 
-                return new Scaffold.ChannelList
+                return new Scaffold.Result.Channel
                 {
-                    ChannelItemInfos = channelItemInfos,
+                    Items = items,
                     TotalRecordCount = result.TotalRecordCount
                 };
             }, cancellationToken);

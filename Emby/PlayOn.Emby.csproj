@@ -70,13 +70,13 @@
     <Compile Include="Rest\Series.cs" />
     <Compile Include="Rest\Video.cs" />
     <Compile Include="Scaffold\Category.cs" />
-    <Compile Include="Scaffold\ChannelList.cs" />
+    <Compile Include="Scaffold\Result\Channel.cs" />
     <Compile Include="Scaffold\Episode.cs" />
     <Compile Include="Scaffold\Movie.cs" />
-    <Compile Include="Scaffold\MovieList.cs" />
+    <Compile Include="Scaffold\Result\Movie.cs" />
     <Compile Include="Scaffold\Season.cs" />
     <Compile Include="Scaffold\Series.cs" />
-    <Compile Include="Scaffold\SeriesList.cs" />
+    <Compile Include="Scaffold\Result\Series.cs" />
     <Compile Include="Scaffold\Video.cs" />
   </ItemGroup>
   <ItemGroup>

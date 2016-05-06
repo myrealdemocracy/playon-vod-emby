@@ -13,7 +13,7 @@ namespace PlayOn.Model.Logic
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public static Tools.Scaffold.SeriesList All(int start, int end)
+        public static Tools.Scaffold.Result.Series All(int start, int end)
         {
             var series = new List<Tools.Scaffold.Series>();
             var totalRecordCount = 0;
@@ -30,9 +30,9 @@ namespace PlayOn.Model.Logic
                 }
             }
 
-            return new Tools.Scaffold.SeriesList
+            return new Tools.Scaffold.Result.Series
             {
-                Series = series,
+                Items = series,
                 TotalRecordCount = totalRecordCount
             };
         }

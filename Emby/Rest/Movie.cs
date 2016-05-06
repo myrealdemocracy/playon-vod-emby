@@ -9,13 +9,13 @@ namespace PlayOn.Emby.Rest
 {
     public class Movie : Base
     {
-        public async Task<Scaffold.MovieList> All(int? start, int? end, CancellationToken cancellationToken)
+        public async Task<Scaffold.Result.Movie> All(int? start, int? end, CancellationToken cancellationToken)
         {
-            var movies = new Scaffold.MovieList();
+            var movies = new Scaffold.Result.Movie();
 
             try
             {
-                movies = await Request<Scaffold.MovieList>("/movie/all/" + Convert.ToInt32(start) + "/" + Convert.ToInt32(end), "GET", cancellationToken);
+                movies = await Request<Scaffold.Result.Movie>("/movie/all/" + Convert.ToInt32(start) + "/" + Convert.ToInt32(end), "GET", cancellationToken);
             }
             catch (Exception exception)
             {
