@@ -24,7 +24,7 @@ using MediaBrowser.Model.Serialization;
 
 namespace PlayOn.Emby
 {
-    public class Channel : IChannel//, ISupportsLatestMedia
+    public class Channel : IChannel, ISearchableChannel
     {
         public static IServerConfigurationManager Config;
         public static ILibraryManager LibraryManager;
@@ -68,13 +68,18 @@ namespace PlayOn.Emby
                 SupportsContentDownloading = true,
                 SupportsSortOrderToggle = false,
                 MaxPageSize = 200,
-                AutoRefreshLevels = 2
+                AutoRefreshLevels = 4
             };
         }
 
         public bool IsEnabledFor(string userId)
         {
             return true;
+        }
+
+        public Task<IEnumerable<ChannelItemInfo>> Search(ChannelSearchInfo searchInfo, CancellationToken cancellationToken)
+        {
+            return Task.Run(async () => await Helper.Search.Items(searchInfo, cancellationToken), cancellationToken);
         }
 
         //public Task<IEnumerable<ChannelItemInfo>> GetLatestMedia(ChannelLatestMediaSearch request, CancellationToken cancellationToken)

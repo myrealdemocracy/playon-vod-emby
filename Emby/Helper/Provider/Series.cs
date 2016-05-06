@@ -86,6 +86,10 @@ namespace PlayOn.Emby.Helper.Provider
                             {
                                 MetadataProviders.Tvdb.ToString(),
                                 seriesId
+                            },
+                            {
+                                MetadataProviders.Imdb.ToString(),
+                                imdbId
                             }
                         };
 

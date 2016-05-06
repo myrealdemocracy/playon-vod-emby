@@ -61,12 +61,14 @@
     <Compile Include="Helper\Movie.cs" />
     <Compile Include="Helper\Provider\Movie.cs" />
     <Compile Include="Helper\Provider\Series.cs" />
+    <Compile Include="Helper\Search.cs" />
     <Compile Include="Helper\Series.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rest\Base.cs" />
     <Compile Include="Rest\Category.cs" />
     <Compile Include="Rest\Movie.cs" />
+    <Compile Include="Rest\Search.cs" />
     <Compile Include="Rest\Series.cs" />
     <Compile Include="Rest\Video.cs" />
     <Compile Include="Scaffold\Category.cs" />

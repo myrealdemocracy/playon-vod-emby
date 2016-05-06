@@ -73,6 +73,7 @@
     <Compile Include="Scaffold\Category.cs" />
     <Compile Include="Scaffold\Form\Base.cs" />
     <Compile Include="Scaffold\Form\Movie.cs" />
+    <Compile Include="Scaffold\Form\Search.cs" />
     <Compile Include="Scaffold\Form\Series.cs" />
     <Compile Include="Scaffold\Movie.cs" />
     <Compile Include="Scaffold\Omdb.cs" />
