@@ -51,6 +51,8 @@ namespace PlayOn.Model.Logic
 
                     foreach (var season in seasonsList)
                     {
+                        if(Convert.ToInt32(season.Season) == 0) continue;
+
                         seasons.Add(new Tools.Scaffold.Season
                         {
                             SeasonNumber = season.Season
@@ -84,6 +86,8 @@ namespace PlayOn.Model.Logic
 
                         if (episodeNumber == 0)
                         {
+                            continue;
+
                             var dbVideos = db.Videos.Where(q => q.VideoSeries.Any(a => a.IdSerie == series.Id && a.Season == season && a.Episode == episodeNumber));
 
                             foreach (var video in dbVideos)
