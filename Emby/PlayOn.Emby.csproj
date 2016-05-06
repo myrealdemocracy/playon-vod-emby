@@ -56,6 +56,7 @@
     <Compile Include="Channel.cs" />
     <Compile Include="Configuration\ConfigurationPage.cs" />
     <Compile Include="Configuration\PluginConfiguration.cs" />
+    <Compile Include="Helper\AllMedia.cs" />
     <Compile Include="Helper\Category.cs" />
     <Compile Include="Helper\Channel.cs" />
     <Compile Include="Helper\Movie.cs" />

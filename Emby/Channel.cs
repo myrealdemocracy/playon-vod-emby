@@ -24,7 +24,7 @@ using MediaBrowser.Model.Serialization;
 
 namespace PlayOn.Emby
 {
-    public class Channel : IChannel, ISearchableChannel
+    public class Channel : IChannel, ISearchableChannel, IIndexableChannel
     {
         public static IServerConfigurationManager Config;
         public static ILibraryManager LibraryManager;
@@ -77,6 +77,11 @@ namespace PlayOn.Emby
             return true;
         }
 
+        public Task<ChannelItemResult> GetAllMedia(InternalAllChannelMediaQuery query, CancellationToken cancellationToken)
+        {
+            return Task.Run(async () => await Helper.AllMedia.Items(query, cancellationToken), cancellationToken);
+        }
+
         public Task<IEnumerable<ChannelItemInfo>> Search(ChannelSearchInfo searchInfo, CancellationToken cancellationToken)
         {
             return Task.Run(async () => await Helper.Search.Items(searchInfo, cancellationToken), cancellationToken);
@@ -89,16 +94,7 @@ namespace PlayOn.Emby
 
         public Task<ChannelItemResult> GetChannelItems(InternalChannelItemQuery query, CancellationToken cancellationToken)
         {
-            return Task.Run(async () =>
-            {
-                var channelList = await Helper.Channel.Items(query, cancellationToken);
-
-                return new ChannelItemResult
-                {
-                    Items = channelList.Items.ToList(),
-                    TotalRecordCount = channelList.TotalRecordCount
-                };
-            }, cancellationToken);
+            return Task.Run(async () => await Helper.Channel.Items(query, cancellationToken), cancellationToken);
         }
 
         public Task<DynamicImageResponse> GetChannelImage(ImageType type, CancellationToken cancellationToken)

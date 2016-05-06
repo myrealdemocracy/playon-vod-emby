@@ -19,10 +19,26 @@ namespace PlayOn.Emby.Rest
             }
             catch (Exception exception)
             {
-                Logger.ErrorException("Loading movies error, API call failed", exception);
+                Logger.ErrorException("Loading video total error, API call failed", exception);
             }
 
             return video;
+        }
+
+        public async Task<List<Scaffold.Video>> All(CancellationToken cancellationToken)
+        {
+            var videos = new List<Scaffold.Video>();
+
+            try
+            {
+                videos = await Request<List<Scaffold.Video>>("/video/all", "GET", cancellationToken);
+            }
+            catch (Exception exception)
+            {
+                Logger.ErrorException("Loading videos error, API call failed", exception);
+            }
+
+            return videos;
         }
     }
 }

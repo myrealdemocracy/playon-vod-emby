@@ -20,6 +20,8 @@ namespace PlayOn.Model.Logic
 
             using (var db = new Ado.PlayOnEntities())
             {
+                totalRecordCount = db.Series.Count();
+
                 foreach (var serie in db.Series.OrderBy(o => o.Name).Skip(start).Take(end))
                 {
                     series.Add(new Tools.Scaffold.Series

@@ -14,7 +14,7 @@ namespace PlayOn.Emby.Helper
     {
         protected static ILogger Logger = Emby.Channel.Logger;
 
-        public static async Task<Scaffold.Result.Channel> Items(InternalChannelItemQuery query, CancellationToken cancellationToken)
+        public static async Task<ChannelItemResult> Items(InternalChannelItemQuery query, CancellationToken cancellationToken)
         {
             return await Task.Run(async () =>
             {
@@ -49,7 +49,11 @@ namespace PlayOn.Emby.Helper
                 else if (query.FolderId == "series" || query.FolderId.Contains("series|"))
                     channelResult = await Series.Items(query, cancellationToken);
 
-                return channelResult;
+                return new ChannelItemResult
+                {
+                    Items = channelResult.Items.ToList(),
+                    TotalRecordCount = channelResult.TotalRecordCount
+                };
             }, cancellationToken);
         }
     }

@@ -19,7 +19,7 @@ namespace PlayOn.Model.Logic
             {
                 using (var db = new Ado.PlayOnEntities())
                 {
-                    foreach (var movie in db.Movies)
+                    foreach (var movie in db.Movies.Where(q => q.Name.Contains(search.Name)))
                     {
                         videos.Add(new Tools.Scaffold.Video
                         {
@@ -29,7 +29,7 @@ namespace PlayOn.Model.Logic
                         });
                     }
 
-                    foreach (var series in db.Series)
+                    foreach (var series in db.Series.Where(q => q.Name.Contains(search.Name)))
                     {
                         videos.Add(new Tools.Scaffold.Video
                         {

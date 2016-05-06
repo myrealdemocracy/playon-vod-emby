@@ -16,5 +16,12 @@ namespace PlayOn.Endpoints.Controllers
         {
             return Model.Logic.Video.Total;
         }
+
+        [Route("all")]
+        [HttpGet]
+        public List<Tools.Scaffold.Video> All()
+        {
+            return Model.Logic.Video.All;
+        }
     }
 }

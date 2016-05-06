@@ -47,6 +47,46 @@ namespace PlayOn.Model.Logic
             }
         }
 
+        public static List<Tools.Scaffold.Video> All
+        {
+            get
+            {
+                var videos = new List<Tools.Scaffold.Video>();
+
+                try
+                {
+                    using (var db = new Ado.PlayOnEntities())
+                    {
+                        foreach (var movie in db.Movies)
+                        {
+                            videos.Add(new Tools.Scaffold.Video
+                            {
+                                Type = "movies",
+                                Name = movie.Name,
+                                ImdbId = movie.Imdb
+                            });
+                        }
+
+                        foreach (var series in db.Series)
+                        {
+                            videos.Add(new Tools.Scaffold.Video
+                            {
+                                Type = "series",
+                                Name = series.Name,
+                                ImdbId = series.Imdb
+                            });
+                        }
+                    }
+                }
+                catch (Exception exception)
+                {
+                    Logger.Error(exception);
+                }
+
+                return videos;
+            }
+        }
+
         public static string Url(IEnumerable<Ado.Video> videos)
         {
             var url = String.Empty;
