@@ -33,7 +33,7 @@ namespace PlayOn.Model.Logic
                     {
                         videos.Add(new Tools.Scaffold.Video
                         {
-                            Type = "movies",
+                            Type = "series",
                             Name = series.Name,
                             ImdbId = series.Imdb
                         });
