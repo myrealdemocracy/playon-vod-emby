@@ -20,7 +20,7 @@ namespace PlayOn.Emby.Helper.Provider
         protected static MemoryCache Cache = new MemoryCache("TvdbSeriesInfo");
         protected static ILogger Logger = Emby.Channel.Logger;
 
-        public static async Task<Scaffold.Series> Info(string name, int? seasonNumber
+        public static async Task<Scaffold.Series> Info(string name, string imdbId, int? seasonNumber
             , int? episodeNumber, CancellationToken cancellationToken)
         {
             return await Task.Run(async () =>
@@ -46,7 +46,11 @@ namespace PlayOn.Emby.Helper.Provider
                     Name = name,
                     MetadataLanguage = "en",
                     ParentIndexNumber = seasonNumber,
-                    IndexNumber = episodeNumber
+                    IndexNumber = episodeNumber,
+                    ProviderIds = new Dictionary<string, string>
+                    {
+                        {MetadataProviders.Imdb.ToString(), imdbId}
+                    }
                 };
 
                 Logger.Debug("name: " + name);
@@ -57,15 +61,6 @@ namespace PlayOn.Emby.Helper.Provider
                 {
                     if (Cache[name] == null)
                     {
-                        MetadataResult<MediaBrowser.Controller.Entities.TV.Series> omdbSeries;
-
-                        var omdbItemProvider = new OmdbItemProvider(Emby.Channel.JsonSerializer, Emby.Channel.HttpClient, Emby.Channel.Logger, Emby.Channel.LibraryManager);
-
-                        omdbSeries = await omdbItemProvider.GetMetadata(seriesInfo, cancellationToken);
-
-                        seriesInfo.Year = omdbSeries.Item.ProductionYear;
-                        seriesInfo.PremiereDate = omdbSeries.Item.PremiereDate;
-
                         var tvdbSeries = await TvdbSeriesProvider.Current.GetMetadata(seriesInfo, cancellationToken);
 
                         seriesItem = tvdbSeries.Item;

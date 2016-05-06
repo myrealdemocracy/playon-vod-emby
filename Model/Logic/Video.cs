@@ -154,13 +154,15 @@ namespace PlayOn.Model.Logic
 
                     if (!Tools.Helper.Series.Detected(videoItem))
                     {
-                        var movie = Movie.Save(videoItem.Name);
-                        Movie.Save(video, movie);
+                        var movie = Movie.Save(videoItem.Name, videoItem.Minutes);
+
+                        if (movie != null) Movie.Save(video, movie);
                     }
                     else if (Tools.Helper.Series.Detected(videoItem) && !String.IsNullOrWhiteSpace(videoItem.SeriesName))
                     {
-                        var serie = Series.Save(videoItem.SeriesName);
-                        Series.Save(video, serie);
+                        var series = Series.Save(videoItem.SeriesName, videoItem.Minutes);
+
+                        if(series != null) Series.Save(video, series);
                     }
                 }
             }

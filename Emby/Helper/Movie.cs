@@ -27,7 +27,7 @@ namespace PlayOn.Emby.Helper
 
                 foreach (var movie in result.Items)
                 {
-                    var info = await Provider.Movie.Info(movie.Name, cancellationToken);
+                    var info = await Provider.Movie.Info(movie.Name, movie.ImdbId, cancellationToken);
 
                     var overview = String.IsNullOrEmpty(info.Overview) ? movie.Overview : info.Overview;
 

@@ -29,7 +29,8 @@ namespace PlayOn.Model.Logic
                         movies.Add(new Tools.Scaffold.Movie
                         {
                             Id = movie.Id,
-                            Name = movie.Name
+                            Name = movie.Name,
+                            ImdbId = movie.Imdb
                         });
                     }
                 }
@@ -67,7 +68,7 @@ namespace PlayOn.Model.Logic
             return url;
         }
 
-        public static Ado.Movie Save(string name)
+        public static Ado.Movie Save(string name, int? minutes)
         {
             var adoMovie = new Ado.Movie();
 
@@ -79,14 +80,32 @@ namespace PlayOn.Model.Logic
 
                     if (adoMovie == null)
                     {
-                        adoMovie = new Ado.Movie
+                        var imdb = "";
+                        var omdbList = Tools.Helper.Omdb.Search(name, "movie").Search;
+
+                        foreach (var movie in omdbList)
                         {
-                            Name = name
-                        };
+                            var min = minutes - 10;
+                            var max = minutes + 10;
 
-                        db.Movies.Add(adoMovie);
+                            if (!String.Equals(movie.Title, name, StringComparison.InvariantCultureIgnoreCase) || movie.Minutes < min || movie.Minutes > max) continue;
 
-                        db.SaveChanges();
+                            imdb = movie.ImdbId;
+                        }
+
+                        if (!String.IsNullOrWhiteSpace(imdb))
+                        {
+
+                            adoMovie = new Ado.Movie
+                            {
+                                Name = name,
+                                Imdb = imdb
+                            };
+
+                            db.Movies.Add(adoMovie);
+
+                            db.SaveChanges();
+                        }
                     }
                 }
             }

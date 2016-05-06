@@ -25,7 +25,8 @@ namespace PlayOn.Model.Logic
                     series.Add(new Tools.Scaffold.Series
                     {
                         Id = serie.Id,
-                        Name = serie.Name
+                        Name = serie.Name,
+                        ImdbId = serie.Imdb
                     });
                 }
             }
@@ -133,7 +134,7 @@ namespace PlayOn.Model.Logic
             return url;
         }
 
-        public static Ado.Serie Save(string seriesName)
+        public static Ado.Serie Save(string seriesName, int? minutes)
         {
             var adoSerie = new Ado.Serie();
 
@@ -145,15 +146,41 @@ namespace PlayOn.Model.Logic
                 {
                     adoSerie = db.Series.FirstOrDefault(q => q.Name == seriesName);
 
-                    if (adoSerie == null) adoSerie = new Ado.Serie();
-
-                    if (adoSerie.Id == 0)
+                    if (adoSerie == null)
                     {
-                        adoSerie.Name = seriesName;
+                        var imdb = "";
+                        var omdbList = Tools.Helper.Omdb.Search(seriesName, "series").Search;
 
-                        db.Series.Add(adoSerie);
+                        foreach (var series in omdbList)
+                        {
+                            var min = minutes - 20;
+                            var max = minutes * 2;
 
-                        db.SaveChanges();
+                            if (series.Runtime == @"N/A" && omdbList.Count == 1)
+                            {
+                                min = series.Minutes;
+                                max = series.Minutes;
+                            }
+
+                            if (!String.Equals(series.Title, seriesName, StringComparison.InvariantCultureIgnoreCase) ||
+                                series.Minutes < min || 
+                                series.Minutes > max) continue;
+
+                            imdb = series.ImdbId;
+                        }
+
+                        if (!String.IsNullOrWhiteSpace(imdb))
+                        {
+                            adoSerie = new Ado.Serie
+                            {
+                                Name = seriesName,
+                                Imdb = imdb
+                            };
+
+                            db.Series.Add(adoSerie);
+
+                            db.SaveChanges();
+                        }
                     }
                 }
             }

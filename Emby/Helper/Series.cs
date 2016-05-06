@@ -36,7 +36,7 @@ namespace PlayOn.Emby.Helper
 
                     foreach (var series in result.Items)
                     {
-                        var info = await Provider.Series.Info(series.Name, 0, 0, cancellationToken);
+                        var info = await Provider.Series.Info(series.Name, series.ImdbId, 0, 0, cancellationToken);
 
                         items.Add(new ChannelItemInfo
                         {

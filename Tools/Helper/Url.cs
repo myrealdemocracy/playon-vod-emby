@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.Caching;
 using System.Text;
 using System.Threading.Tasks;
 using NLog;
@@ -11,7 +12,7 @@ namespace PlayOn.Tools.Helper
     public class Url
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private static Dictionary<string, string> Videos = new Dictionary<string, string>();  
+        protected static MemoryCache Cache = new MemoryCache("PlayOnXML");
 
         public static string Generate(string path = null)
         {
@@ -109,8 +110,12 @@ namespace PlayOn.Tools.Helper
         public static string Search(string provider, string name, string series = null)
         {
             var url = "";
+            var type = String.IsNullOrEmpty(series) ? "movie-" : "series-" + series + "-";
             var searchTerm = (String.IsNullOrEmpty(series) ? name : series).ToLower();
             var searchUrl = Constant.Url.Xml + "?id=" + provider + "&searchterm=" + WebUtility.UrlEncode(searchTerm);
+            var key = type + name;
+
+            Logger.Debug("key: " + key);
 
             try
             {
@@ -118,9 +123,9 @@ namespace PlayOn.Tools.Helper
 
                 var items = Xml.Extractor.Items<Scaffold.Xml.Group>(searchUrl).Items;
 
-                SearchItems(items, name);
+                SearchItems(items, name, type);
 
-                url = Videos.FirstOrDefault(q => q.Key == name).Value;
+                url = Cache[key].ToString();
             }
             catch (Exception exception)
             {
@@ -130,8 +135,10 @@ namespace PlayOn.Tools.Helper
             return url;
         }
 
-        public static void SearchItems(List<Scaffold.Xml.Item> items, string name)
+        public static void SearchItems(List<Scaffold.Xml.Item> items, string name, string type)
         {
+            var key = type + name;
+
             try
             {
                 foreach (var item in items)
@@ -139,16 +146,16 @@ namespace PlayOn.Tools.Helper
                     Logger.Debug("item.Name:" + item.Name);
                     Logger.Debug("item.Href:" + item.Href);
 
-                    if (Videos.Any(a => a.Key == name)) break;
+                    if (Cache[key] != null) break;
 
                     if (item.Type == "folder")
-                        SearchItems(Xml.Extractor.Items<Scaffold.Xml.Group>(item.Href).Items, name);
+                        SearchItems(Xml.Extractor.Items<Scaffold.Xml.Group>(item.Href).Items, name, type);
 
                     if (!String.Equals(item.Name, name, StringComparison.InvariantCultureIgnoreCase)) continue;
 
                     var url = Constant.Url.Base + "/" + Xml.Extractor.Items<Scaffold.Xml.Video>(item.Href).Item.Src;
 
-                    Videos.Add(name, url);
+                    Cache.Add(key, url, DateTimeOffset.Now.AddMinutes(1));
 
                     break;
                 }

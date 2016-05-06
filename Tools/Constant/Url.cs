@@ -12,5 +12,7 @@ namespace PlayOn.Tools.Constant
         public const string Xml = "/data/data.xml";
         public const string Video = "http://playon.local/url/video?id=";
         public const string Image = "http://playon.local/url/image?id=";
+
+        public const string Omdb = "http://www.omdbapi.com/";
     }
 }

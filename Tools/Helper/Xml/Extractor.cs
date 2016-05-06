@@ -29,16 +29,13 @@ namespace PlayOn.Tools.Helper.Xml
                 if (Cache[url] != null) return Cache[url] as T;
 
                 var client = new WebClient();
-
                 var data = client.DownloadString(finalUrl);
-
                 var xmlSerializer = new XmlSerializer(typeof(T));
-
                 xml = xmlSerializer.Deserialize(Stream.GenerateFromString(data)) as T;
 
                 if (xml == null) return new T();
 
-                Cache.Add(url, xml, DateTimeOffset.Now.AddDays(1));
+                if(!url.Contains("searchterm")) Cache.Add(url, xml, DateTimeOffset.Now.AddHours(12));
             }
             catch (Exception exception)
             {

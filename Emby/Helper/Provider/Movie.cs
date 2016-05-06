@@ -19,7 +19,7 @@ namespace PlayOn.Emby.Helper.Provider
         protected static MemoryCache Cache = new MemoryCache("PlayOnMovies");
         protected static ILogger Logger = Emby.Channel.Logger;
 
-        public static async Task<Scaffold.Movie> Info(string name, CancellationToken cancellationToken)
+        public static async Task<Scaffold.Movie> Info(string name, string imdbId, CancellationToken cancellationToken)
         {
             return await Task.Run(async () =>
             {
@@ -37,27 +37,17 @@ namespace PlayOn.Emby.Helper.Provider
                 {
                     Name = name,
                     MetadataLanguage = "en",
+                    ProviderIds = new Dictionary<string, string>
+                    {
+                        {MetadataProviders.Imdb.ToString(), imdbId}
+                    }
                 };
 
                 try
                 {
-                    MetadataResult<MediaBrowser.Controller.Entities.Movies.Movie> omdbMovie;
-
-                    var omdbItemProvider = new OmdbItemProvider(Emby.Channel.JsonSerializer, Emby.Channel.HttpClient, Emby.Channel.Logger, Emby.Channel.LibraryManager);
-
-                    omdbMovie = await omdbItemProvider.GetMetadata(movieInfo, cancellationToken);
-
-                    movieItem = omdbMovie.Item;
-
-                    Logger.Debug("omdbMovie.Item.Name: " + movieItem.Name);
-
-                    movieInfo.ProviderIds = movieItem.ProviderIds;
-
-                    MetadataResult<MediaBrowser.Controller.Entities.Movies.Movie> moviedb;
-
                     var moviedbProvider = new MovieDbProvider(Emby.Channel.JsonSerializer, Emby.Channel.HttpClient, Emby.Channel.FileSystem, Emby.Channel.Config, Emby.Channel.Logger, Emby.Channel.Localization, Emby.Channel.LibraryManager, Emby.Channel.AppHost);
 
-                    moviedb = await moviedbProvider.GetMetadata(movieInfo, cancellationToken);
+                    var moviedb = await moviedbProvider.GetMetadata(movieInfo, cancellationToken);
 
                     movieItem = moviedb.Item;
 
