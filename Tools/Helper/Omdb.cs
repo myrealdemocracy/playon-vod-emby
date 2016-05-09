@@ -60,10 +60,17 @@ namespace PlayOn.Tools.Helper
 
                 Logger.Debug("result.Year: " + result.Year);
 
-                var years = result.Year.Split(Convert.ToChar("-"));
+                if (result.Year.Contains("-"))
+                {
+                    var years = result.Year.Split(Convert.ToChar("-"));
 
-                result.YearStarted = Convert.ToInt32(years[0]);
-                result.YearEnded = Convert.ToInt32(years[1]);
+                    result.YearStarted = Convert.ToInt32(years[0]);
+                    result.YearEnded = Convert.ToInt32(years[1]);
+                }
+                else
+                {
+                    result.YearStarted = Convert.ToInt32(result.Year);
+                }
 
                 Logger.Debug("result.YearStarted: " + result.YearStarted);
                 Logger.Debug("result.YearEnded: " + result.YearEnded);

@@ -55,6 +55,16 @@ namespace PlayOn.Tools.Helper
                 }
             }
 
+            foreach (var ignore in Constant.Ignore.NameStartsWith)
+            {
+                if (itemName.StartsWith(ignore))
+                {
+                    Logger.Debug("Ignoring - itemName.StartsWith: " + ignore);
+
+                    return true;
+                }
+            }
+
             foreach (var ignore in Constant.Ignore.NameEndsWith)
             {
                 if (itemName.EndsWith(ignore))

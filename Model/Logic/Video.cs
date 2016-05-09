@@ -277,11 +277,13 @@ namespace PlayOn.Model.Logic
             {
                 using (var db = new Ado.PlayOnEntities())
                 {
-                    foreach (var video in db.Videos.Where(q => q.UpdatedAt <= DateTime.UtcNow.AddDays(-1)))
+                    var yesterday = DateTime.UtcNow.AddDays(-1);
+
+                    foreach (var video in db.Videos.Where(q => q.UpdatedAt <= yesterday))
                     {
                         Logger.Debug("video.Name: " + video.Name);
                         Logger.Debug("video.Path: " + video.Path);
-                        Logger.Debug("video.Provider.Name: " + video.Provider.Name);
+                        Logger.Debug("video.UpdatedAt: " + video.UpdatedAt);
 
                         db.Videos.Remove(video);
                     }

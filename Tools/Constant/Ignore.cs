@@ -25,7 +25,10 @@ namespace PlayOn.Tools.Constant
             "minisodes",
             "pbs newshour",
             "web exclusive",
-            "interview"
+            "interview",
+            "my list",
+            "suggestions for you",
+            "popular on netflix"
         };
 
         public static List<string> NameContains = new List<string>
@@ -33,6 +36,11 @@ namespace PlayOn.Tools.Constant
             "this folder contains no content",
             "s00",
             "e00"
+        };
+
+        public static List<string> NameStartsWith = new List<string>
+        {
+            "top picks for"
         };
 
         public static List<string> NameEndsWith = new List<string>
