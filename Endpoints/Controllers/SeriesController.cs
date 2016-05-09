@@ -35,7 +35,7 @@ namespace PlayOn.Endpoints.Controllers
         [HttpGet]
         public HttpResponseMessage Video(string imdbId, int? season, int? episode)
         {
-            var url = Model.Logic.Series.VideoByNameSeasonEpisode(imdbId, season, episode);
+            var url = Model.Logic.Series.VideoByImdbIdSeasonEpisode(imdbId, season, episode);
             var message = new HttpResponseMessage();
 
             if (String.IsNullOrEmpty(url))

@@ -87,6 +87,24 @@ namespace PlayOn.Model.Logic
             }
         }
 
+        public static string M3u8(IEnumerable<Ado.Video> videos)
+        {
+            var m3u8 = String.Empty;
+
+            try
+            {
+                m3u8 = "#EXTM3U" + Environment.NewLine;
+                m3u8 += "#EXTINF:-1" + Environment.NewLine;
+                m3u8 += Url(videos) + Environment.NewLine;
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+            }
+
+            return m3u8;
+        }
+
         public static string Url(IEnumerable<Ado.Video> videos)
         {
             var url = String.Empty;
@@ -251,6 +269,30 @@ namespace PlayOn.Model.Logic
             }
 
             return adoVideo;
+        }
+
+        public static void DeleteOld()
+        {
+            try
+            {
+                using (var db = new Ado.PlayOnEntities())
+                {
+                    foreach (var video in db.Videos.Where(q => q.UpdatedAt <= DateTime.UtcNow.AddDays(-1)))
+                    {
+                        Logger.Debug("video.Name: " + video.Name);
+                        Logger.Debug("video.Path: " + video.Path);
+                        Logger.Debug("video.Provider.Name: " + video.Provider.Name);
+
+                        db.Videos.Remove(video);
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+            }
         }
     }
 }

@@ -119,7 +119,7 @@ namespace PlayOn.Model.Logic
             return episodes;
         }
 
-        public static string VideoByNameSeasonEpisode(string imdbId, int? season, int? episode)
+        public static string VideoByImdbIdSeasonEpisode(string imdbId, int? season, int? episode)
         {
             var url = String.Empty;
 
@@ -157,7 +157,7 @@ namespace PlayOn.Model.Logic
                         var imdb = "";
                         var omdbList = Tools.Helper.Omdb.Search(seriesName, "series").Search;
 
-                        foreach (var series in omdbList)
+                        foreach (var series in omdbList.OrderBy(o => o.Year))
                         {
                             var min = minutes - 20;
                             var max = minutes * 2;
