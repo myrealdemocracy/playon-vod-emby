@@ -157,7 +157,7 @@ namespace PlayOn.Model.Logic
                         var imdb = "";
                         var omdbList = Tools.Helper.Omdb.Search(seriesName, "series").Search;
 
-                        foreach (var series in omdbList.OrderBy(o => o.Year))
+                        foreach (var series in omdbList.OrderBy(o => o.YearStarted))
                         {
                             var min = minutes - 20;
                             var max = minutes * 2;

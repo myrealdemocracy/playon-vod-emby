@@ -11,6 +11,8 @@ namespace PlayOn.Tools.Scaffold.Result
         public string ImdbId { get; set; }
         public string Title { get; set; }
         public string Year { get; set; }
+        public int YearStarted { get; set; }
+        public int YearEnded { get; set; }
         public string Runtime { get; set; }
         public int Minutes { get; set; }
     }

@@ -58,6 +58,16 @@ namespace PlayOn.Tools.Helper
 
                 result = JsonConvert.DeserializeObject<Scaffold.Result.Omdb>(data);
 
+                Logger.Debug("result.Year: " + result.Year);
+
+                var years = result.Year.Split(Convert.ToChar("-"));
+
+                result.YearStarted = Convert.ToInt32(years[0]);
+                result.YearEnded = Convert.ToInt32(years[1]);
+
+                Logger.Debug("result.YearStarted: " + result.YearStarted);
+                Logger.Debug("result.YearEnded: " + result.YearEnded);
+
                 Logger.Debug("result.Runtime: " + result.Runtime);
 
                 var runtime = result.Runtime.Contains("min") ? result.Runtime.Replace(" min", "") : "0";

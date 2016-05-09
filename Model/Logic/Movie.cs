@@ -83,7 +83,7 @@ namespace PlayOn.Model.Logic
                         var imdb = "";
                         var omdbList = Tools.Helper.Omdb.Search(name, "movie").Search;
 
-                        foreach (var movie in omdbList.OrderBy(o => o.Year))
+                        foreach (var movie in omdbList.OrderBy(o => o.YearStarted))
                         {
                             var min = minutes - 10;
                             var max = minutes + 10;
