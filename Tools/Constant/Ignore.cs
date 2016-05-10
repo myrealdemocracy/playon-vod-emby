@@ -28,7 +28,12 @@ namespace PlayOn.Tools.Constant
             "interview",
             "my list",
             "suggestions for you",
-            "popular on netflix"
+            "popular on netflix",
+            "new releases",
+            "anime",
+            "latino",
+            "featured",
+            "sports"
         };
 
         public static List<string> NameContains = new List<string>
@@ -40,7 +45,8 @@ namespace PlayOn.Tools.Constant
 
         public static List<string> NameStartsWith = new List<string>
         {
-            "top picks for"
+            "top picks for",
+            "children & family"
         };
 
         public static List<string> NameEndsWith = new List<string>

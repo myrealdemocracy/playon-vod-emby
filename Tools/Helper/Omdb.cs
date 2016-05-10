@@ -54,18 +54,20 @@ namespace PlayOn.Tools.Helper
             try
             {
                 var client = new WebClient();
+                client.Encoding = Encoding.UTF8;
+
                 var data = client.DownloadString(url);
 
                 result = JsonConvert.DeserializeObject<Scaffold.Result.Omdb>(data);
 
                 Logger.Debug("result.Year: " + result.Year);
 
-                if (result.Year.Contains("-"))
+                if (result.Year.Contains("–"))
                 {
-                    var years = result.Year.Split(Convert.ToChar("-"));
+                    var years = result.Year.Split(Convert.ToChar("–"));
 
                     result.YearStarted = Convert.ToInt32(years[0]);
-                    result.YearEnded = Convert.ToInt32(years[1]);
+                    result.YearEnded = Convert.ToInt32(String.IsNullOrWhiteSpace(years[1]) ? "0" : years[1]);
                 }
                 else
                 {

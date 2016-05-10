@@ -79,8 +79,7 @@ namespace PlayOn.Tools.Helper
 
                             foreach (var item in items)
                             {
-                                Logger.Debug("item.Name:" + item.Name);
-                                Logger.Debug("item.Href:" + item.Href);
+                                Logger.Debug("item: " + item.Name + " - " + item.Href);
 
                                 if (!String.Equals(item.Name, term, StringComparison.InvariantCultureIgnoreCase)) continue;
 
@@ -92,7 +91,7 @@ namespace PlayOn.Tools.Helper
                             break;
                     }
 
-                    Logger.Debug("baseUrl:" + url);
+                    Logger.Debug("url:" + url);
 
                     count++;
                 }
@@ -102,7 +101,7 @@ namespace PlayOn.Tools.Helper
                 Logger.Error(exception);
             }
 
-            Logger.Debug("return baseUrl:" + url);
+            Logger.Debug("return url:" + url);
 
             return url;
         }
@@ -143,8 +142,7 @@ namespace PlayOn.Tools.Helper
             {
                 foreach (var item in items)
                 {
-                    Logger.Debug("item.Name:" + item.Name);
-                    Logger.Debug("item.Href:" + item.Href);
+                    Logger.Debug("item: " + item.Name + " - " + item.Href);
 
                     if (Cache[key] != null) break;
 

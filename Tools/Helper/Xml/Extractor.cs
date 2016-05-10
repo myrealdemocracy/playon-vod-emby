@@ -24,7 +24,7 @@ namespace PlayOn.Tools.Helper.Xml
             {
                 var finalUrl = Constant.Url.Base + url + (url.Contains("?") ? "&" : "?") + "flm=long";
 
-                if (url.Contains("error")) return new T();
+                if (url.Contains("error")) throw new Exception("Provider XML error");
 
                 if (Cache[url] != null) return Cache[url] as T;
 
