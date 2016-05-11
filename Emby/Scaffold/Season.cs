@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PlayOn.Emby.Scaffold
 {
-    public class Season
+    public class Season : Video
     {
         public int? SeasonNumber { get; set; }
     }

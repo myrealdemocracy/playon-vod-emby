@@ -42,7 +42,7 @@ namespace PlayOn.Emby.Helper
                         {
                             Id = "series|" + series.ImdbId,
                             Name = series.Name,
-                            SeriesName = series.Name,
+                            //SeriesName = Guid.Empty.ToString(),
                             Type = ChannelItemType.Folder,
                             Genres = info.Genres,
                             ImageUrl = info.Image,
@@ -72,8 +72,8 @@ namespace PlayOn.Emby.Helper
                             items.Add(new ChannelItemInfo
                             {
                                 Id = query.FolderId + "|" + season.SeasonNumber,
-                                SeriesName = info.SeriesName,
-                                ParentIndexNumber = season.SeasonNumber,
+                                //SeriesName = Guid.Empty.ToString(),
+                                IndexNumber = season.SeasonNumber,
                                 Name = "Season " + season.SeasonNumber,
                                 Type = ChannelItemType.Folder,
                                 ImageUrl = info.Image
@@ -93,25 +93,28 @@ namespace PlayOn.Emby.Helper
                                 Id = query.FolderId + "|" + episode.EpisodeNumber,
                                 ParentIndexNumber = seasonNumber,
                                 IndexNumber = episode.EpisodeNumber,
-                                SeriesName = info.SeriesName,
+                                //SeriesName = Guid.Empty.ToString(),
                                 Name = info.Name,
                                 Overview = info.Overview,
+                                People = info.People,
                                 Type = ChannelItemType.Media,
                                 ContentType = ChannelMediaContentType.Episode,
                                 MediaType = ChannelMediaType.Video,
                                 ImageUrl = info.Image,
+                                ProviderIds = info.ProviderIds,
                                 PremiereDate = info.PremiereDate,
                                 DateCreated = info.PremiereDate,
                                 RunTimeTicks = info.RunTimeTicks,
                                 MediaSources = new List<ChannelMediaInfo>
+                                {
+                                    new ChannelMediaInfo
                                     {
-                                        new ChannelMediaInfo
-                                        {
-                                            Path = "http://playon.local/series/" + imdbId + "/video/" + seasonNumber + "/" + episode.EpisodeNumber,
-                                            Protocol = MediaProtocol.Http,
-                                            SupportsDirectPlay = true
-                                        }
+                                        Path =
+                                            "http://playon.local/series/" + imdbId + "/video/" + seasonNumber + "/" + episode.EpisodeNumber,
+                                        Protocol = MediaProtocol.Http,
+                                        SupportsDirectPlay = true
                                     }
+                                }
                             });
                         }
                     }

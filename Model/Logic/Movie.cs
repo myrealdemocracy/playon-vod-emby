@@ -18,6 +18,8 @@ namespace PlayOn.Model.Logic
             var movies = new List<Tools.Scaffold.Movie>();
             var totalRecordCount = 0;
 
+            end = end == 0 ? 10000 : end;
+
             try
             {
                 using (var db = new Ado.PlayOnEntities())

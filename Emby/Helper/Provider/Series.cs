@@ -36,7 +36,7 @@ namespace PlayOn.Emby.Helper.Provider
                 var seriesDataPath = "";
                 var episodeInfo = new EpisodeInfo();
 
-                var series = new Scaffold.Series
+                var info = new Scaffold.Series
                 {
                     Genres = new List<string>(),
                     Studios = new List<string>(),
@@ -106,6 +106,11 @@ namespace PlayOn.Emby.Helper.Provider
                         Logger.Debug("seriesItem.ProviderId: " + providerId);
                     }
 
+                    foreach (var studio in seriesItem.Studios)
+                    {
+                        Logger.Debug("seriesItem.Studio: " + studio);
+                    }
+
                     seriesDataPath = TvdbSeriesProvider.GetSeriesDataPath(
                         Emby.Channel.Config.ApplicationPaths,
                         new Dictionary<string, string>
@@ -120,13 +125,13 @@ namespace PlayOn.Emby.Helper.Provider
                     Logger.Debug("seriesItem.PremiereDate: " + seriesItem.PremiereDate);
                     Logger.Debug("seriesDataPath:" + seriesDataPath);
 
-                    series.SeriesName = seriesItem.Name;
-                    series.ProductionYear = seriesItem.ProductionYear;
-                    series.PremiereDate = seriesItem.PremiereDate;
-                    series.Studios = seriesItem.Studios;
-                    series.Genres = seriesItem.Genres;
-                    series.OfficialRating = seriesItem.OfficialRating;
-                    series.ProviderIds = seriesItem.ProviderIds;
+                    info.SeriesName = seriesItem.Name;
+                    info.ProductionYear = seriesItem.ProductionYear;
+                    info.PremiereDate = seriesItem.PremiereDate;
+                    info.Studios = seriesItem.Studios;
+                    info.Genres = seriesItem.Genres;
+                    info.OfficialRating = seriesItem.OfficialRating;
+                    info.ProviderIds = seriesItem.ProviderIds;
                 }
                 catch (Exception exception)
                 {
@@ -140,7 +145,6 @@ namespace PlayOn.Emby.Helper.Provider
                         ParentIndexNumber = seasonNumber,
                         IndexNumber = episodeNumber,
                         SeriesProviderIds = seriesItem.ProviderIds,
-                        ProviderIds = seriesItem.ProviderIds,
                         MetadataLanguage = seriesItem.GetPreferredMetadataLanguage(),
                         MetadataCountryCode = seriesItem.GetPreferredMetadataCountryCode()
                     };
@@ -154,15 +158,23 @@ namespace PlayOn.Emby.Helper.Provider
                         Logger.Debug("episodeItem.ProviderId: " + providerId);
                     }
 
+                    foreach (var studio in episodeItem.Studios)
+                    {
+                        Logger.Debug("episodeItem.Studio: " + studio);
+                    }
+
                     Logger.Debug("episodeItem null?: " + (episodeItem == null));
                     Logger.Debug("episodeItem.Name: " + episodeItem.Name);
                     Logger.Debug("episodeItem.PremiereDate: " + episodeItem.PremiereDate);
 
-                    series.Name = "S" + seasonNumber + " E" + episodeNumber + " - " + episodeItem.Name;
-                    series.Overview = episodeItem.Overview;
-                    series.PremiereDate = episodeItem.PremiereDate;
-                    series.RunTimeTicks = episodeItem.RunTimeTicks;
-                    series.OfficialRating = episodeItem.OfficialRating;
+                    info.Name = episodeItem.Name;
+                    info.Overview = episodeItem.Overview;
+                    info.ProviderIds = episodeItem.ProviderIds;
+                    info.Genres = episodeItem.Genres;
+                    info.Studios = episodeItem.Studios;
+                    info.PremiereDate = episodeItem.PremiereDate;
+                    info.RunTimeTicks = episodeItem.RunTimeTicks;
+                    info.OfficialRating = episodeItem.OfficialRating;
                 }
                 catch (Exception exception)
                 {
@@ -217,7 +229,7 @@ namespace PlayOn.Emby.Helper.Provider
                             image = imageItem;
                         }
 
-                        series.Image = image.Url;
+                        info.Image = image.Url;
                     }
                 }
                 catch (Exception exception)
@@ -225,7 +237,7 @@ namespace PlayOn.Emby.Helper.Provider
                     Logger.ErrorException("tvdbimages", exception);
                 }
 
-                return series;
+                return info;
             }, cancellationToken);
         }
     }

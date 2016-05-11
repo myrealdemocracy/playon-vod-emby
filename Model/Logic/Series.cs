@@ -18,17 +18,19 @@ namespace PlayOn.Model.Logic
             var series = new List<Tools.Scaffold.Series>();
             var totalRecordCount = 0;
 
+            end = end == 0 ? 10000 : end;
+
             using (var db = new Ado.PlayOnEntities())
             {
                 totalRecordCount = db.Series.Count();
 
-                foreach (var serie in db.Series.OrderBy(o => o.Name).Skip(start).Take(end))
+                foreach (var seriesItem in db.Series.OrderBy(o => o.Name).Skip(start).Take(end))
                 {
                     series.Add(new Tools.Scaffold.Series
                     {
-                        Id = serie.Id,
-                        Name = serie.Name,
-                        ImdbId = serie.Imdb
+                        Id = seriesItem.Id,
+                        Name = seriesItem.Name,
+                        ImdbId = seriesItem.Imdb
                     });
                 }
             }
@@ -57,6 +59,7 @@ namespace PlayOn.Model.Logic
 
                         seasons.Add(new Tools.Scaffold.Season
                         {
+                            SeriesName = series.Name,
                             SeasonNumber = season.Season
                         });
                     }
@@ -105,6 +108,7 @@ namespace PlayOn.Model.Logic
 
                         episodes.Add(new Tools.Scaffold.Episode
                         {
+                            SeriesName = series.Name,
                             EpisodeNumber = episodeNumber,
                             Videos = videos
                         });

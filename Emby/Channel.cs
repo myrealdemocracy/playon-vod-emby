@@ -24,7 +24,7 @@ using MediaBrowser.Model.Serialization;
 
 namespace PlayOn.Emby
 {
-    public class Channel : IChannel, ISearchableChannel, IIndexableChannel
+    public class Channel : IChannel, ISearchableChannel//, IIndexableChannel
     {
         public static IServerConfigurationManager Config;
         public static ILibraryManager LibraryManager;
@@ -65,19 +65,19 @@ namespace PlayOn.Emby
                     ChannelMediaType.Video
                 },
 
-                DefaultSortFields = new List<ChannelItemSortField>
-                {
-                    ChannelItemSortField.Name,
-                    ChannelItemSortField.DateCreated,
-                    ChannelItemSortField.CommunityRating,
-                    ChannelItemSortField.PremiereDate,
-                    ChannelItemSortField.Runtime
-                },
+                //DefaultSortFields = new List<ChannelItemSortField>
+                //{
+                //    ChannelItemSortField.Name,
+                //    ChannelItemSortField.DateCreated,
+                //    ChannelItemSortField.CommunityRating,
+                //    ChannelItemSortField.PremiereDate,
+                //    ChannelItemSortField.Runtime
+                //},
 
                 SupportsContentDownloading = true,
                 SupportsSortOrderToggle = false,
-                MaxPageSize = 200,
-                AutoRefreshLevels = 4
+                MaxPageSize = 10,
+                AutoRefreshLevels = 20
             };
         }
 
@@ -86,10 +86,10 @@ namespace PlayOn.Emby
             return true;
         }
 
-        public Task<ChannelItemResult> GetAllMedia(InternalAllChannelMediaQuery query, CancellationToken cancellationToken)
-        {
-            return Task.Run(async () => await Helper.AllMedia.Items(query, cancellationToken), cancellationToken);
-        }
+        //public Task<ChannelItemResult> GetAllMedia(InternalAllChannelMediaQuery query, CancellationToken cancellationToken)
+        //{
+        //    return Task.Run(async () => await Helper.AllMedia.Items(query, cancellationToken), cancellationToken);
+        //}
 
         public Task<IEnumerable<ChannelItemInfo>> Search(ChannelSearchInfo searchInfo, CancellationToken cancellationToken)
         {
@@ -133,15 +133,9 @@ namespace PlayOn.Emby
         {
             get
             {
-                if (Cache["DataVersion"] != null) return Cache["DataVersion"].ToString();
+                var data = DateTime.UtcNow;
 
-                var rest = new Rest.Video();
-
-                var total = rest.Total(new CancellationToken(false)).Result.Total.ToString();
-
-                Cache.Add("DataVersion", total, DateTimeOffset.Now.AddHours(12));
-
-                return total;
+                return data.Year + "-" + data.Month + "-" + data.Day;
             }
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MediaBrowser.Controller.Entities;
 
 namespace PlayOn.Emby.Scaffold
 {
@@ -27,5 +28,6 @@ namespace PlayOn.Emby.Scaffold
         public long? RunTimeTicks { get; set; }
         public string OfficialRating { get; set; }
         public Dictionary<string, string> ProviderIds { get; set; }
+        public List<PersonInfo> People { get; set; }
     }
 }
