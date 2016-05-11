@@ -120,6 +120,7 @@ namespace PlayOn.Emby.Helper.Provider
                     Logger.Debug("seriesItem.PremiereDate: " + seriesItem.PremiereDate);
                     Logger.Debug("seriesDataPath:" + seriesDataPath);
 
+                    series.SeriesName = seriesItem.Name;
                     series.ProductionYear = seriesItem.ProductionYear;
                     series.PremiereDate = seriesItem.PremiereDate;
                     series.Studios = seriesItem.Studios;

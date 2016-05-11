@@ -88,10 +88,13 @@ namespace PlayOn.Emby.Helper
                             items.Add(new ChannelItemInfo
                             {
                                 Id = query.FolderId + "|" + episode.EpisodeNumber,
+                                ParentIndexNumber = seasonNumber,
+                                IndexNumber = episode.EpisodeNumber,
+                                SeriesName = info.SeriesName,
                                 Name = info.Name,
                                 Overview = info.Overview,
                                 Type = ChannelItemType.Media,
-                                ContentType = ChannelMediaContentType.Clip,
+                                ContentType = ChannelMediaContentType.Episode,
                                 MediaType = ChannelMediaType.Video,
                                 ImageUrl = info.Image,
                                 PremiereDate = info.PremiereDate,

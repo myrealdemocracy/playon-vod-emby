@@ -37,7 +37,7 @@ namespace PlayOn.Emby.Helper
                         Name = movie.Name,
                         Overview = overview,
                         Type = ChannelItemType.Media,
-                        ContentType = ChannelMediaContentType.Clip,
+                        ContentType = ChannelMediaContentType.Movie,
                         MediaType = ChannelMediaType.Video,
                         ImageUrl = info.Image,
                         Genres = info.Genres,
