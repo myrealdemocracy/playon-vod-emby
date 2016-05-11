@@ -24,30 +24,52 @@ namespace PlayOn.Tools.Helper.Xml
             {
                 var finalUrl = Constant.Url.Base + url + (url.Contains("?") ? "&" : "?") + "flm=long";
 
-                if (url.Contains("error")) throw new Exception("Provider XML error");
+                if (url.Contains("error")) RemoveCache();
 
                 if (Cache[url] != null) return Cache[url] as T;
 
-                var client = new WebClient();
-                var data = client.DownloadString(finalUrl);
-                var xmlSerializer = new XmlSerializer(typeof(T));
-                xml = xmlSerializer.Deserialize(Stream.GenerateFromString(data)) as T;
+                xml = DownloadXml<T>(finalUrl);
 
-                if (xml == null) return new T();
-
-                if(!url.Contains("searchterm")) Cache.Add(url, xml, DateTimeOffset.Now.AddHours(12));
+                if (!url.Contains("searchterm")) Cache.Add(url, xml, DateTimeOffset.Now.AddMinutes(10));
             }
             catch (Exception exception)
             {
                 Logger.Error(exception);
 
-                foreach (var cache in Cache.Select(s => s.Key))
-                {
-                    Cache.Remove(cache);
-                }
+                RemoveCache();
             }
 
             return xml;
+        }
+
+        public static T DownloadXml<T>(string url) where T : class, new()
+        {
+            var xml = new T();
+
+            try
+            {
+                var client = new WebClient();
+                var data = client.DownloadString(url);
+                var xmlSerializer = new XmlSerializer(typeof(T));
+
+                xml = xmlSerializer.Deserialize(Stream.GenerateFromString(data)) as T;
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception);
+
+                RemoveCache();
+            }
+
+            return xml;
+        }
+
+        public static void RemoveCache()
+        {
+            foreach (var cache in Cache.Select(s => s.Key))
+            {
+                Cache.Remove(cache);
+            }
         }
     }
 }
