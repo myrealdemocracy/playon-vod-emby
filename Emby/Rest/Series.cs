@@ -32,7 +32,7 @@ namespace PlayOn.Emby.Rest
 
             try
             {
-                seasons = await Request<List<Scaffold.Season>>("/series/seasons/" + imdbId, "GET", cancellationToken);
+                seasons = await Request<List<Scaffold.Season>>("/series/" + imdbId + "/seasons", "GET", cancellationToken);
             }
             catch (Exception exception)
             {
@@ -48,7 +48,7 @@ namespace PlayOn.Emby.Rest
 
             try
             {
-                episodes = await Request<List<Scaffold.Episode>>("/series/episodes/" + imdbId + "/s/" + season, "GET", cancellationToken);
+                episodes = await Request<List<Scaffold.Episode>>("/series/" + imdbId + "/episodes/" + season, "GET", cancellationToken);
             }
             catch (Exception exception)
             {

@@ -17,21 +17,21 @@ namespace PlayOn.Endpoints.Controllers
             return Model.Logic.Series.All(start, end);
         }
 
-        [Route("seasons/{imdbId}")]
+        [Route("{imdbId}/seasons")]
         [HttpGet]
         public List<Tools.Scaffold.Season> ByName(string imdbId)
         {
             return Model.Logic.Series.ByName(imdbId);
         }
 
-        [Route("episodes/{imdbId}/s/{season}")]
+        [Route("{imdbId}/episodes/{season}")]
         [HttpGet]
         public List<Tools.Scaffold.Episode> BySeason(string imdbId, int? season)
         {
             return Model.Logic.Series.BySeason(imdbId, season);
         }
 
-        [Route("video/{imdbId}/s/{season}/e/{episode}")]
+        [Route("{imdbId}/video/{season}/{episode}")]
         [HttpGet]
         public HttpResponseMessage Video(string imdbId, int? season, int? episode)
         {

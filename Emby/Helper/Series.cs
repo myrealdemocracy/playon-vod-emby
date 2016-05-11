@@ -101,7 +101,7 @@ namespace PlayOn.Emby.Helper
                                     {
                                         new ChannelMediaInfo
                                         {
-                                            Path = "http://playon.local/series/video/" + imdbId + "/s/" + seasonNumber + "/e/" + episode.EpisodeNumber,
+                                            Path = "http://playon.local/series/" + imdbId + "/video/" + seasonNumber + "/" + episode.EpisodeNumber,
                                             Protocol = MediaProtocol.Http,
                                             SupportsDirectPlay = true
                                         }
