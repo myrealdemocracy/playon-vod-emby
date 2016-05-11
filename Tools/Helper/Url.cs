@@ -52,7 +52,7 @@ namespace PlayOn.Tools.Helper
         {
             Scaffold.Xml.Item subItem = null;
             var count = 0;
-            var items = Xml.Extractor.Items<Scaffold.Xml.Group>(url).Items;
+            var items = Xml.Extractor.Items<Scaffold.Xml.Group>(url, true).Items;
             var terms = path.Split(Convert.ToChar("|"));
 
             try
@@ -67,13 +67,13 @@ namespace PlayOn.Tools.Helper
                     switch (term)
                     {
                         case "video":
-                            url = Constant.Url.Base + "/" + Xml.Extractor.Items<Scaffold.Xml.Video>(url).Item.Src;
+                            url = Constant.Url.Base + "/" + Xml.Extractor.Items<Scaffold.Xml.Video>(url, true).Item.Src;
                             break;
                         case "image":
                             url = count == 0 ? Image.Default(url, true) : Image.Mapper(subItem);
                             break;
                         default:
-                            if (count > 0) items = Xml.Extractor.Items<Scaffold.Xml.Group>(url).Items;
+                            if (count > 0) items = Xml.Extractor.Items<Scaffold.Xml.Group>(url, true).Items;
 
                             subItem = null;
 

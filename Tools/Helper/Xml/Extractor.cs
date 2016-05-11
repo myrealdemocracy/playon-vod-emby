@@ -16,7 +16,7 @@ namespace PlayOn.Tools.Helper.Xml
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         protected static MemoryCache Cache = new MemoryCache("PlayOnXML");
 
-        public static T Items<T>(string url) where T : class, new()
+        public static T Items<T>(string url, bool forceReload = false) where T : class, new()
         {
             var xml = new T();
 
@@ -26,7 +26,7 @@ namespace PlayOn.Tools.Helper.Xml
 
                 if (url.Contains("error")) RemoveCache();
 
-                if (Cache[url] != null) return Cache[url] as T;
+                if (Cache[url] != null && !forceReload) return Cache[url] as T;
 
                 xml = DownloadXml<T>(finalUrl);
 
