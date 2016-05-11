@@ -46,6 +46,7 @@ namespace PlayOn.Emby.Helper
                         Studios = info.Studios,
                         ProviderIds = info.ProviderIds,
                         DateCreated = info.PremiereDate,
+                        RunTimeTicks = info.RunTimeTicks,
                         MediaSources = new List<ChannelMediaInfo>
                             {
                                 new ChannelMediaInfo

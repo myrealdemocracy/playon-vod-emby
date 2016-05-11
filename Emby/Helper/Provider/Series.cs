@@ -160,6 +160,7 @@ namespace PlayOn.Emby.Helper.Provider
                     series.Name = "S" + seasonNumber + " E" + episodeNumber + " - " + episodeItem.Name;
                     series.Overview = episodeItem.Overview;
                     series.PremiereDate = episodeItem.PremiereDate;
+                    series.RunTimeTicks = episodeItem.RunTimeTicks;
                     series.OfficialRating = episodeItem.OfficialRating;
                 }
                 catch (Exception exception)

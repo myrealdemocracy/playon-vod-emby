@@ -96,6 +96,7 @@ namespace PlayOn.Emby.Helper
                                 ImageUrl = info.Image,
                                 PremiereDate = info.PremiereDate,
                                 DateCreated = info.PremiereDate,
+                                RunTimeTicks = info.RunTimeTicks,
                                 MediaSources = new List<ChannelMediaInfo>
                                     {
                                         new ChannelMediaInfo

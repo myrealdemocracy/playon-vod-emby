@@ -24,6 +24,7 @@ namespace PlayOn.Emby.Scaffold
         public string Image { get; set; }
         public DateTime? PremiereDate { get; set; }
         public int? ProductionYear { get; set; }
+        public long? RunTimeTicks { get; set; }
         public string OfficialRating { get; set; }
         public Dictionary<string, string> ProviderIds { get; set; }
     }

@@ -65,6 +65,15 @@ namespace PlayOn.Emby
                     ChannelMediaType.Video
                 },
 
+                DefaultSortFields = new List<ChannelItemSortField>
+                {
+                    ChannelItemSortField.Name,
+                    ChannelItemSortField.DateCreated,
+                    ChannelItemSortField.CommunityRating,
+                    ChannelItemSortField.PremiereDate,
+                    ChannelItemSortField.Runtime
+                },
+
                 SupportsContentDownloading = true,
                 SupportsSortOrderToggle = false,
                 MaxPageSize = 200,
