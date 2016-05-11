@@ -170,8 +170,8 @@ namespace PlayOn.Emby.Helper.Provider
                     info.Name = episodeItem.Name;
                     info.Overview = episodeItem.Overview;
                     info.ProviderIds = episodeItem.ProviderIds;
-                    info.Genres = episodeItem.Genres;
-                    info.Studios = episodeItem.Studios;
+                    //info.Genres = episodeItem.Genres;
+                    //info.Studios = episodeItem.Studios;
                     info.PremiereDate = episodeItem.PremiereDate;
                     info.RunTimeTicks = episodeItem.RunTimeTicks;
                     info.OfficialRating = episodeItem.OfficialRating;

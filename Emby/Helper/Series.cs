@@ -42,14 +42,8 @@ namespace PlayOn.Emby.Helper
                         {
                             Id = "series|" + series.ImdbId,
                             Name = series.Name,
-                            //SeriesName = Guid.Empty.ToString(),
                             Type = ChannelItemType.Folder,
-                            Genres = info.Genres,
-                            ImageUrl = info.Image,
-                            ProductionYear = info.ProductionYear,
-                            Studios = info.Studios,
-                            ProviderIds = info.ProviderIds,
-                            DateCreated = info.PremiereDate
+                            ImageUrl = info.Image
                         });
                     }
                 }
@@ -72,8 +66,6 @@ namespace PlayOn.Emby.Helper
                             items.Add(new ChannelItemInfo
                             {
                                 Id = query.FolderId + "|" + season.SeasonNumber,
-                                //SeriesName = Guid.Empty.ToString(),
-                                IndexNumber = season.SeasonNumber,
                                 Name = "Season " + season.SeasonNumber,
                                 Type = ChannelItemType.Folder,
                                 ImageUrl = info.Image
@@ -93,7 +85,7 @@ namespace PlayOn.Emby.Helper
                                 Id = query.FolderId + "|" + episode.EpisodeNumber,
                                 ParentIndexNumber = seasonNumber,
                                 IndexNumber = episode.EpisodeNumber,
-                                //SeriesName = Guid.Empty.ToString(),
+                                SeriesName = episode.SeriesName,
                                 Name = info.Name,
                                 Overview = info.Overview,
                                 People = info.People,
