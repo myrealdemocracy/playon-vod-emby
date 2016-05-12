@@ -105,7 +105,7 @@ namespace PlayOn.Emby.Helper
                                 People = info.People,
                                 ImageUrl = info.Image,
                                 ProviderIds = info.ProviderIds,
-                                ProductionYear = info.ProductionYear,
+                                //ProductionYear = info.ProductionYear,
                                 PremiereDate = info.PremiereDate,
                                 DateCreated = info.PremiereDate,
                                 RunTimeTicks = info.RunTimeTicks,

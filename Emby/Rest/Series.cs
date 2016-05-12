@@ -57,5 +57,21 @@ namespace PlayOn.Emby.Rest
 
             return episodes;
         }
+
+        public async Task<List<Scaffold.Video>> Videos(string imdbId, int season, int episode, CancellationToken cancellationToken)
+        {
+            var videos = new List<Scaffold.Video>();
+
+            try
+            {
+                videos = await Request<List<Scaffold.Video>>("/series/" + imdbId + "/video/" + season + "/" + episode, "GET", cancellationToken);
+            }
+            catch (Exception exception)
+            {
+                Logger.ErrorException("Loading series video error, API call failed", exception);
+            }
+
+            return videos;
+        }
     }
 }

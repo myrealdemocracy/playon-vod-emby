@@ -24,5 +24,21 @@ namespace PlayOn.Emby.Rest
 
             return movies;
         }
+
+        public async Task<List<Scaffold.Video>> Videos(string imdbId, CancellationToken cancellationToken)
+        {
+            var videos = new List<Scaffold.Video>();
+
+            try
+            {
+                videos = await Request<List<Scaffold.Video>>("/movie/" + imdbId + "/video", "GET", cancellationToken);
+            }
+            catch (Exception exception)
+            {
+                Logger.ErrorException("Loading movie video error, API call failed", exception);
+            }
+
+            return videos;
+        }
     }
 }

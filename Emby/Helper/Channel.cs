@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using MediaBrowser.Controller.Channels;
 using MediaBrowser.Model.Channels;
 using MediaBrowser.Model.Logging;
+using MediaBrowser.Model.MediaInfo;
 
 namespace PlayOn.Emby.Helper
 {
@@ -54,6 +55,48 @@ namespace PlayOn.Emby.Helper
                     Items = channelResult.Items.ToList(),
                     TotalRecordCount = channelResult.TotalRecordCount
                 };
+            }, cancellationToken);
+        }
+
+        public static async Task<IEnumerable<ChannelMediaInfo>> Item(string id, CancellationToken cancellationToken)
+        {
+            return await Task.Run(async () =>
+            {
+                var media = new List<ChannelMediaInfo>();
+                var terms = id.Split(Convert.ToChar("|"));
+                var type = terms[0];
+                var imdbId = terms[1];
+
+                Logger.Debug("type: " + type);
+                Logger.Debug("imdbId: " + imdbId);
+
+                if (type == "movie")
+                {
+                    var restMovie = new Rest.Movie();
+                    var movies = await restMovie.Videos(imdbId, cancellationToken);
+
+                    media.AddRange(movies.Select(movie => new ChannelMediaInfo
+                    {
+                        Path = movie.Path
+                    }));
+                }
+                else if (type == "series")
+                {
+                    var season = Convert.ToInt32(terms[2]);
+                    var episode = Convert.ToInt32(terms[3]);
+                    var restSeries = new Rest.Series();
+                    var series = await restSeries.Videos(imdbId, season, episode, cancellationToken);
+
+                    Logger.Debug("season: " + season);
+                    Logger.Debug("episode: " + episode);
+
+                    media.AddRange(series.Select(item => new ChannelMediaInfo
+                    {
+                        Path = item.Path
+                    }));
+                }
+
+                return media.ToList();
             }, cancellationToken);
         }
     }
