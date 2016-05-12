@@ -24,7 +24,7 @@ using MediaBrowser.Model.Serialization;
 
 namespace PlayOn.Emby
 {
-    public class Channel : IChannel, ISearchableChannel //, IRequiresMediaInfoCallback, IIndexableChannel
+    public class Channel : IChannel, ISearchableChannel, IRequiresMediaInfoCallback//, IIndexableChannel
     {
         public static IServerConfigurationManager Config;
         public static ILibraryManager LibraryManager;
@@ -105,10 +105,10 @@ namespace PlayOn.Emby
             return Task.Run(async () => await Helper.Channel.Items(query, cancellationToken), cancellationToken);
         }
 
-        //public Task<IEnumerable<ChannelMediaInfo>> GetChannelItemMediaInfo(string id, CancellationToken cancellationToken)
-        //{
-        //    return Task.Run(async () => await Helper.Channel.Item(id, cancellationToken), cancellationToken);
-        //}
+        public Task<IEnumerable<ChannelMediaInfo>> GetChannelItemMediaInfo(string id, CancellationToken cancellationToken)
+        {
+            return Task.Run(async () => await Helper.Channel.Item(id, cancellationToken), cancellationToken);
+        }
 
         public Task<DynamicImageResponse> GetChannelImage(ImageType type, CancellationToken cancellationToken)
         {

@@ -33,22 +33,15 @@ namespace PlayOn.Endpoints.Controllers
 
         [Route("{imdbId}/video/{season}/{episode}")]
         [HttpGet]
-        public HttpResponseMessage Video(string imdbId, int? season, int? episode)
+        public List<Tools.Scaffold.Video> Video(string imdbId, int? season, int? episode)
         {
-            var url = Model.Logic.Series.VideoByImdbIdSeasonEpisode(imdbId, season, episode);
-            var message = new HttpResponseMessage();
-
-            if (String.IsNullOrEmpty(url))
+            return new List<Tools.Scaffold.Video>
             {
-                message.StatusCode = HttpStatusCode.Gone;
-            }
-            else
-            {
-                message.StatusCode = HttpStatusCode.Found;
-                message.Headers.Location = new Uri(url);
-            }
-
-            return message;
+                new Tools.Scaffold.Video
+                {
+                    Path = Model.Logic.Series.VideoByImdbIdSeasonEpisode(imdbId, season, episode)
+                }
+            };
         }
     }
 }

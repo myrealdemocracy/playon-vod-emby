@@ -70,14 +70,16 @@ namespace PlayOn.Emby.Helper
                 Logger.Debug("type: " + type);
                 Logger.Debug("imdbId: " + imdbId);
 
-                if (type == "movie")
+                if (type == "movies")
                 {
                     var restMovie = new Rest.Movie();
                     var movies = await restMovie.Videos(imdbId, cancellationToken);
 
                     media.AddRange(movies.Select(movie => new ChannelMediaInfo
                     {
-                        Path = movie.Path
+                        Path = movie.Path,
+                        Protocol = MediaProtocol.Http,
+                        SupportsDirectPlay = true
                     }));
                 }
                 else if (type == "series")
@@ -92,7 +94,9 @@ namespace PlayOn.Emby.Helper
 
                     media.AddRange(series.Select(item => new ChannelMediaInfo
                     {
-                        Path = item.Path
+                        Path = item.Path,
+                        Protocol = MediaProtocol.Http,
+                        SupportsDirectPlay = true
                     }));
                 }
 

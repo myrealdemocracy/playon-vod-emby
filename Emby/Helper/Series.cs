@@ -100,7 +100,7 @@ namespace PlayOn.Emby.Helper
                                 ParentIndexNumber = seasonNumber,
                                 IndexNumber = episode.EpisodeNumber,
                                 SeriesName = episode.SeriesName,
-                                Name = info.Name,
+                                Name = "S" + seasonNumber + ", E" + episode.EpisodeNumber + " - " + info.Name,
                                 Overview = info.Overview,
                                 People = info.People,
                                 ImageUrl = info.Image,
@@ -110,18 +110,8 @@ namespace PlayOn.Emby.Helper
                                 DateCreated = info.PremiereDate,
                                 RunTimeTicks = info.RunTimeTicks,
                                 Type = ChannelItemType.Media,
-                                ContentType = ChannelMediaContentType.Episode,
-                                MediaType = ChannelMediaType.Video,
-                                MediaSources = new List<ChannelMediaInfo>
-                                {
-                                    new ChannelMediaInfo
-                                    {
-                                        Path =
-                                            "http://playon.local/series/" + imdbId + "/video/" + seasonNumber + "/" + episode.EpisodeNumber,
-                                        Protocol = MediaProtocol.Http,
-                                        SupportsDirectPlay = true
-                                    }
-                                }
+                                ContentType = ChannelMediaContentType.Clip,
+                                MediaType = ChannelMediaType.Video
                             });
                         }
                     }

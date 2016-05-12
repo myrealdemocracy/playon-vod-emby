@@ -19,22 +19,15 @@ namespace PlayOn.Endpoints.Controllers
 
         [Route("{imdbId}/video")]
         [HttpGet]
-        public HttpResponseMessage Video(string imdbId)
+        public List<Tools.Scaffold.Video> Video(string imdbId)
         {
-            var url = Model.Logic.Movie.VideoByImdbId(imdbId);
-            var message = new HttpResponseMessage();
-
-            if (String.IsNullOrEmpty(url))
+            return new List<Tools.Scaffold.Video>
             {
-                message.StatusCode = HttpStatusCode.Gone;
-            }
-            else
-            {
-                message.StatusCode = HttpStatusCode.Found;
-                message.Headers.Location = new Uri(url);
-            }
-
-            return message;
+                new Tools.Scaffold.Video
+                {
+                    Path = Model.Logic.Movie.VideoByImdbId(imdbId)
+                }
+            };
         }
     }
 }
