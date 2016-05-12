@@ -28,6 +28,7 @@ namespace PlayOn.Emby.Scaffold
         public long? RunTimeTicks { get; set; }
         public string OfficialRating { get; set; }
         public Dictionary<string, string> ProviderIds { get; set; }
+        public string HomePageUrl { get; set; }
         public List<PersonInfo> People { get; set; }
     }
 }

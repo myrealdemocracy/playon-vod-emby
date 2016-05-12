@@ -76,7 +76,7 @@ namespace PlayOn.Emby
 
                 SupportsContentDownloading = true,
                 SupportsSortOrderToggle = false,
-                MaxPageSize = 200,
+                MaxPageSize = 10,
                 AutoRefreshLevels = 2
             };
         }

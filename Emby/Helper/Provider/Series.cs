@@ -111,6 +111,11 @@ namespace PlayOn.Emby.Helper.Provider
                         Logger.Debug("seriesItem.Studio: " + studio);
                     }
 
+                    foreach (var genre in seriesItem.Genres)
+                    {
+                        Logger.Debug("seriesItem.Genre: " + genre);
+                    }
+
                     seriesDataPath = TvdbSeriesProvider.GetSeriesDataPath(
                         Emby.Channel.Config.ApplicationPaths,
                         new Dictionary<string, string>
@@ -121,17 +126,20 @@ namespace PlayOn.Emby.Helper.Provider
                             }
                         });
 
+                    Logger.Debug("seriesItem.ExternalId: " + seriesItem.ExternalId);
+                    Logger.Debug("seriesItem.ExternalEtag: " + seriesItem.ExternalEtag);
                     Logger.Debug("seriesItem.Name: " + seriesItem.Name);
                     Logger.Debug("seriesItem.PremiereDate: " + seriesItem.PremiereDate);
                     Logger.Debug("seriesDataPath:" + seriesDataPath);
 
-                    info.SeriesName = seriesItem.Name;
+                    info.SeriesName = seriesItem.Id.ToString();
                     info.ProductionYear = seriesItem.ProductionYear;
                     info.PremiereDate = seriesItem.PremiereDate;
                     info.Studios = seriesItem.Studios;
                     info.Genres = seriesItem.Genres;
                     info.OfficialRating = seriesItem.OfficialRating;
                     info.ProviderIds = seriesItem.ProviderIds;
+                    info.HomePageUrl = seriesItem.HomePageUrl;
                 }
                 catch (Exception exception)
                 {
@@ -163,7 +171,14 @@ namespace PlayOn.Emby.Helper.Provider
                         Logger.Debug("episodeItem.Studio: " + studio);
                     }
 
+                    foreach (var genre in episodeItem.Genres)
+                    {
+                        Logger.Debug("episodeItem.Genre: " + genre);
+                    }
+
                     Logger.Debug("episodeItem null?: " + (episodeItem == null));
+                    Logger.Debug("episodeItem.ExternalId: " + episodeItem.ExternalId);
+                    Logger.Debug("episodeItem.ExternalEtag: " + episodeItem.ExternalEtag);
                     Logger.Debug("episodeItem.Name: " + episodeItem.Name);
                     Logger.Debug("episodeItem.PremiereDate: " + episodeItem.PremiereDate);
 
@@ -173,6 +188,7 @@ namespace PlayOn.Emby.Helper.Provider
                     //info.Genres = episodeItem.Genres;
                     //info.Studios = episodeItem.Studios;
                     info.PremiereDate = episodeItem.PremiereDate;
+                    info.ProductionYear = episodeItem.ProductionYear;
                     info.RunTimeTicks = episodeItem.RunTimeTicks;
                     info.OfficialRating = episodeItem.OfficialRating;
                 }
