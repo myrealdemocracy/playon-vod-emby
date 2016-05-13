@@ -42,10 +42,8 @@ namespace PlayOn.Emby.Helper
                         {
                             Id = "series|" + series.ImdbId,
                             Type = ChannelItemType.Folder,
-                            MediaType = ChannelMediaType.Video,
-                            ContentType = ChannelMediaContentType.Episode,
+                            FolderType = ChannelFolderType.Series,
                             Name = series.Name,
-                            SeriesName = series.Name,
                             ImageUrl = info.Image,
                             ProviderIds = info.ProviderIds,
                             ProductionYear = info.ProductionYear,
@@ -77,12 +75,11 @@ namespace PlayOn.Emby.Helper
                             {
                                 Id = query.FolderId + "|" + season.SeasonNumber,
                                 Type = ChannelItemType.Folder,
-                                MediaType = ChannelMediaType.Video,
-                                ContentType = ChannelMediaContentType.Episode,
-                                SeriesName = season.SeriesName,
+                                FolderType = ChannelFolderType.Season,
                                 IndexNumber = season.SeasonNumber,
                                 Name = "Season " + season.SeasonNumber,
-                                ImageUrl = info.Image
+                                ImageUrl = info.Image,
+                                ProviderIds = info.ProviderIds
                             });
                         }
                     }
@@ -99,18 +96,16 @@ namespace PlayOn.Emby.Helper
                                 Id = query.FolderId + "|" + episode.EpisodeNumber,
                                 ParentIndexNumber = seasonNumber,
                                 IndexNumber = episode.EpisodeNumber,
-                                SeriesName = episode.SeriesName,
-                                Name = "S" + seasonNumber + ", E" + episode.EpisodeNumber + " - " + info.Name,
+                                Name = info.Name,
                                 Overview = info.Overview,
                                 People = info.People,
                                 ImageUrl = info.Image,
                                 ProviderIds = info.ProviderIds,
-                                //ProductionYear = info.ProductionYear,
                                 PremiereDate = info.PremiereDate,
                                 DateCreated = info.PremiereDate,
                                 RunTimeTicks = info.RunTimeTicks,
                                 Type = ChannelItemType.Media,
-                                ContentType = ChannelMediaContentType.Clip,
+                                ContentType = ChannelMediaContentType.Episode,
                                 MediaType = ChannelMediaType.Video
                             });
                         }

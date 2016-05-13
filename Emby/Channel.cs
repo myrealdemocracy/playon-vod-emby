@@ -24,7 +24,7 @@ using MediaBrowser.Model.Serialization;
 
 namespace PlayOn.Emby
 {
-    public class Channel : IChannel, ISearchableChannel, IRequiresMediaInfoCallback//, IIndexableChannel
+    public class Channel : IChannel, ISearchableChannel, IRequiresMediaInfoCallback
     {
         public static IServerConfigurationManager Config;
         public static ILibraryManager LibraryManager;
@@ -47,6 +47,36 @@ namespace PlayOn.Emby
             JsonSerializer = jsonSerializer;
             Localization = localization;
             AppHost = appHost;
+        }
+
+        public string Name
+        {
+            get { return "Video On Demand"; }
+        }
+
+        public string Description
+        {
+            get { return ""; }
+        }
+
+        public string DataVersion
+        {
+            get
+            {
+                var data = DateTime.UtcNow;
+
+                return data.Year + "-" + data.Month + "-" + data.Day;
+            }
+        }
+
+        public string HomePageUrl
+        {
+            get { return "http://www.playon.tv"; }
+        }
+
+        public ChannelParentalRating ParentalRating
+        {
+            get { return ChannelParentalRating.GeneralAudience; }
         }
 
         public InternalChannelFeatures GetChannelFeatures()
@@ -80,25 +110,26 @@ namespace PlayOn.Emby
             };
         }
 
+        public IEnumerable<ImageType> GetSupportedChannelImages()
+        {
+            return new List<ImageType>
+            {
+                ImageType.Backdrop,
+                ImageType.Banner,
+                ImageType.Primary,
+                ImageType.Thumb
+            };
+        }
+
         public bool IsEnabledFor(string userId)
         {
             return true;
         }
 
-        //public Task<ChannelItemResult> GetAllMedia(InternalAllChannelMediaQuery query, CancellationToken cancellationToken)
-        //{
-        //    return Task.Run(async () => await Helper.AllMedia.Items(query, cancellationToken), cancellationToken);
-        //}
-
         public Task<IEnumerable<ChannelItemInfo>> Search(ChannelSearchInfo searchInfo, CancellationToken cancellationToken)
         {
             return Task.Run(async () => await Helper.Search.Items(searchInfo, cancellationToken), cancellationToken);
         }
-
-        //public Task<IEnumerable<ChannelItemInfo>> GetLatestMedia(ChannelLatestMediaSearch request, CancellationToken cancellationToken)
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         public Task<ChannelItemResult> GetChannelItems(InternalChannelItemQuery query, CancellationToken cancellationToken)
         {
@@ -113,44 +144,6 @@ namespace PlayOn.Emby
         public Task<DynamicImageResponse> GetChannelImage(ImageType type, CancellationToken cancellationToken)
         {
             return Task.Run(() => new DynamicImageResponse(), cancellationToken);
-        }
-
-        public IEnumerable<ImageType> GetSupportedChannelImages()
-        {
-            return new List<ImageType>
-            {
-                ImageType.Primary
-            };
-        }
-
-        public string Name
-        {
-            get { return "Video On Demand"; }
-        }
-
-        public string Description
-        {
-            get { return ""; }
-        }
-
-        public string DataVersion
-        {
-            get
-            {
-                var data = DateTime.UtcNow;
-
-                return data.Year + "-" + data.Month + "-" + data.Day;
-            }
-        }
-
-        public string HomePageUrl
-        {
-            get { return "http://www.playon.tv"; }
-        }
-
-        public ChannelParentalRating ParentalRating
-        {
-            get { return ChannelParentalRating.GeneralAudience; }
         }
     }
 }

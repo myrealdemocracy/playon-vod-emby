@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using MediaBrowser.Common.Net;
+using MediaBrowser.Controller.Entities.TV;
 using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Logging;
@@ -34,6 +35,7 @@ namespace PlayOn.Emby.Helper.Provider
                 var episodeItem = new MediaBrowser.Controller.Entities.TV.Episode();
                 var seriesId = "";
                 var seriesDataPath = "";
+                var seasonInfo = new SeasonInfo();
                 var episodeInfo = new EpisodeInfo();
 
                 var info = new Scaffold.Series
@@ -199,42 +201,45 @@ namespace PlayOn.Emby.Helper.Provider
 
                 try
                 {
-                    IEnumerable<RemoteImageInfo> tvdbImages = null;
+                    IEnumerable<RemoteImageInfo> images = null;
 
                     if (seasonNumber == 0 && episodeNumber == 0)
                     {
-                        var tvdbImageProvider = new TvdbSeriesImageProvider(Emby.Channel.Config, Emby.Channel.HttpClient, Emby.Channel.FileSystem);
+                        var imageProvider = new FanartSeriesProvider(Emby.Channel.Config, Emby.Channel.HttpClient, Emby.Channel.FileSystem, Emby.Channel.JsonSerializer);
 
-                        tvdbImages = tvdbImageProvider.GetImages(Path.Combine(seriesDataPath, "banners.xml"), "en", cancellationToken);
+                        images = await imageProvider.GetImages(seriesItem, cancellationToken);
 
-                        tvdbImages = tvdbImages.Where(q => q.Language == "en");
+                        images = images.Where(q => q.Language == "en");
                     }
                     else if (seasonNumber > 0 && episodeNumber == 0)
                     {
-                        tvdbImages = TvdbSeasonImageProvider.GetImages(Path.Combine(seriesDataPath, "banners.xml"), "en", Convert.ToInt32(seasonNumber), cancellationToken);
+                        var imageProvider = new FanArtSeasonProvider(Emby.Channel.Config, Emby.Channel.HttpClient, Emby.Channel.FileSystem, Emby.Channel.JsonSerializer);
 
-                        tvdbImages = tvdbImages.Where(q => q.Language == "en");
+                        var season = new Season();
+                        season.SetParent(seriesItem);
+
+                        images = await imageProvider.GetImages(season, cancellationToken);
+
+                        images = images.Where(q => q.Language == "en");
                     }
                     else if (seasonNumber > 0 && episodeNumber > 0)
                     {
-                        var tvdbImageProvider = new TvdbEpisodeImageProvider(Emby.Channel.Config, Emby.Channel.HttpClient, Emby.Channel.FileSystem);
-
-                        //tvdbImages = await tvdbImageProvider.GetImages(episodeItem, cancellationToken);
+                        var imageProvider = new TvdbEpisodeImageProvider(Emby.Channel.Config, Emby.Channel.HttpClient, Emby.Channel.FileSystem);
 
                         var nodes = TvdbEpisodeProvider.Current.GetEpisodeXmlNodes(seriesDataPath, episodeInfo);
 
-                        tvdbImages = nodes.Select(i => tvdbImageProvider.GetImageInfo(i, cancellationToken)).Where(i => i != null).ToList();
+                        images = nodes.Select(i => imageProvider.GetImageInfo(i, cancellationToken)).Where(i => i != null).ToList();
                     }
 
-                    Logger.Debug("tvdbimages?: " + (tvdbImages == null));
+                    Logger.Debug("tvdbimages?: " + (images == null));
 
-                    if (tvdbImages != null)
+                    if (images != null)
                     {
-                        Logger.Debug("tvdbimages.Count: " + tvdbImages.Count());
+                        Logger.Debug("tvdbimages.Count: " + images.Count());
 
                         var image = new RemoteImageInfo();
 
-                        foreach (var imageItem in tvdbImages.OrderByDescending(o => o.VoteCount))
+                        foreach (var imageItem in images.OrderByDescending(o => o.VoteCount))
                         {
                             Logger.Debug("tvdbimages.Type: " + imageItem.Type);
                             Logger.Debug("tvdbimages.Url: " + imageItem.Url);
