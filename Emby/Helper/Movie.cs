@@ -27,27 +27,36 @@ namespace PlayOn.Emby.Helper
 
                 foreach (var movie in result.Items)
                 {
-                    var info = await Provider.Movie.Info(movie.Name, movie.ImdbId, cancellationToken);
-
-                    var overview = String.IsNullOrEmpty(info.Overview) ? movie.Overview : info.Overview;
-
-                    items.Add(new ChannelItemInfo
+                    if (movie.Deleted)
+                        items.Add(new ChannelItemInfo
+                        {
+                            Id = "movies|" + movie.ImdbId,
+                            Deleted = true
+                        });
+                    else
                     {
-                        Id = "movies|" + movie.ImdbId,
-                        Name = movie.Name,
-                        Overview = overview,
-                        Type = ChannelItemType.Media,
-                        ContentType = ChannelMediaContentType.Movie,
-                        MediaType = ChannelMediaType.Video,
-                        ImageUrl = info.Image,
-                        Genres = info.Genres,
-                        OfficialRating = info.OfficialRating,
-                        ProductionYear = info.ProductionYear,
-                        Studios = info.Studios,
-                        ProviderIds = info.ProviderIds,
-                        DateCreated = info.PremiereDate,
-                        RunTimeTicks = info.RunTimeTicks
-                    });
+                        var info = await Provider.Movie.Info(movie.Name, movie.ImdbId, cancellationToken);
+
+                        var overview = String.IsNullOrEmpty(info.Overview) ? movie.Overview : info.Overview;
+
+                        items.Add(new ChannelItemInfo
+                        {
+                            Id = "movies|" + movie.ImdbId,
+                            Name = movie.Name,
+                            Overview = overview,
+                            Type = ChannelItemType.Media,
+                            ContentType = ChannelMediaContentType.Movie,
+                            MediaType = ChannelMediaType.Video,
+                            ImageUrl = info.Image,
+                            Genres = info.Genres,
+                            OfficialRating = info.OfficialRating,
+                            ProductionYear = info.ProductionYear,
+                            Studios = info.Studios,
+                            ProviderIds = info.ProviderIds,
+                            DateCreated = info.PremiereDate,
+                            RunTimeTicks = info.RunTimeTicks
+                        });
+                    }
                 }
 
                 return new Scaffold.Result.Channel

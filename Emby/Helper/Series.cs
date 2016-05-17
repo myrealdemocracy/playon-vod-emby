@@ -36,25 +36,34 @@ namespace PlayOn.Emby.Helper
 
                     foreach (var series in result.Items)
                     {
-                        var info = await Provider.Series.Info(series.ImdbId, 0, 0, cancellationToken);
-
-                        items.Add(new ChannelItemInfo
+                        if (series.Deleted)
+                            items.Add(new ChannelItemInfo
+                            {
+                                Id = "series|" + series.ImdbId,
+                                Deleted = true
+                            });
+                        else
                         {
-                            Id = "series|" + series.ImdbId,
-                            Type = ChannelItemType.Folder,
-                            FolderType = ChannelFolderType.Series,
-                            ContentType = ChannelMediaContentType.Series,
-                            MediaType = ChannelMediaType.Video,
-                            Name = series.Name,
-                            ImageUrl = info.Image,
-                            ProviderIds = info.ProviderIds,
-                            ProductionYear = info.ProductionYear,
-                            PremiereDate = info.PremiereDate,
-                            Genres = info.Genres,
-                            Studios = info.Studios,
-                            OfficialRating = info.OfficialRating,
-                            DateCreated = info.PremiereDate,
-                        });
+                            var info = await Provider.Series.Info(series.ImdbId, 0, 0, cancellationToken);
+
+                            items.Add(new ChannelItemInfo
+                            {
+                                Id = "series|" + series.ImdbId,
+                                Type = ChannelItemType.Folder,
+                                FolderType = ChannelFolderType.Series,
+                                ContentType = ChannelMediaContentType.Series,
+                                MediaType = ChannelMediaType.Video,
+                                Name = series.Name,
+                                ImageUrl = info.Image,
+                                ProviderIds = info.ProviderIds,
+                                ProductionYear = info.ProductionYear,
+                                PremiereDate = info.PremiereDate,
+                                Genres = info.Genres,
+                                Studios = info.Studios,
+                                OfficialRating = info.OfficialRating,
+                                DateCreated = info.PremiereDate
+                            });
+                        }
                     }
                 }
                 else
@@ -71,20 +80,29 @@ namespace PlayOn.Emby.Helper
 
                         foreach (var season in seasons)
                         {
-                            var info = await Provider.Series.Info(imdbId, season.SeasonNumber, 0, cancellationToken);
-
-                            items.Add(new ChannelItemInfo
+                            if (season.Deleted)
+                                items.Add(new ChannelItemInfo
+                                {
+                                    Id = query.FolderId + "|" + season.SeasonNumber,
+                                    Deleted = true
+                                });
+                            else
                             {
-                                Id = query.FolderId + "|" + season.SeasonNumber,
-                                Type = ChannelItemType.Folder,
-                                FolderType = ChannelFolderType.Season,
-                                ContentType = ChannelMediaContentType.Season,
-                                MediaType = ChannelMediaType.Video,
-                                IndexNumber = season.SeasonNumber,
-                                Name = "Season " + season.SeasonNumber,
-                                ImageUrl = info.Image,
-                                ProviderIds = info.ProviderIds
-                            });
+                                var info = await Provider.Series.Info(imdbId, season.SeasonNumber, 0, cancellationToken);
+
+                                items.Add(new ChannelItemInfo
+                                {
+                                    Id = query.FolderId + "|" + season.SeasonNumber,
+                                    Type = ChannelItemType.Folder,
+                                    FolderType = ChannelFolderType.Season,
+                                    ContentType = ChannelMediaContentType.Season,
+                                    MediaType = ChannelMediaType.Video,
+                                    IndexNumber = season.SeasonNumber,
+                                    Name = "Season " + season.SeasonNumber,
+                                    ImageUrl = info.Image,
+                                    ProviderIds = info.ProviderIds
+                                });
+                            }
                         }
                     }
                     else if (seasonNumber > 0 && episodeNumber == 0)
@@ -93,25 +111,34 @@ namespace PlayOn.Emby.Helper
 
                         foreach (var episode in episodes)
                         {
-                            var info = await Provider.Series.Info(imdbId, seasonNumber, episode.EpisodeNumber, cancellationToken);
-
-                            items.Add(new ChannelItemInfo
+                            if(episode.Deleted)
+                                items.Add(new ChannelItemInfo
+                                {
+                                    Id = query.FolderId + "|" + episode.EpisodeNumber,
+                                    Deleted = true
+                                });
+                            else
                             {
-                                Id = query.FolderId + "|" + episode.EpisodeNumber,
-                                ParentIndexNumber = seasonNumber,
-                                IndexNumber = episode.EpisodeNumber,
-                                Name = info.Name,
-                                Overview = info.Overview,
-                                People = info.People,
-                                ImageUrl = info.Image,
-                                ProviderIds = info.ProviderIds,
-                                PremiereDate = info.PremiereDate,
-                                DateCreated = info.PremiereDate,
-                                RunTimeTicks = info.RunTimeTicks,
-                                Type = ChannelItemType.Media,
-                                ContentType = ChannelMediaContentType.Episode,
-                                MediaType = ChannelMediaType.Video
-                            });
+                                var info = await Provider.Series.Info(imdbId, seasonNumber, episode.EpisodeNumber, cancellationToken);
+
+                                items.Add(new ChannelItemInfo
+                                {
+                                    Id = query.FolderId + "|" + episode.EpisodeNumber,
+                                    ParentIndexNumber = seasonNumber,
+                                    IndexNumber = episode.EpisodeNumber,
+                                    Name = info.Name,
+                                    Overview = info.Overview,
+                                    People = info.People,
+                                    ImageUrl = info.Image,
+                                    ProviderIds = info.ProviderIds,
+                                    PremiereDate = info.PremiereDate,
+                                    DateCreated = info.PremiereDate,
+                                    RunTimeTicks = info.RunTimeTicks,
+                                    Type = ChannelItemType.Media,
+                                    ContentType = ChannelMediaContentType.Episode,
+                                    MediaType = ChannelMediaType.Video
+                                });
+                            }
                         }
                     }
 

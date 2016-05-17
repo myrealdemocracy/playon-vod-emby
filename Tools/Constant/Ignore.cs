@@ -33,7 +33,9 @@ namespace PlayOn.Tools.Constant
             "anime",
             "latino",
             "featured",
-            "sports"
+            "sports",
+            "anime series",
+            "kids' tv"
         };
 
         public static List<string> NameContains = new List<string>

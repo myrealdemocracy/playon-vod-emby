@@ -17,6 +17,6 @@ namespace PlayOn.Tools.Scaffold
         public string Overview { get; set; }
         public int? Minutes { get; set; }
         public bool IsLive { get; set; }
-        public int Total { get; set; }
+        public bool Deleted { get; set; }
     }
 }
