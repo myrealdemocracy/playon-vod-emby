@@ -26,11 +26,15 @@ namespace PlayOn.Model.Logic
 
                 foreach (var seriesItem in db.Series.OrderBy(o => o.Name).Skip(start).Take(end))
                 {
+                    var yesterday = DateTime.UtcNow.AddDays(-1);
+                    var videos = db.Videos.Count(q => q.VideoSeries.Any(a => a.IdSerie == seriesItem.Id) && q.UpdatedAt >= yesterday);
+
                     series.Add(new Tools.Scaffold.Series
                     {
                         Id = seriesItem.Id,
                         Name = seriesItem.Name,
-                        ImdbId = seriesItem.Imdb
+                        ImdbId = seriesItem.Imdb,
+                        Deleted = videos < 1
                     });
                 }
             }
@@ -55,12 +59,18 @@ namespace PlayOn.Model.Logic
 
                     foreach (var season in seasonsList)
                     {
-                        if(Convert.ToInt32(season.Season) == 0) continue;
+                        var seasonNumber = Convert.ToInt32(season.Season);
+
+                        if (Convert.ToInt32(seasonNumber) == 0) continue;
+
+                        var yesterday = DateTime.UtcNow.AddDays(-1);
+                        var videos = db.Videos.Count(q => q.VideoSeries.Any(a => a.IdSerie == series.Id && a.Season == seasonNumber) && q.UpdatedAt >= yesterday);
 
                         seasons.Add(new Tools.Scaffold.Season
                         {
                             SeriesName = series.Name,
-                            SeasonNumber = season.Season
+                            SeasonNumber = seasonNumber,
+                            Deleted = videos < 1
                         });
                     }
                 }
@@ -87,30 +97,17 @@ namespace PlayOn.Model.Logic
                     foreach (var episode in episodeList)
                     {
                         var episodeNumber = Convert.ToInt32(episode.Episode);
-                        var videos = new List<Tools.Scaffold.Video>();
 
-                        if (episodeNumber == 0)
-                        {
-                            continue;
+                        if (episodeNumber == 0) continue;
 
-                            var dbVideos = db.Videos.Where(q => q.VideoSeries.Any(a => a.IdSerie == series.Id && a.Season == season && a.Episode == episodeNumber));
-
-                            foreach (var video in dbVideos)
-                            {
-                                videos.Add(new Tools.Scaffold.Video
-                                {
-                                    Name = video.Name,
-                                    Overview = video.Overview,
-                                    Path = video.Path
-                                });
-                            }
-                        }
+                        var yesterday = DateTime.UtcNow.AddDays(-1);
+                        var videos = db.Videos.Count(q => q.VideoSeries.Any(a => a.IdSerie == series.Id && a.Season == season && a.Episode == episodeNumber) && q.UpdatedAt >= yesterday);
 
                         episodes.Add(new Tools.Scaffold.Episode
                         {
                             SeriesName = series.Name,
                             EpisodeNumber = episodeNumber,
-                            Videos = videos
+                            Deleted = videos < 1
                         });
                     }
                 }

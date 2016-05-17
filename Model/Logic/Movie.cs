@@ -28,11 +28,15 @@ namespace PlayOn.Model.Logic
 
                     foreach (var movie in db.Movies.OrderBy(o => o.Name).Skip(start).Take(end))
                     {
+                        var yesterday = DateTime.UtcNow.AddDays(-1);
+                        var videos = db.Videos.Count(q => q.VideoMovies.Any(a => a.IdMovie == movie.Id) && q.UpdatedAt >= yesterday);
+
                         movies.Add(new Tools.Scaffold.Movie
                         {
                             Id = movie.Id,
                             Name = movie.Name,
-                            ImdbId = movie.Imdb
+                            ImdbId = movie.Imdb,
+                            Deleted = videos < 1
                         });
                     }
                 }
