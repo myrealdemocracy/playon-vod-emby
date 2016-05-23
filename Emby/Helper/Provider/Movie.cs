@@ -87,7 +87,7 @@ namespace PlayOn.Emby.Helper.Provider
                 {}
 
                 return movie;
-            });
+            }, cancellationToken);
         }
     }
 }
