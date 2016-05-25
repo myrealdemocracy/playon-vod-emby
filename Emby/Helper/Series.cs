@@ -54,6 +54,7 @@ namespace PlayOn.Emby.Helper
                                 ContentType = ChannelMediaContentType.Series,
                                 MediaType = ChannelMediaType.Video,
                                 Name = series.Name,
+                                SeriesName = series.Name,
                                 ImageUrl = info.Image,
                                 ProviderIds = info.ProviderIds,
                                 ProductionYear = info.ProductionYear,
@@ -97,6 +98,7 @@ namespace PlayOn.Emby.Helper
                                     FolderType = ChannelFolderType.Season,
                                     ContentType = ChannelMediaContentType.Season,
                                     MediaType = ChannelMediaType.Video,
+                                    SeriesName = season.SeriesName,
                                     IndexNumber = season.SeasonNumber,
                                     Name = "Season " + season.SeasonNumber,
                                     ImageUrl = info.Image,
@@ -124,6 +126,7 @@ namespace PlayOn.Emby.Helper
                                 items.Add(new ChannelItemInfo
                                 {
                                     Id = query.FolderId + "|" + episode.EpisodeNumber,
+                                    SeriesName = episode.SeriesName,
                                     ParentIndexNumber = seasonNumber,
                                     IndexNumber = episode.EpisodeNumber,
                                     Name = info.Name,
