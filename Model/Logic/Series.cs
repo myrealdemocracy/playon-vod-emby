@@ -27,7 +27,8 @@ namespace PlayOn.Model.Logic
                 foreach (var seriesItem in db.Series.OrderBy(o => o.Name).Skip(start).Take(end))
                 {
                     var yesterday = DateTime.UtcNow.AddDays(-1);
-                    var videos = db.Videos.Count(q => q.VideoSeries.Any(a => a.IdSerie == seriesItem.Id) && q.UpdatedAt >= yesterday);
+                    var lastWeek = DateTime.UtcNow.AddDays(-7);
+                    var videos = db.Videos.Count(q => q.VideoSeries.Any(a => a.IdSerie == seriesItem.Id) && ((q.UpdatedAt >= yesterday && q.Provider.Code != "netflix") || (q.UpdatedAt >= lastWeek && q.Provider.Code == "netflix")));
 
                     series.Add(new Tools.Scaffold.Series
                     {
@@ -64,7 +65,8 @@ namespace PlayOn.Model.Logic
                         if (Convert.ToInt32(seasonNumber) == 0) continue;
 
                         var yesterday = DateTime.UtcNow.AddDays(-1);
-                        var videos = db.Videos.Count(q => q.VideoSeries.Any(a => a.IdSerie == series.Id && a.Season == seasonNumber) && q.UpdatedAt >= yesterday);
+                        var lastWeek = DateTime.UtcNow.AddDays(-7);
+                        var videos = db.Videos.Count(q => q.VideoSeries.Any(a => a.IdSerie == series.Id && a.Season == seasonNumber) && ((q.UpdatedAt >= yesterday && q.Provider.Code != "netflix") || (q.UpdatedAt >= lastWeek && q.Provider.Code == "netflix")));
 
                         seasons.Add(new Tools.Scaffold.Season
                         {
@@ -101,7 +103,8 @@ namespace PlayOn.Model.Logic
                         if (episodeNumber == 0) continue;
 
                         var yesterday = DateTime.UtcNow.AddDays(-1);
-                        var videos = db.Videos.Count(q => q.VideoSeries.Any(a => a.IdSerie == series.Id && a.Season == season && a.Episode == episodeNumber) && q.UpdatedAt >= yesterday);
+                        var lastWeek = DateTime.UtcNow.AddDays(-7);
+                        var videos = db.Videos.Count(q => q.VideoSeries.Any(a => a.IdSerie == series.Id && a.Season == season && a.Episode == episodeNumber) && ((q.UpdatedAt >= yesterday && q.Provider.Code != "netflix") || (q.UpdatedAt >= lastWeek && q.Provider.Code == "netflix")));
 
                         episodes.Add(new Tools.Scaffold.Episode
                         {

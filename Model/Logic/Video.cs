@@ -186,7 +186,7 @@ namespace PlayOn.Model.Logic
             {
                 using (var db = new Ado.PlayOnEntities())
                 {
-                    var notSeen = DateTime.UtcNow.AddDays(-7);
+                    var notSeen = DateTime.UtcNow.AddDays(-14);
 
                     foreach (var video in db.Videos.Where(q => q.UpdatedAt <= notSeen))
                     {
