@@ -63,9 +63,13 @@ namespace PlayOn.Emby.Helper.Provider
                     movie.OfficialRating = movieItem.OfficialRating;
                     movie.Studios = movieItem.Studios;
                     movie.ProviderIds = movieItem.ProviderIds;
+
+                    if (movie.PremiereDate == null) movie.PremiereDate = DateTime.UtcNow.AddYears(-10);
                 }
                 catch (Exception exception)
-                {}
+                {
+                    Logger.ErrorException("moviedbProvider", exception);
+                }
 
                 try
                 {
@@ -82,9 +86,20 @@ namespace PlayOn.Emby.Helper.Provider
                     image = fanartImages.OrderByDescending(o => o.VoteCount).FirstOrDefault(q => q.Type == ImageType.Primary);
 
                     movie.Image = image.Url;
+
+                    if (String.IsNullOrWhiteSpace(movie.Image))
+                    {
+                        var movieDbImageProvider = new MovieDbImageProvider(Emby.Channel.JsonSerializer, Emby.Channel.HttpClient);
+
+                        var images = await movieDbImageProvider.GetImages(movieItem, cancellationToken);
+
+                        image = images.OrderByDescending(o => o.VoteCount).FirstOrDefault(q => q.Type == ImageType.Primary);
+                    }
                 }
                 catch (Exception exception)
-                {}
+                {
+                    Logger.ErrorException("images", exception);
+                }
 
                 return movie;
             }, cancellationToken);

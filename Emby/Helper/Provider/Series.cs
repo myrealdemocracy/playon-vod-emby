@@ -142,6 +142,8 @@ namespace PlayOn.Emby.Helper.Provider
                     info.OfficialRating = seriesItem.OfficialRating;
                     info.ProviderIds = seriesItem.ProviderIds;
                     info.HomePageUrl = seriesItem.HomePageUrl;
+
+                    if (info.PremiereDate == null) info.PremiereDate = DateTime.UtcNow.AddYears(-10);
                 }
                 catch (Exception exception)
                 {
@@ -193,6 +195,8 @@ namespace PlayOn.Emby.Helper.Provider
                     info.ProductionYear = episodeItem.ProductionYear;
                     info.RunTimeTicks = episodeItem.RunTimeTicks;
                     info.OfficialRating = episodeItem.OfficialRating;
+
+                    if (info.PremiereDate == null) info.PremiereDate = DateTime.UtcNow.AddYears(-10);
                 }
                 catch (Exception exception)
                 {
@@ -205,30 +209,37 @@ namespace PlayOn.Emby.Helper.Provider
 
                     if (seasonNumber == 0 && episodeNumber == 0)
                     {
-                        var imageProvider = new FanartSeriesProvider(Emby.Channel.Config, Emby.Channel.HttpClient, Emby.Channel.FileSystem, Emby.Channel.JsonSerializer);
+                        var fanartSeriesProvider = new FanartSeriesProvider(Emby.Channel.Config, Emby.Channel.HttpClient, Emby.Channel.FileSystem, Emby.Channel.JsonSerializer);
 
-                        images = await imageProvider.GetImages(seriesItem, cancellationToken);
+                        images = await fanartSeriesProvider.GetImages(seriesItem, cancellationToken);
 
                         images = images.Where(q => q.Language == "en");
+
+                        if (images.Count(c => c.Type == ImageType.Primary) == 0)
+                        {
+                            var tvdbSeriesImageProvider = new TvdbSeriesImageProvider(Emby.Channel.Config, Emby.Channel.HttpClient, Emby.Channel.FileSystem);
+
+                            images = await tvdbSeriesImageProvider.GetImages(seriesItem, cancellationToken);
+                        }
                     }
                     else if (seasonNumber > 0 && episodeNumber == 0)
                     {
-                        var imageProvider = new FanArtSeasonProvider(Emby.Channel.Config, Emby.Channel.HttpClient, Emby.Channel.FileSystem, Emby.Channel.JsonSerializer);
+                        var fanArtSeasonProvider = new FanArtSeasonProvider(Emby.Channel.Config, Emby.Channel.HttpClient, Emby.Channel.FileSystem, Emby.Channel.JsonSerializer);
 
                         var season = new Season();
                         season.SetParent(seriesItem);
 
-                        images = await imageProvider.GetImages(season, cancellationToken);
+                        images = await fanArtSeasonProvider.GetImages(season, cancellationToken);
 
                         images = images.Where(q => q.Language == "en");
                     }
                     else if (seasonNumber > 0 && episodeNumber > 0)
                     {
-                        var imageProvider = new TvdbEpisodeImageProvider(Emby.Channel.Config, Emby.Channel.HttpClient, Emby.Channel.FileSystem);
+                        var tvdbEpisodeImageProvider = new TvdbEpisodeImageProvider(Emby.Channel.Config, Emby.Channel.HttpClient, Emby.Channel.FileSystem);
 
                         var nodes = TvdbEpisodeProvider.Current.GetEpisodeXmlNodes(seriesDataPath, episodeInfo);
 
-                        images = nodes.Select(i => imageProvider.GetImageInfo(i, cancellationToken)).Where(i => i != null).ToList();
+                        images = nodes.Select(i => tvdbEpisodeImageProvider.GetImageInfo(i, cancellationToken)).Where(i => i != null).ToList();
                     }
 
                     Logger.Debug("tvdbimages?: " + (images == null));
@@ -255,7 +266,7 @@ namespace PlayOn.Emby.Helper.Provider
                 }
                 catch (Exception exception)
                 {
-                    Logger.ErrorException("tvdbimages", exception);
+                    Logger.ErrorException("images", exception);
                 }
 
                 return info;
