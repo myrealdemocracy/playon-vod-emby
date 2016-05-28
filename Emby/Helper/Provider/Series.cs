@@ -103,6 +103,8 @@ namespace PlayOn.Emby.Helper.Provider
                     }
                     else seriesItem = Cache[imdbId] as MediaBrowser.Controller.Entities.TV.Series;
 
+                    Logger.Debug("seriesItem.ProviderIds.Count: " + seriesItem.ProviderIds.Count);
+
                     foreach (var providerId in seriesItem.ProviderIds)
                     {
                         Logger.Debug("seriesItem.ProviderId: " + providerId);
@@ -152,51 +154,54 @@ namespace PlayOn.Emby.Helper.Provider
 
                 try
                 {
-                    episodeInfo = new EpisodeInfo
+                    if (seasonNumber > 0 && episodeNumber > 0)
                     {
-                        ParentIndexNumber = seasonNumber,
-                        IndexNumber = episodeNumber,
-                        SeriesProviderIds = seriesItem.ProviderIds,
-                        MetadataLanguage = seriesItem.GetPreferredMetadataLanguage(),
-                        MetadataCountryCode = seriesItem.GetPreferredMetadataCountryCode()
-                    };
+                        episodeInfo = new EpisodeInfo
+                        {
+                            ParentIndexNumber = seasonNumber,
+                            IndexNumber = episodeNumber,
+                            SeriesProviderIds = seriesItem.ProviderIds,
+                            MetadataLanguage = seriesItem.GetPreferredMetadataLanguage(),
+                            MetadataCountryCode = seriesItem.GetPreferredMetadataCountryCode()
+                        };
 
-                    var tvdbEpisode = await TvdbEpisodeProvider.Current.GetMetadata(episodeInfo, cancellationToken);
+                        var tvdbEpisode = await TvdbEpisodeProvider.Current.GetMetadata(episodeInfo, cancellationToken);
 
-                    episodeItem = tvdbEpisode.Item;
+                        episodeItem = tvdbEpisode.Item;
 
-                    foreach (var providerId in episodeItem.ProviderIds)
-                    {
-                        Logger.Debug("episodeItem.ProviderId: " + providerId);
+                        foreach (var providerId in episodeItem.ProviderIds)
+                        {
+                            Logger.Debug("episodeItem.ProviderId: " + providerId);
+                        }
+
+                        foreach (var studio in episodeItem.Studios)
+                        {
+                            Logger.Debug("episodeItem.Studio: " + studio);
+                        }
+
+                        foreach (var genre in episodeItem.Genres)
+                        {
+                            Logger.Debug("episodeItem.Genre: " + genre);
+                        }
+
+                        Logger.Debug("episodeItem null?: " + (episodeItem == null));
+                        Logger.Debug("episodeItem.ExternalId: " + episodeItem.ExternalId);
+                        Logger.Debug("episodeItem.ExternalEtag: " + episodeItem.ExternalEtag);
+                        Logger.Debug("episodeItem.Name: " + episodeItem.Name);
+                        Logger.Debug("episodeItem.PremiereDate: " + episodeItem.PremiereDate);
+
+                        info.Name = episodeItem.Name;
+                        info.Overview = episodeItem.Overview;
+                        info.ProviderIds = episodeItem.ProviderIds;
+                        //info.Genres = episodeItem.Genres;
+                        //info.Studios = episodeItem.Studios;
+                        info.PremiereDate = episodeItem.PremiereDate;
+                        info.ProductionYear = episodeItem.ProductionYear;
+                        info.RunTimeTicks = episodeItem.RunTimeTicks;
+                        info.OfficialRating = episodeItem.OfficialRating;
+
+                        if (info.PremiereDate == null) info.PremiereDate = DateTime.UtcNow.AddYears(-10);
                     }
-
-                    foreach (var studio in episodeItem.Studios)
-                    {
-                        Logger.Debug("episodeItem.Studio: " + studio);
-                    }
-
-                    foreach (var genre in episodeItem.Genres)
-                    {
-                        Logger.Debug("episodeItem.Genre: " + genre);
-                    }
-
-                    Logger.Debug("episodeItem null?: " + (episodeItem == null));
-                    Logger.Debug("episodeItem.ExternalId: " + episodeItem.ExternalId);
-                    Logger.Debug("episodeItem.ExternalEtag: " + episodeItem.ExternalEtag);
-                    Logger.Debug("episodeItem.Name: " + episodeItem.Name);
-                    Logger.Debug("episodeItem.PremiereDate: " + episodeItem.PremiereDate);
-
-                    info.Name = episodeItem.Name;
-                    info.Overview = episodeItem.Overview;
-                    info.ProviderIds = episodeItem.ProviderIds;
-                    //info.Genres = episodeItem.Genres;
-                    //info.Studios = episodeItem.Studios;
-                    info.PremiereDate = episodeItem.PremiereDate;
-                    info.ProductionYear = episodeItem.ProductionYear;
-                    info.RunTimeTicks = episodeItem.RunTimeTicks;
-                    info.OfficialRating = episodeItem.OfficialRating;
-
-                    if (info.PremiereDate == null) info.PremiereDate = DateTime.UtcNow.AddYears(-10);
                 }
                 catch (Exception exception)
                 {
@@ -215,7 +220,7 @@ namespace PlayOn.Emby.Helper.Provider
 
                         images = images.Where(q => q.Language == "en");
 
-                        if (images.Count(c => c.Type == ImageType.Primary) == 0)
+                        if (images == null || images.Count(c => c.Type == ImageType.Primary) == 0)
                         {
                             var tvdbSeriesImageProvider = new TvdbSeriesImageProvider(Emby.Channel.Config, Emby.Channel.HttpClient, Emby.Channel.FileSystem);
 

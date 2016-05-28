@@ -51,8 +51,14 @@ namespace PlayOn.Emby.Helper.Provider
 
                     movieItem = moviedb.Item;
 
-                    Logger.Debug("movieDb.Item.Name: " + movieItem.Name);
-                    Logger.Debug("movieDb.Item.Overview: " + movieItem.Overview);
+                    Logger.Debug("movieItem.Name: " + movieItem.Name);
+                    Logger.Debug("movieItem.Overview: " + movieItem.Overview);
+                    Logger.Debug("movieItem.ProviderIds.Count: " + movieItem.ProviderIds.Count);
+
+                    foreach (var providerId in movieItem.ProviderIds)
+                    {
+                        Logger.Debug("movieItem.ProviderId: " + providerId);
+                    }
 
                     movie.Name = movieItem.Name;
                     movie.Overview = movieItem.Overview;
@@ -81,11 +87,15 @@ namespace PlayOn.Emby.Helper.Provider
                     fanartImages = await fanartMovieImageProvider.GetImages(movieItem, cancellationToken);
 
                     Logger.Debug("fanartImages?: " + (fanartImages == null));
-                    if (fanartImages != null) Logger.Debug("fanartImages.Count: " + fanartImages.Count());
 
-                    image = fanartImages.OrderByDescending(o => o.VoteCount).FirstOrDefault(q => q.Type == ImageType.Primary);
+                    if (fanartImages != null)
+                    {
+                        //Logger.Debug("fanartImages.Count: " + fanartImages.Count());
 
-                    movie.Image = image.Url;
+                        image = fanartImages.OrderByDescending(o => o.VoteCount).FirstOrDefault(q => q.Type == ImageType.Primary);
+
+                        if(image != null) movie.Image = image.Url;
+                    }
 
                     if (String.IsNullOrWhiteSpace(movie.Image))
                     {

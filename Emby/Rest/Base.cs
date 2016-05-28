@@ -31,7 +31,8 @@ namespace PlayOn.Emby.Rest
                         Url = "http://playon.local" + route,
                         EnableHttpCompression = true,
                         CacheMode = CacheMode.None,
-                        CancellationToken = cancellationToken
+                        CancellationToken = cancellationToken,
+                        TimeoutMs = 1000 * 60 * 5
                     };
 
                     if(!String.IsNullOrEmpty(body)) options.RequestContent = body;

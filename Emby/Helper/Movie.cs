@@ -27,7 +27,14 @@ namespace PlayOn.Emby.Helper
 
                 foreach (var movie in result.Items)
                 {
-                    if (movie.Deleted)
+                    var info = new Scaffold.Movie();
+
+                    if (!movie.Deleted)
+                    {
+                        info = await Provider.Movie.Info(movie.Name, movie.ImdbId, cancellationToken);
+                    }
+
+                    if (movie.Deleted || info.ProviderIds.Count == 0)
                         items.Add(new ChannelItemInfo
                         {
                             Id = "movies|" + movie.ImdbId,
@@ -35,8 +42,6 @@ namespace PlayOn.Emby.Helper
                         });
                     else
                     {
-                        var info = await Provider.Movie.Info(movie.Name, movie.ImdbId, cancellationToken);
-
                         var overview = String.IsNullOrEmpty(info.Overview) ? movie.Overview : info.Overview;
 
                         items.Add(new ChannelItemInfo

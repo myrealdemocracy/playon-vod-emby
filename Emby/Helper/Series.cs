@@ -36,7 +36,14 @@ namespace PlayOn.Emby.Helper
 
                     foreach (var series in result.Items)
                     {
-                        if (series.Deleted)
+                        var info = new Scaffold.Series();
+
+                        if (!series.Deleted)
+                        {
+                            info = await Provider.Series.Info(series.ImdbId, 0, 0, cancellationToken);
+                        }
+
+                        if (series.Deleted || info.ProviderIds.Count == 0)
                             items.Add(new ChannelItemInfo
                             {
                                 Id = "series|" + series.ImdbId,
@@ -44,8 +51,6 @@ namespace PlayOn.Emby.Helper
                             });
                         else
                         {
-                            var info = await Provider.Series.Info(series.ImdbId, 0, 0, cancellationToken);
-
                             items.Add(new ChannelItemInfo
                             {
                                 Id = "series|" + series.ImdbId,
