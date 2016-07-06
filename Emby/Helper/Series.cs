@@ -56,8 +56,6 @@ namespace PlayOn.Emby.Helper
                                 Id = "series|" + series.ImdbId,
                                 Type = ChannelItemType.Folder,
                                 FolderType = ChannelFolderType.Series,
-                                ContentType = ChannelMediaContentType.Series,
-                                MediaType = ChannelMediaType.Video,
                                 Name = series.Name,
                                 SeriesName = series.Name,
                                 ImageUrl = info.Image,
@@ -101,8 +99,6 @@ namespace PlayOn.Emby.Helper
                                     Id = query.FolderId + "|" + season.SeasonNumber,
                                     Type = ChannelItemType.Folder,
                                     FolderType = ChannelFolderType.Season,
-                                    ContentType = ChannelMediaContentType.Season,
-                                    MediaType = ChannelMediaType.Video,
                                     SeriesName = season.SeriesName,
                                     IndexNumber = season.SeasonNumber,
                                     Name = "Season " + season.SeasonNumber,
@@ -131,6 +127,9 @@ namespace PlayOn.Emby.Helper
                                 items.Add(new ChannelItemInfo
                                 {
                                     Id = query.FolderId + "|" + episode.EpisodeNumber,
+                                    Type = ChannelItemType.Media,
+                                    ContentType = ChannelMediaContentType.Episode,
+                                    MediaType = ChannelMediaType.Video,
                                     SeriesName = episode.SeriesName,
                                     ParentIndexNumber = seasonNumber,
                                     IndexNumber = episode.EpisodeNumber,
@@ -141,10 +140,7 @@ namespace PlayOn.Emby.Helper
                                     ProviderIds = info.ProviderIds,
                                     PremiereDate = info.PremiereDate,
                                     DateCreated = info.PremiereDate,
-                                    RunTimeTicks = info.RunTimeTicks,
-                                    Type = ChannelItemType.Media,
-                                    ContentType = ChannelMediaContentType.Episode,
-                                    MediaType = ChannelMediaType.Video
+                                    RunTimeTicks = info.RunTimeTicks
                                 });
                             }
                         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,14 +22,23 @@ namespace PlayOn.Model.Logic
 
                     var adoProvider = db.Providers.FirstOrDefault(q => q.Code == code);
 
-                    if(adoProvider != null) return;
+                    if(adoProvider == null) adoProvider = new Ado.Provider();
 
-                    db.Providers.Add(new Ado.Provider
+                    if (adoProvider.Id == 0)
                     {
-                        Code = code,
-                        Name = item.Name,
-                        Searchable = item.Searchable == "true" ? 1 : 0
-                    });
+                        db.Providers.Add(new Ado.Provider
+                        {
+                            Code = code,
+                            Name = item.Name,
+                            Searchable = item.Searchable == "true" ? 1 : 0
+                        });
+                    }
+                    else
+                    {
+                        adoProvider.Searchable = item.Searchable == "true" ? 1 : 0;
+
+                        db.Entry(adoProvider).State = EntityState.Modified;
+                    }
 
                     db.SaveChanges();
                 }

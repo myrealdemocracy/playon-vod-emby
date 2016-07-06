@@ -32,14 +32,14 @@ namespace PlayOn.Emby.Helper
                                 Id = "movies",
                                 Name = "Movies",
                                 Type = ChannelItemType.Folder,
-                                ImageUrl = "http://playon.local/img/movies.png"
+                                ImageUrl = "http://192.168.3.40/img/movies.png"
                             },
                             new ChannelItemInfo
                             {
                                 Id = "series",
                                 Name = "TV Shows",
                                 Type = ChannelItemType.Folder,
-                                ImageUrl = "http://playon.local/img/series.png"
+                                ImageUrl = "http://192.168.3.40/img/series.png"
                             }
                         },
                         TotalRecordCount = 2
