@@ -62,7 +62,7 @@ namespace PlayOn.Emby.Helper.Provider
                     {
                         using (var result = await Emby.Channel.HttpClient.Get(new HttpRequestOptions
                         {
-                            Url = "http://www.thetvdb.com/api/GetSeriesByRemoteID.php?language=en&imdbid=" + imdbId,
+                            Url = "http://www.thetvdb.com/api/GetSeriesByRemoteID.php?imdbid=" + imdbId + "&language=en",
                             ResourcePool = new SemaphoreSlim(2, 2),
                             CancellationToken = cancellationToken
                         }).ConfigureAwait(false))

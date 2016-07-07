@@ -38,10 +38,7 @@ namespace PlayOn.Emby.Helper
                     {
                         var info = new Scaffold.Series();
 
-                        if (!series.Deleted)
-                        {
-                            info = await Provider.Series.Info(series.ImdbId, 0, 0, cancellationToken);
-                        }
+                        if (!series.Deleted) info = await Provider.Series.Info(series.ImdbId, 0, 0, cancellationToken);
 
                         if (series.Deleted || info.ProviderIds.Count == 0)
                             items.Add(new ChannelItemInfo

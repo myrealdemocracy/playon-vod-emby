@@ -29,10 +29,7 @@ namespace PlayOn.Emby.Helper
                 {
                     var info = new Scaffold.Movie();
 
-                    if (!movie.Deleted)
-                    {
-                        info = await Provider.Movie.Info(movie.Name, movie.ImdbId, cancellationToken);
-                    }
+                    if (!movie.Deleted) info = await Provider.Movie.Info(movie.Name, movie.ImdbId, cancellationToken);
 
                     if (movie.Deleted || info.ProviderIds.Count == 0)
                         items.Add(new ChannelItemInfo

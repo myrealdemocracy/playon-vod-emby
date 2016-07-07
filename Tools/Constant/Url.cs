@@ -8,10 +8,10 @@ namespace PlayOn.Tools.Constant
 {
     public class Url
     {
-        public const string Base = "http://192.168.2.20:54479";
+        public const string Base = "http://playon.home:54479";
         public const string Xml = "/data/data.xml";
-        public const string Video = "http://playon.local/url/video?id=";
-        public const string Image = "http://playon.local/url/image?id=";
+        public const string Video = "http://playon-rest.home/url/video?id=";
+        public const string Image = "http://playon-rest.home/url/image?id=";
 
         public const string Omdb = "http://www.omdbapi.com/";
     }
