@@ -24,7 +24,7 @@ using MediaBrowser.Model.Serialization;
 
 namespace PlayOn.Emby
 {
-    public class Channel : IChannel, ISearchableChannel, IRequiresMediaInfoCallback
+    public class Channel : IChannel, IIndexableChannel, ISearchableChannel, IRequiresMediaInfoCallback
     {
         public static IServerConfigurationManager Config;
         public static ILibraryManager LibraryManager;
@@ -103,7 +103,7 @@ namespace PlayOn.Emby
                 //    ChannelItemSortField.Runtime
                 //},
 
-                SupportsContentDownloading = true,
+                SupportsContentDownloading = false,
                 SupportsSortOrderToggle = false,
                 MaxPageSize = 20,
                 AutoRefreshLevels = 2
@@ -124,6 +124,11 @@ namespace PlayOn.Emby
         public bool IsEnabledFor(string userId)
         {
             return true;
+        }
+
+        public Task<ChannelItemResult> GetAllMedia(InternalAllChannelMediaQuery query, CancellationToken cancellationToken)
+        {
+            return Task.Run(async () => await Helper.Channel.AllItems(query, cancellationToken), cancellationToken);
         }
 
         public Task<IEnumerable<ChannelItemInfo>> Search(ChannelSearchInfo searchInfo, CancellationToken cancellationToken)

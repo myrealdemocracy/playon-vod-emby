@@ -28,7 +28,7 @@ namespace PlayOn.Emby.Rest
                 {
                     var options = new HttpRequestOptions
                     {
-                        Url = "http://playon-rest.home" + route,
+                        Url = "http://192.168.3.40" + route,
                         EnableHttpCompression = true,
                         CacheMode = CacheMode.None,
                         CancellationToken = cancellationToken,

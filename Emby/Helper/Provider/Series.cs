@@ -218,8 +218,6 @@ namespace PlayOn.Emby.Helper.Provider
 
                         images = await fanartSeriesProvider.GetImages(seriesItem, cancellationToken);
 
-                        images = images.Where(q => q.Language == "en");
-
                         if (images == null || images.Count(c => c.Type == ImageType.Primary) == 0)
                         {
                             var tvdbSeriesImageProvider = new TvdbSeriesImageProvider(Emby.Channel.Config, Emby.Channel.HttpClient, Emby.Channel.FileSystem);
@@ -235,8 +233,6 @@ namespace PlayOn.Emby.Helper.Provider
                         season.SetParent(seriesItem);
 
                         images = await fanArtSeasonProvider.GetImages(season, cancellationToken);
-
-                        images = images.Where(q => q.Language == "en");
                     }
                     else if (seasonNumber > 0 && episodeNumber > 0)
                     {
@@ -255,7 +251,7 @@ namespace PlayOn.Emby.Helper.Provider
 
                         var image = new RemoteImageInfo();
 
-                        foreach (var imageItem in images.OrderByDescending(o => o.VoteCount))
+                        foreach (var imageItem in images.Where(q => q.Language == "en").OrderByDescending(o => o.VoteCount))
                         {
                             Logger.Debug("tvdbimages.Type: " + imageItem.Type);
                             Logger.Debug("tvdbimages.Url: " + imageItem.Url);
